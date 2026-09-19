@@ -1,9 +1,12 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideStore } from '@ngrx/store';
+import { provideState, provideStore } from '@ngrx/store';
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { productsReducer } from './store/product/products.reducer';
+import { provideEffects } from '@ngrx/effects';
+import { ProductsEffects } from './store/product/products.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,6 +16,8 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
 
   
-    provideStore()
+    provideStore(),
+    provideState('products', productsReducer),
+    provideEffects(ProductsEffects)
   ]
 };

@@ -1,2 +1,21 @@
-<p>home works!</p>
+<h2>Books</h2>
+@if (loading$ | async) {
+<p>Loading books...</p> }
+
+@if (error$ | async; as error) {
+<p>{{ error }}</p> }
+
+@if (products$ | async; as products) {
+
+<p>Total books: {{ products.length }}</p>
+
+@for (product of products; track product.id) {
+<div>
+    <h3>{{ product.title }}</h3>
+    <p>Author: {{ product.author }}</p>
+    <p>Price: ₹{{ product.price }}</p>
+</div>
+}
+
+}
 <button type="button" (click)="logout()">Logout</button>

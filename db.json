@@ -9,5 +9,31 @@
     }
    
   ],
-  "products": []
+  "products": [
+    {
+      "id": 1,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "price": 450,
+      "mrp": 599,
+      "discountPercent": 25,
+      "images": [
+        "https://example.com/atomic-habits-front.jpg",
+        "https://example.com/atomic-habits-back.jpg"
+      ],
+      "category": "Self Help",
+      "genre": [
+        "Self Help",
+        "Psychology"
+      ],
+      "rating": 4.8,
+      "reviewCount": 1250,
+      "publisher": "Penguin",
+      "language": "English",
+      "pages": 320,
+      "createdAt": "2026-09-19",
+      "description": "A practical guide to building good habits and breaking bad ones.",
+      "stock": 20
+    }
+  ]
 }

@@ -8,7 +8,7 @@ export interface Product{
     mrp:number;
     discountPercent?:number;
 
-    image:string;
+    image:string[];
 
     category:string;
     genre:string[];
