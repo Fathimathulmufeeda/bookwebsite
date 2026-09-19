@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "name": "fathima",
+      "email": "fathi@gmail.com",
+      "password": "Fathi@12",
+      "role": "user",
+      "id": 1
+    }
+  ],
+  "products": []
+}

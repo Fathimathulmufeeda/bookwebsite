@@ -1,0 +1,86 @@
+<form [formGroup]="registerForm" (ngSubmit)="register()">
+
+    <label>Name</label>
+    <input type="text" formControlName="name">
+
+    @if (registerForm.controls['name'].touched &&
+    registerForm.controls['name'].invalid) {
+
+    @if (registerForm.controls['name'].hasError('required')) {
+    <small>Name is required.</small>
+    }
+
+    @if (registerForm.controls['name'].hasError('minlength')) {
+    <small>Name must be at least 2 characters.</small>
+    }
+
+    @if (registerForm.controls['name'].hasError('maxlength')) {
+    <small>Name cannot exceed 50 characters.</small>
+    }
+
+    @if (registerForm.controls['name'].hasError('pattern')) {
+    <small>Name can contain only letters and spaces.</small>
+    }
+    }
+
+    <br><br>
+
+    <label>Email</label>
+    <input type="email" formControlName="email">
+
+    @if (registerForm.controls['email'].touched &&
+    registerForm.controls['email'].invalid) {
+
+    @if (registerForm.controls['email'].hasError('required')) {
+    <small>Email is required.</small>
+    }
+
+    @if (registerForm.controls['email'].hasError('email')) {
+    <small>Enter a valid email address.</small>
+    }
+    }
+
+    <br><br>
+
+    <label>Password</label>
+    <input type="password" formControlName="password">
+
+    @if (registerForm.controls['password'].touched &&
+    registerForm.controls['password'].dirty &&
+    registerForm.controls['password'].invalid) {
+
+    @if (registerForm.controls['password'].hasError('required')) {
+    <small>Password is required.</small>
+    }
+
+    @if (registerForm.controls['password'].hasError('minlength')) {
+    <small>Password must be at least 8 characters.</small>
+    }
+
+    @if (registerForm.controls['password'].hasError('pattern')) {
+    <small>
+        Password must contain uppercase, lowercase, number and special character.
+    </small>
+    }
+    }
+
+    <br><br>
+
+    <label>Confirm Password</label>
+    <input type="password" formControlName="confirmPassword">
+
+    @if (registerForm.controls['confirmPassword'].touched &&
+    registerForm.controls['confirmPassword'].invalid) {
+
+    @if (registerForm.controls['confirmPassword'].hasError('required')) {
+    <small>Confirm password is required.</small>
+    }
+    }
+
+    <br><br>
+
+    <button type="submit" [disabled]="registerForm.invalid">
+        Sign Up
+    </button>
+
+</form>

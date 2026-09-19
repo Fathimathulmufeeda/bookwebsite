@@ -1,0 +1,46 @@
+<h2>Login page</h2>
+<form [formGroup]="loginForm" (ngSubmit)="login()">
+
+    <label>Email</label>
+    <input type="email" formControlName="email">
+
+    @if (loginForm.controls['email'].touched &&
+    loginForm.controls['email'].invalid) {
+
+    @if (loginForm.controls['email'].hasError('required')) {
+    <small>Email is required.</small>
+    }
+
+    @if (loginForm.controls['email'].hasError('email')) {
+    <small>Enter a valid email address.</small>
+    }
+    }
+
+    <br><br>
+
+    <label>Password</label>
+    <input type="password" formControlName="password">
+
+    @if (loginForm.controls['password'].touched &&
+    loginForm.controls['password'].invalid) {
+
+    @if (loginForm.controls['password'].hasError('required')) {
+    <small>Password is required.</small>
+    }
+    }
+
+    <br><br>
+
+    <button type="submit" [disabled]="loginForm.invalid">
+        Sign In
+    </button>
+
+    @if (error$ | async; as error) {
+    <p>{{ error }}</p>     }
+
+    @if (message) {
+    <p>{{ message }}</p>    
+ }
+<p>Logged in: {{ loggedIn$ | async }}</p>
+
+</form>
