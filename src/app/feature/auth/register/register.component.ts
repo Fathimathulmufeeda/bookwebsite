@@ -63,8 +63,8 @@ export class RegisterComponent {
       next: () => {
         this.message = 'Registration successful!';
       },
-      error: () => {
-        this.message = 'Registration failed!';
+      error: (error) => {
+        this.message = error.message || 'Registration failed!';
       }
     });
   }

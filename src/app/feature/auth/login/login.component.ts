@@ -1,25 +1,27 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { login } from '../../../store/auth/auth.action'; 
-import { selectAuthError } from '../../../store/auth/auth.selectors';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
-import { selectLoggedIn } from '../../../store/auth/auth.selectors';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule,AsyncPipe],
+  imports: [ReactiveFormsModule, AsyncPipe, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  
-  private router=inject(Router)
-  private store = inject(Store);
-  error$ = this.store.select(selectAuthError);
-  loggedIn$ = this.store.select(selectLoggedIn);
+
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  error = '';
 
   loginForm = new FormGroup({
 
@@ -35,14 +37,20 @@ export class LoginComponent {
   });
 
   login() {
+
     const email = this.loginForm.controls['email'].value!;
     const password = this.loginForm.controls['password'].value!;
-  
-    this.store.dispatch(
-      login({
-        email,
-        password
-      })
-    );
+
+    this.authService.login(email, password).subscribe(users => {
+
+      if (users.length === 0) {
+        this.error = 'Incorrect email or password';
+        return;
+      }
+
+      localStorage.setItem('loggedIn', 'true');
+
+      this.router.navigate(['/home']);
+    });
   }
 }

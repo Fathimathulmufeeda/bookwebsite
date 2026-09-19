@@ -46,7 +46,6 @@
     <input type="password" formControlName="password">
 
     @if (registerForm.controls['password'].touched &&
-    registerForm.controls['password'].dirty &&
     registerForm.controls['password'].invalid) {
 
     @if (registerForm.controls['password'].hasError('required')) {
@@ -82,5 +81,7 @@
     <button type="submit" [disabled]="registerForm.invalid">
         Sign Up
     </button>
-
+    @if (message) {
+    <p>{{ message }}</p>     }
+    
 </form>
