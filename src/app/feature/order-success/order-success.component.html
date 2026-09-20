@@ -1,0 +1,36 @@
+<h2>Order Placed Successfully! ✅</h2>
+
+@if (order$ | async; as order) {
+
+<p>Thank you for your purchase.</p>
+
+<h3>Order Details</h3>
+
+<p>
+    <strong>Order ID:</strong> {{ order.id }}
+</p>
+
+<p>
+    <strong>Total:</strong> ₹{{ order.total }}
+</p>
+
+<p>
+    <strong>Status:</strong> {{ order.status }}
+</p>
+
+<h3>Shipping Address</h3>
+
+<p>{{ order.shippingAddress.name }}</p>
+<p>{{ order.shippingAddress.address }}</p>
+<p>{{ order.shippingAddress.city }}</p>
+<p>{{ order.shippingAddress.pincode }}</p>
+
+<a routerLink="/home">
+    Continue Shopping
+</a>
+
+} @else {
+
+<p>No order found.</p>
+
+}

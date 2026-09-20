@@ -43,8 +43,9 @@
 }
 
 }
-<a routerLink="/cart">Cart</a>
-<br><br>
-<a routerLink="/cart">Cart ({{ cartCount$ | async }})</a>
+
+<button type="button" (click)="goToCart()">
+    Cart ({{ cartCount$ | async }})
+    </button>
 <br><br>
 <button type="button" (click)="logout()">Logout</button>

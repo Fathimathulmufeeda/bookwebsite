@@ -1,22 +1,28 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { loadProducts } from '../../store/product/products.action';
-import { selectProducts, selectProductsError, selectProductsLoading } from '../../store/product/products.selectors';
 import { CommonModule } from '@angular/common';
+
+import { loadProducts } from '../../store/product/products.action';
+import {
+  selectProducts,
+  selectProductsError,
+  selectProductsLoading
+} from '../../store/product/products.selectors';
+
 import { Product } from '../../core/Models/Product.model';
+
 import { addToCart } from '../../store/cart/cart.action';
-import { selectCartCount, selectCartItems } from '../../store/cart/cart.selectors';
+import { selectCartCount } from '../../store/cart/cart.selectors';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-
 export class HomeComponent implements OnInit {
 
   private authService = inject(AuthService);
@@ -40,6 +46,7 @@ export class HomeComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
   addToCart(product: Product): void {
     this.store.dispatch(
       addToCart({
@@ -51,4 +58,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  goToCart(): void {
+    this.router.navigate(['/cart']);
+  }
 }

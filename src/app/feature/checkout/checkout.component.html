@@ -1,0 +1,129 @@
+<h2>Checkout</h2>
+
+<h3>Order Summary</h3>
+
+@if (cartItems$ | async; as items) {
+
+@for (item of items; track item.product.id) {
+
+<div>
+    <p>{{ item.product.title }}</p>
+    <p>Price: ₹{{ item.product.price }}</p>
+    <p>Quantity: {{ item.quantity }}</p>
+    <p>
+        Subtotal: ₹{{ item.product.price * item.quantity }}
+    </p>
+</div>
+
+}
+
+<p>
+    <strong>Total: ₹{{ cartTotal$ | async }}</strong>
+</p>
+
+}
+
+<form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+
+    <!-- Name -->
+    <div>
+        <label>Name</label>
+
+        <input type="text" formControlName="name" placeholder="Enter your name">
+
+        @if (
+        checkoutForm.controls.name.touched &&
+        checkoutForm.controls.name.invalid
+        ) {
+
+        @if (checkoutForm.controls.name.hasError('required')) {
+        <p>Name is required.</p>
+        }
+
+        @if (checkoutForm.controls.name.hasError('minlength')) {
+        <p>Name must be at least 3 characters.</p>
+        }
+
+        @if (checkoutForm.controls.name.hasError('pattern')) {
+        <p>Name can contain only letters and spaces.</p>
+        }
+
+        }
+    </div>
+
+
+    <!-- Address -->
+    <div>
+        <label>Address</label>
+
+        <textarea formControlName="address" placeholder="Enter your delivery address"></textarea>
+
+        @if (
+        checkoutForm.controls.address.touched &&
+        checkoutForm.controls.address.invalid
+        ) {
+
+        @if (checkoutForm.controls.address.hasError('required')) {
+        <p>Address is required.</p>
+        }
+
+        @if (checkoutForm.controls.address.hasError('minlength')) {
+        <p>Address must be at least 10 characters.</p>
+        }
+
+        }
+    </div>
+
+
+    <!-- City -->
+    <div>
+        <label>City</label>
+
+        <input type="text" formControlName="city" placeholder="Enter your city">
+
+        @if (
+        checkoutForm.controls.city.touched &&
+        checkoutForm.controls.city.invalid
+        ) {
+
+        @if (checkoutForm.controls.city.hasError('required')) {
+        <p>City is required.</p>
+        }
+
+        @if (checkoutForm.controls.city.hasError('pattern')) {
+        <p>City can contain only letters and spaces.</p>
+        }
+
+        }
+    </div>
+
+
+    <!-- Pincode -->
+    <div>
+        <label>Pincode</label>
+
+        <input type="text" formControlName="pincode" placeholder="Enter 6-digit pincode" maxlength="6">
+
+        @if (
+        checkoutForm.controls.pincode.touched &&
+        checkoutForm.controls.pincode.invalid
+        ) {
+
+        @if (checkoutForm.controls.pincode.hasError('required')) {
+        <p>Pincode is required.</p>
+        }
+
+        @if (checkoutForm.controls.pincode.hasError('pattern')) {
+        <p>Pincode must contain exactly 6 digits.</p>
+        }
+
+        }
+    </div>
+
+
+    <!-- Submit -->
+    <button type="submit" [disabled]="checkoutForm.invalid">
+        Place Order
+    </button>
+
+</form>

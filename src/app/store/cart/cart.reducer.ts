@@ -5,7 +5,8 @@ import {
   addToCart,
   increaseQuantity,
   decreaseQuantity,
-  removeFromCart
+  removeFromCart,
+  clearCart
 } from './cart.action';
 
 export interface CartState {
@@ -84,5 +85,10 @@ export const cartReducer = createReducer(
     items: state.items.filter(
       item => item.product.id !== productId
     )
+  })),
+
+  //clearing cart
+  on(clearCart, () => ({
+    items: []
   }))
 );
