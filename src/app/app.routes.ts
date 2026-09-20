@@ -28,6 +28,13 @@ export const routes: Routes = [
         canActivate:[authGuard]
   },
   {
+    path: 'cart',
+    loadComponent: () =>
+      import('./feature/cart/cart.component')
+        .then(m => m.CartComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: '**',
     redirectTo: 'login'
   }

@@ -10,12 +10,41 @@
 <p>Total books: {{ products.length }}</p>
 
 @for (product of products; track product.id) {
-<div>
+<div class="book-card">
+
+    <img
+      [src]="product.images[0]"
+      [alt]="product.title"
+      width="150"
+    >
+  
     <h3>{{ product.title }}</h3>
-    <p>Author: {{ product.author }}</p>
-    <p>Price: ₹{{ product.price }}</p>
-</div>
+  
+    <p>{{ product.author }}</p>
+  
+    <p>₹{{ product.price }}</p>
+    <p>MRP: ₹{{ product.mrp }}</p>
+    
+    @if (product.discountPercent) {
+    <p>{{ product.discountPercent }}% off</p>
+    }
+    <p>⭐ {{ product.rating }} ({{ product.reviewCount }} reviews)</p>
+    <p>Category: {{ product.category }}</p>
+    <p>Genre: {{ product.genre.join(', ') }}</p>
+    <p>Publisher: {{ product.publisher }}</p>
+    <p>Language: {{ product.language }}</p>
+    <p>Pages: {{ product.pages }}</p>
+    <p>{{ product.description }}</p>
+    <p>Stock: {{ product.stock }}</p>
+    <button type="button" (click)="addToCart(product)">Add to Cart</button>
+    
+  
+  </div>
 }
 
 }
+<a routerLink="/cart">Cart</a>
+<br><br>
+<a routerLink="/cart">Cart ({{ cartCount$ | async }})</a>
+<br><br>
 <button type="button" (click)="logout()">Logout</button>

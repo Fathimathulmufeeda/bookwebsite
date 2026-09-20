@@ -1,0 +1,52 @@
+<h2>Cart page</h2>
+<h2>My Cart</h2>
+
+@if (cartItems$ | async; as items) {
+
+@if (items.length > 0) {
+
+@for (item of items; track item.product.id) {
+
+<div class="cart-item">
+
+    <h3>{{ item.product.title }}</h3>
+
+    <p>Author: {{ item.product.author }}</p>
+
+    <p>Price: ₹{{ item.product.price }}</p>
+
+    <button type="button" (click)="onDecreaseQuantity(item.product.id)">
+        −
+    </button>
+
+    <span>{{ item.quantity }}</span>
+
+    <button type="button" (click)="increaseQuantity(item.product.id)">
+        +
+    </button>
+
+    <p>
+        Subtotal: ₹{{ item.product.price * item.quantity }}
+    </p>
+
+    <button type="button" (click)="onRemoveFromCart(item.product.id)">
+        Remove
+    </button>
+
+</div>
+
+}
+
+<p>Total: ₹{{ cartTotal$ | async }}</p>
+
+<button type="button">
+    Proceed to Checkout
+</button>
+
+} @else {
+
+<p>Your cart is empty.</p>
+
+}
+
+}
