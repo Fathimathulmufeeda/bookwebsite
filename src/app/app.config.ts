@@ -9,6 +9,7 @@ import { provideEffects } from '@ngrx/effects';
 import { ProductsEffects } from './store/product/products.effects';
 import { cartReducer } from './store/cart/cart.reducer';
 import { ordersReducer } from './store/orders/orders.reducer';
+import { OrdersEffect } from './store/orders/orders.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideState('products', productsReducer),
     provideState('cart', cartReducer),
     provideState('orders', ordersReducer),
-    provideEffects(ProductsEffects)
+    provideEffects(ProductsEffects),
+    provideEffects(OrdersEffect)
   ]
 };

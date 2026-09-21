@@ -1,0 +1,49 @@
+<h2>Order History</h2>
+
+@if (orders$ | async; as orders) {
+
+@if (orders.length > 0) {
+
+@for (order of orders; track order.id) {
+
+<div class="order-card">
+
+    <h3>Order #{{ order.id }}</h3>
+
+    <p>Status: {{ order.status }}</p>
+
+    <p>Total: ₹{{ order.total }}</p>
+
+    <h4>Items</h4>
+
+    @for (item of order.items; track item.product.id) {
+    <p>
+        {{ item.product.title }}
+        × {{ item.quantity }}
+        — ₹{{ item.product.price * item.quantity }}
+    </p>
+    }
+
+    <h4>Shipping Address</h4>
+
+    <p>{{ order.shippingAddress.name }}</p>
+    <p>{{ order.shippingAddress.address }}</p>
+    <p>{{ order.shippingAddress.city }}</p>
+    <p>{{ order.shippingAddress.pincode }}</p>
+
+    <p>
+        Ordered on:
+        {{ order.createdAt | date:'medium' }}
+    </p>
+
+</div>
+
+}
+
+} @else {
+
+<p>No orders found.</p>
+
+}
+
+}

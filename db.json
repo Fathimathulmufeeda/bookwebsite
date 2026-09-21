@@ -7,7 +7,6 @@
       "role": "user",
       "id": 1
     }
-   
   ],
   "products": [
     {
@@ -34,6 +33,92 @@
       "createdAt": "2026-09-19",
       "description": "A practical guide to building good habits and breaking bad ones.",
       "stock": 20
+    }
+  ],
+  "orders": [
+    {
+      "id": 1789974253705,
+      "items": [
+        {
+          "product": {
+            "id": 1,
+            "title": "Atomic Habits",
+            "author": "James Clear",
+            "price": 450,
+            "mrp": 599,
+            "discountPercent": 25,
+            "images": [
+              "https://example.com/atomic-habits-front.jpg",
+              "https://example.com/atomic-habits-back.jpg"
+            ],
+            "category": "Self Help",
+            "genre": [
+              "Self Help",
+              "Psychology"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1250,
+            "publisher": "Penguin",
+            "language": "English",
+            "pages": 320,
+            "createdAt": "2026-09-19",
+            "description": "A practical guide to building good habits and breaking bad ones.",
+            "stock": 20
+          },
+          "quantity": 2
+        }
+      ],
+      "total": 900,
+      "shippingAddress": {
+        "name": "FATHIMATHUL MUFEEDA",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "sedrt",
+        "pincode": "670308"
+      },
+      "createdAt": "2026-09-21T07:04:13.705Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1789974317053,
+      "items": [
+        {
+          "product": {
+            "id": 1,
+            "title": "Atomic Habits",
+            "author": "James Clear",
+            "price": 450,
+            "mrp": 599,
+            "discountPercent": 25,
+            "images": [
+              "https://example.com/atomic-habits-front.jpg",
+              "https://example.com/atomic-habits-back.jpg"
+            ],
+            "category": "Self Help",
+            "genre": [
+              "Self Help",
+              "Psychology"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1250,
+            "publisher": "Penguin",
+            "language": "English",
+            "pages": 320,
+            "createdAt": "2026-09-19",
+            "description": "A practical guide to building good habits and breaking bad ones.",
+            "stock": 20
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 450,
+      "shippingAddress": {
+        "name": "FATHIMATHUL MUFEEDA",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "sedrt",
+        "pincode": "670308"
+      },
+      "createdAt": "2026-09-21T07:05:17.053Z",
+      "status": "Placed"
     }
   ]
 }
