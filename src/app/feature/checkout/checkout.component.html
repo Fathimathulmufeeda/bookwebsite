@@ -2,31 +2,75 @@
 
 <h3>Order Summary</h3>
 
+@if (buyNowProduct) {
+
+<div>
+    <p>{{ buyNowProduct.title }}</p>
+
+   
+    <p>Price: ₹{{ buyNowProduct.price }}</p>
+
+    <p>Quantity: 1</p>
+
+    <p>
+        Subtotal: ₹{{ buyNowProduct.price }}
+    </p>
+   
+
+</div>
+
+<p>
+    <strong>Total: ₹{{ buyNowProduct.price }}</strong>
+</p>
+
+} @else {
+
 @if (cartItems$ | async; as items) {
+
+
+@if (items.length > 0) {
 
 @for (item of items; track item.product.id) {
 
 <div>
     <p>{{ item.product.title }}</p>
+
     <p>Price: ₹{{ item.product.price }}</p>
+
     <p>Quantity: {{ item.quantity }}</p>
+
     <p>
-        Subtotal: ₹{{ item.product.price * item.quantity }}
+        Subtotal:
+        ₹{{ item.product.price * item.quantity }}
     </p>
 </div>
 
 }
 
 <p>
-    <strong>Total: ₹{{ cartTotal$ | async }}</strong>
+    <strong>
+        Total: ₹{{ cartTotal$ | async }}
+    </strong>
 </p>
+
+} @else {
+
+<p>Your cart is empty.</p>
+
+}
+
+
+}
 
 }
 
 <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
 
     <!-- Name -->
+
     <div>
+
+        
         <label>Name</label>
 
         <input type="text" formControlName="name" placeholder="Enter your name">
@@ -48,15 +92,20 @@
         <p>Name can contain only letters and spaces.</p>
         }
 
-        }
+    }
+        
+
     </div>
 
-
     <!-- Address -->
+
     <div>
+
+        
         <label>Address</label>
 
-        <textarea formControlName="address" placeholder="Enter your delivery address"></textarea>
+        <textarea formControlName="address" placeholder="Enter your delivery address">
+</textarea>
 
         @if (
         checkoutForm.controls.address.touched &&
@@ -72,11 +121,15 @@
         }
 
         }
+        
+
     </div>
 
-
     <!-- City -->
+
     <div>
+
+        
         <label>City</label>
 
         <input type="text" formControlName="city" placeholder="Enter your city">
@@ -95,11 +148,15 @@
         }
 
         }
+        
+
     </div>
 
-
     <!-- Pincode -->
+
     <div>
+
+        
         <label>Pincode</label>
 
         <input type="text" formControlName="pincode" placeholder="Enter 6-digit pincode" maxlength="6">
@@ -118,12 +175,13 @@
         }
 
         }
+        
+
     </div>
 
-
     <!-- Submit -->
+
     <button type="submit" [disabled]="checkoutForm.invalid">
-        Place Order
-    </button>
+        Place Order </button>
 
 </form>

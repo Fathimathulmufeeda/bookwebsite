@@ -1,55 +1,92 @@
 <h2>Books</h2>
+
 @if (loading$ | async) {
-<p>Loading books...</p> }
+<p>Loading books...</p>
+}
 
 @if (error$ | async; as error) {
-<p>{{ error }}</p> }
+<p>{{ error }}</p>
+}
 
 @if (products$ | async; as products) {
 
 <p>Total books: {{ products.length }}</p>
 
 @for (product of products; track product.id) {
+
 <div class="book-card">
 
-    <img
-      [src]="product.images[0]"
-      [alt]="product.title"
-      width="150"
-    >
-  
-    <h3>{{ product.title }}</h3>
-  
-    <p>{{ product.author }}</p>
-  
-    <p>₹{{ product.price }}</p>
-    <p>MRP: ₹{{ product.mrp }}</p>
-    
-    @if (product.discountPercent) {
-    <p>{{ product.discountPercent }}% off</p>
-    }
-    <p>⭐ {{ product.rating }} ({{ product.reviewCount }} reviews)</p>
-    <p>Category: {{ product.category }}</p>
-    <p>Genre: {{ product.genre.join(', ') }}</p>
-    <p>Publisher: {{ product.publisher }}</p>
-    <p>Language: {{ product.language }}</p>
-    <p>Pages: {{ product.pages }}</p>
-    <p>{{ product.description }}</p>
-    <p>Stock: {{ product.stock }}</p>
-    <button type="button" (click)="addToCart(product)">Add to Cart</button>
-    <br><br>
-    <button type="button" (click)="addToWishlist(product)">
-      ♡ Add to Wishlist
-      </button>
-  </div>
-}
+  <img [src]="product.images[0]" [alt]="product.title" width="150">
+
+  <h3>{{ product.title }}</h3>
+
+  <p>{{ product.author }}</p>
+
+  <p>₹{{ product.price }}</p>
+
+  <p>MRP: ₹{{ product.mrp }}</p>
+
+  @if (product.discountPercent) {
+  <p>{{ product.discountPercent }}% off</p>
+  }
+
+  <p>
+    ⭐ {{ product.rating }}
+    ({{ product.reviewCount }} reviews)
+  </p>
+
+  <p>Category: {{ product.category }}</p>
+
+  <p>Genre: {{ product.genre.join(', ') }}</p>
+
+  <p>Publisher: {{ product.publisher }}</p>
+
+  <p>Language: {{ product.language }}</p>
+
+  <p>Pages: {{ product.pages }}</p>
+
+  <p>{{ product.description }}</p>
+
+  <p>Stock: {{ product.stock }}</p>
+
+  <button type="button" (click)="addToCart(product)">
+    Add to Cart
+  </button>
+
+  <button type="button" (click)="addToWishlist(product)">
+    ♡ Add to Wishlist
+  </button>
+
+  <button type="button" (click)="buyNow(product)">
+    Buy Now
+  </button>
+
+</div>
 
 }
 
-<button type="button" (click)="goToCart()">Cart ({{ cartCount$ | async }})</button>
+}
+
 <br><br>
-<a routerLink="/wishlist">Wishlist</a>
+
+<button type="button" (click)="goToCart()">
+  Cart ({{ cartCount$ | async }})
+</button>
+
 <br><br>
-<a routerLink="/order-history">Order History</a>
+
+<a routerLink="/wishlist">
+  Wishlist
+</a>
+
 <br><br>
-<button type="button" (click)="logout()">Logout</button>
+
+<a routerLink="/order-history">
+  Order History
+</a>
+
+<br><br>
+
+<button type="button" (click)="logout()">
+  Logout
+</button>

@@ -68,6 +68,15 @@ export class HomeComponent implements OnInit {
     this.store.dispatch(
       addToWishlist({ product })
     );
+    
   }
+  buyNow(product: Product): void {
+    this.router.navigate(['/checkout'], {
+      state: {
+        buyNowProduct: product
+      }
+    });
+  }
+
 
 }
