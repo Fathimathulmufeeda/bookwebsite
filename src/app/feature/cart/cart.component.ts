@@ -4,7 +4,7 @@ import { selectCartItems, selectCartTotal } from '../../store/cart/cart.selector
 import { CommonModule } from '@angular/common';
 import { decreaseQuantity, increaseQuantity, removeFromCart } from '../../store/cart/cart.action';
 import { Router, RouterLink } from '@angular/router';
-
+import { MAX_BOOK_QUANTITY } from '../../store/cart/cart.constant'; 
 
 @Component({
   selector: 'app-cart',
@@ -14,6 +14,9 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './cart.component.css'
 })
 export class CartComponent {
+  
+  readonly maxBookQuantity = MAX_BOOK_QUANTITY;
+
   private store = inject(Store);
   private router = inject(Router);
   cartItems$ = this.store.select(selectCartItems);

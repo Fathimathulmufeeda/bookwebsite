@@ -1,13 +1,9 @@
 import { createReducer, on } from '@ngrx/store';
 import { CartItem } from '../../core/Models/cart-item.model';
+import { MAX_BOOK_QUANTITY } from './cart.constant';
+import {addToCart,increaseQuantity,decreaseQuantity,removeFromCart,clearCart} from './cart.action';
 
-import {
-  addToCart,
-  increaseQuantity,
-  decreaseQuantity,
-  removeFromCart,
-  clearCart
-} from './cart.action';
+
 
 export interface CartState {
   items: CartItem[];
@@ -18,6 +14,7 @@ const initialState: CartState = {
 };
 
 export const cartReducer = createReducer(
+
   initialState,
 
   // Add product to cart
@@ -27,34 +24,51 @@ export const cartReducer = createReducer(
       cartItem => cartItem.product.id === item.product.id
     );
 
-    // increasing  the quantityof existing product
     if (existingItem) {
+
       return {
         ...state,
+
         items: state.items.map(cartItem =>
           cartItem.product.id === item.product.id
             ? {
                 ...cartItem,
-                quantity: cartItem.quantity + item.quantity
+                quantity: Math.min(
+                  cartItem.quantity + item.quantity,
+                  MAX_BOOK_QUANTITY,
+                  cartItem.product.stock
+                )
               }
             : cartItem
         )
       };
     }
 
-    // adding new product
     return {
       ...state,
-      items: [...state.items, item]
+
+      items: [
+        ...state.items,
+        {
+          ...item,
+          quantity: Math.min(
+            item.quantity,
+            MAX_BOOK_QUANTITY,
+            item.product.stock
+          )
+        }
+      ]
     };
   }),
 
   // Increase quantity
   on(increaseQuantity, (state, { productId }) => ({
+
     ...state,
-  
+
     items: state.items.map(item =>
       item.product.id === productId &&
+      item.quantity < MAX_BOOK_QUANTITY &&
       item.quantity < item.product.stock
         ? {
             ...item,
@@ -66,8 +80,9 @@ export const cartReducer = createReducer(
 
   // Decrease quantity
   on(decreaseQuantity, (state, { productId }) => ({
+
     ...state,
-  
+
     items: state.items
       .map(item =>
         item.product.id === productId
@@ -79,16 +94,20 @@ export const cartReducer = createReducer(
       )
       .filter(item => item.quantity > 0)
   })),
-  //removing product
+
+  // Remove product completely
   on(removeFromCart, (state, { productId }) => ({
+
     ...state,
+
     items: state.items.filter(
       item => item.product.id !== productId
     )
   })),
 
-  //clearing cart
+  // Clear entire cart
   on(clearCart, () => ({
     items: []
   }))
+
 );

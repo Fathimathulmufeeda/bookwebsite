@@ -1,0 +1,1 @@
+export const MAX_BOOK_QUANTITY = 5;

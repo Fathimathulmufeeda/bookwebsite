@@ -21,9 +21,14 @@
 
     <span>{{ item.quantity }}</span>
 
-    <button type="button" (click)="increaseQuantity(item.product.id)">
+    <button type="button" [disabled]="item.quantity >= maxBookQuantity || item.quantity >= item.product.stock"
+        (click)="increaseQuantity(item.product.id)">
         +
     </button>
+    @if (item.quantity >= maxBookQuantity) {
+    <p>Maximum {{ maxBookQuantity }} copies allowed per book.</p>     } 
+    @else if (item.quantity >= item.product.stock) {
+    <p>Only {{ item.product.stock }} copies available.</p>     }
 
     <p>
         Subtotal: ₹{{ item.product.price * item.quantity }}
