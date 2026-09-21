@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { CartItem } from '../../core/Models/cart-item.model';
 import { MAX_BOOK_QUANTITY } from './cart.constant';
-import {addToCart,increaseQuantity,decreaseQuantity,removeFromCart,clearCart} from './cart.action';
+import {addToCart,increaseQuantity,decreaseQuantity,removeFromCart,clearCart, loadCartSuccess} from './cart.action';
 
 
 
@@ -108,6 +108,11 @@ export const cartReducer = createReducer(
   // Clear entire cart
   on(clearCart, () => ({
     items: []
+  })),
+  
+  on(loadCartSuccess, (state, { items }) => ({
+    ...state,
+    items
   }))
 
 );

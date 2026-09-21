@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectCartItems, selectCartTotal } from '../../store/cart/cart.selectors';
 import { CommonModule } from '@angular/common';
-import { decreaseQuantity, increaseQuantity, removeFromCart } from '../../store/cart/cart.action';
+import { decreaseQuantity, increaseQuantity, loadCart, removeFromCart } from '../../store/cart/cart.action';
 import { Router, RouterLink } from '@angular/router';
 import { MAX_BOOK_QUANTITY } from '../../store/cart/cart.constant'; 
 
@@ -14,7 +14,7 @@ import { MAX_BOOK_QUANTITY } from '../../store/cart/cart.constant';
   styleUrl: './cart.component.css'
 })
 export class CartComponent {
-  
+
   readonly maxBookQuantity = MAX_BOOK_QUANTITY;
 
   private store = inject(Store);
@@ -41,5 +41,8 @@ export class CartComponent {
     this.store.dispatch(
       removeFromCart({ productId })
     );
+  }
+  ngOnInit(): void {
+    this.store.dispatch(loadCart());
   }
 }

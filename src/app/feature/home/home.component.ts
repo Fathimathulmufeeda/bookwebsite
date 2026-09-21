@@ -13,8 +13,9 @@ import {
 
 import { Product } from '../../core/Models/Product.model';
 
-import { addToCart } from '../../store/cart/cart.action';
+import { addToCart, loadCart } from '../../store/cart/cart.action';
 import { selectCartCount } from '../../store/cart/cart.selectors';
+import { addToWishlist } from '../../store/wishlist/wishlist.action';
 
 @Component({
   selector: 'app-home',
@@ -36,6 +37,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProducts();
+    this.store.dispatch(loadCart());
   }
 
   loadProducts(): void {
@@ -61,4 +63,11 @@ export class HomeComponent implements OnInit {
   goToCart(): void {
     this.router.navigate(['/cart']);
   }
+
+  addToWishlist(product: Product): void {
+    this.store.dispatch(
+      addToWishlist({ product })
+    );
+  }
+
 }

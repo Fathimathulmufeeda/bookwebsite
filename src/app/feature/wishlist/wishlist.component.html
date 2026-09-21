@@ -1,0 +1,38 @@
+<h2>My Wishlist</h2>
+
+@if (wishlistProducts$ | async; as products) {
+
+@if (products.length > 0) {
+
+@for (product of products; track product.id) {
+
+<div class="wishlist-item">
+
+    <img [src]="product.images[0]" [alt]="product.title" width="150">
+
+    <h3>{{ product.title }}</h3>
+
+    <p>Author: {{ product.author }}</p>
+    <p>Price: ₹{{ product.price }}</p>
+    <p>{{ product.description }}</p>
+    <button type="button" (click)="moveToCart(product)">
+        Move to Cart
+    </button>
+
+    <button type="button" (click)="removeFromWishlist(product.id)">
+        Remove from Wishlist
+    </button>
+
+
+
+</div>
+
+}
+
+} @else {
+
+<p>Your wishlist is empty.</p>
+
+}
+
+}

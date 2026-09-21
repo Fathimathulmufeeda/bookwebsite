@@ -18,6 +18,15 @@ export const removeFromCart = createAction(
     '[Cart] Remove From Cart',
     props<{ productId: number }>()
   );
-  export const clearCart = createAction(
+export const clearCart = createAction(
     '[Cart] Clear Cart'
+  );
+
+  export const loadCart = createAction(
+    '[Cart] Load Cart'
+  );
+  
+  export const loadCartSuccess = createAction(
+    '[Cart] Load Cart Success',
+    props<{ items: CartItem[] }>()
   );

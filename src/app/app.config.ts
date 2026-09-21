@@ -10,6 +10,9 @@ import { ProductsEffects } from './store/product/products.effects';
 import { cartReducer } from './store/cart/cart.reducer';
 import { ordersReducer } from './store/orders/orders.reducer';
 import { OrdersEffect } from './store/orders/orders.effect';
+import { wishlistReducer } from './store/wishlist/wishlist.reducer';
+import { WishlistEffect } from './store/wishlist/wishlist.effect';
+import { CartEffect } from './store/cart/cart.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,7 +26,10 @@ export const appConfig: ApplicationConfig = {
     provideState('products', productsReducer),
     provideState('cart', cartReducer),
     provideState('orders', ordersReducer),
+    provideState('wishlist', wishlistReducer),
     provideEffects(ProductsEffects),
-    provideEffects(OrdersEffect)
+    provideEffects(OrdersEffect),
+    provideEffects(WishlistEffect),
+    provideEffects(CartEffect)
   ]
 };
