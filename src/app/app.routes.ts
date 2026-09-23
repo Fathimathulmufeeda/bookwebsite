@@ -21,6 +21,19 @@ export const routes: Routes = [
         .then(m => m.LoginComponent)
   },
   {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./feature/auth/forgot-password/forgot-password.component')
+        .then(m => m.ForgotPasswordComponent)
+  },
+  {
+    path: 'product/:id',
+    loadComponent: () =>
+      import('./feature/product-details/product-details.component')
+        .then(m => m.ProductDetailsComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'home',
     loadComponent: () =>
       import('./feature/home/home.component')
@@ -60,6 +73,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./feature/wishlist/wishlist.component')
         .then(m => m.WishlistComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'books',
+    loadComponent: () =>
+      import('./feature/books/books.component')
+        .then(m => m.BooksComponent),
     canActivate: [authGuard]
   },
   {

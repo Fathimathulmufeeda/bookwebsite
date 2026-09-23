@@ -1,36 +1,48 @@
-<h2>Order Placed Successfully! ✅</h2>
+<app-header></app-header>
 
-@if (order$ | async; as order) {
+<main class="flex min-h-screen flex-col items-center justify-center bg-[#f8f5ef] px-4 py-16">
 
-<p>Thank you for your purchase.</p>
+  <div class="w-full max-w-md rounded-md border border-[#ebe6dd] bg-white p-8 text-center sm:p-10">
 
-<h3>Order Details</h3>
+    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#193629]/10 text-3xl text-[#193629]">
+      ✓
+    </div>
 
-<p>
-    <strong>Order ID:</strong> {{ order.id }}
-</p>
+    <h1 class="mt-5 font-serif text-2xl font-medium text-[#202a24]">Order placed successfully!</h1>
+    <p class="mt-2 text-sm text-[#777d76]">Thank you for shopping with Nova. Your books are on their way.</p>
 
-<p>
-    <strong>Total:</strong> ₹{{ order.total }}
-</p>
+    @if (order$ | async; as order) {
+    <div class="mt-6 rounded-sm bg-[#f8f5ef] p-4 text-left text-sm">
+      <div class="flex justify-between">
+        <span class="text-[#999]">Order ID</span>
+        <span class="font-semibold text-[#26332b]">#{{ order.id }}</span>
+      </div>
+      <div class="mt-1 flex justify-between">
+        <span class="text-[#999]">Total</span>
+        <span class="font-semibold text-[#193629]">₹{{ order.total }}</span>
+      </div>
+      @if (order.paymentMethod) {
+      <div class="mt-1 flex justify-between">
+        <span class="text-[#999]">Payment</span>
+        <span class="font-semibold text-[#26332b]">{{ order.paymentMethod }}</span>
+      </div>
+      }
+    </div>
+    }
 
-<p>
-    <strong>Status:</strong> {{ order.status }}
-</p>
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+      <a routerLink="/order-history"
+        class="h-11 flex-1 rounded-sm border border-[#193629] text-xs font-bold uppercase tracking-wide leading-[44px] text-[#193629] no-underline hover:bg-[#193629] hover:text-white">
+        View Orders
+      </a>
+      <a routerLink="/home"
+        class="h-11 flex-1 rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-wide leading-[44px] text-white no-underline hover:bg-[#28503b]">
+        Continue Shopping
+      </a>
+    </div>
 
-<h3>Shipping Address</h3>
+  </div>
 
-<p>{{ order.shippingAddress.name }}</p>
-<p>{{ order.shippingAddress.address }}</p>
-<p>{{ order.shippingAddress.city }}</p>
-<p>{{ order.shippingAddress.pincode }}</p>
+</main>
 
-<a routerLink="/home">
-    Continue Shopping
-</a>
-
-} @else {
-
-<p>No order found.</p>
-
-}
+<app-footer></app-footer>

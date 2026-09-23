@@ -1,92 +1,883 @@
-<h2>Books</h2>
+<app-header></app-header>
 
-@if (loading$ | async) {
-<p>Loading books...</p>
-}
+<!-- ========================================================= -->
+<!-- HERO -->
+<!-- ========================================================= -->
 
-@if (error$ | async; as error) {
-<p>{{ error }}</p>
-}
+<section id="home" class="grid min-h-[560px] grid-cols-1 items-center bg-[#f2ecdf] lg:grid-cols-2">
+  <!-- LEFT SIDE -->
+  <div class="px-8 py-16 sm:px-12 lg:px-20">
 
-@if (products$ | async; as products) {
+    <p class="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-[#92764f]">
+      DISCOVER. READ. GROW.
+    </p>
 
-<p>Total books: {{ products.length }}</p>
+    <h1 class="max-w-xl font-serif text-5xl font-medium leading-[1.02] text-[#213027] sm:text-6xl lg:text-7xl">
+      Books for every
+      <br />
+      mind & moment.
+    </h1>
 
-@for (product of products; track product.id) {
+    <p class="mt-6 max-w-lg text-base leading-7 text-[#687169]">
+      Discover stories worth keeping, ideas worth exploring,
+      and books you'll want to read again.
+    </p>
 
-<div class="book-card">
+    <div class="mt-8 flex flex-wrap gap-3">
 
-  <img [src]="product.images[0]" [alt]="product.title" width="150">
+      <a routerLink="/books"
+        class="inline-flex h-12 items-center bg-[#1b392a] px-7 text-xs font-bold uppercase tracking-wide text-white transition hover:bg-[#28503b]">
+        Shop Books →
+      </a>
 
-  <h3>{{ product.title }}</h3>
+      <a href="javascript:void(0)" (click)="scrollToSection($event, 'categories')"
+        class="inline-flex h-12 items-center border border-[#94836d] px-7 text-xs font-bold uppercase tracking-wide text-[#2d392f] transition hover:bg-[#e7dece]">
+        Explore Categories
+      </a>
 
-  <p>{{ product.author }}</p>
+    </div>
 
-  <p>₹{{ product.price }}</p>
+  </div>
 
-  <p>MRP: ₹{{ product.mrp }}</p>
+  <!-- RIGHT SIDE -->
+  @if (products$ | async; as products) {
 
-  @if (product.discountPercent) {
-  <p>{{ product.discountPercent }}% off</p>
+  @if (products.length > 0) {
+
+  <div class="relative flex min-h-[420px] items-center justify-center overflow-hidden">
+
+    <!-- Background circle -->
+    <div class="absolute h-[300px] w-[300px] rounded-full bg-[#d6c29f] opacity-60 sm:h-[380px] sm:w-[380px]"></div>
+
+    <!-- Book -->
+    <img [src]="products[0].images[0]" [alt]="products[0].title"
+      class="relative z-10 h-[330px] w-[230px] rotate-3 object-contain drop-shadow-[20px_25px_20px_rgba(0,0,0,0.22)] sm:h-[390px] sm:w-[280px]" />
+
+    <!-- Badge -->
+    <div
+      class="absolute bottom-[12%] right-[10%] z-20 flex h-24 w-24 items-center justify-center rounded-full bg-[#274936] text-center font-serif text-sm leading-5 text-white shadow-xl">
+      New
+      <br />
+      Arrival
+    </div>
+
+  </div>
+
   }
 
-  <p>
-    ⭐ {{ product.rating }}
-    ({{ product.reviewCount }} reviews)
-  </p>
+  }
 
-  <p>Category: {{ product.category }}</p>
+</section>
 
-  <p>Genre: {{ product.genre.join(', ') }}</p>
 
-  <p>Publisher: {{ product.publisher }}</p>
+<!-- ========================================================= -->
+<!-- FEATURES -->
+<!-- ========================================================= -->
 
-  <p>Language: {{ product.language }}</p>
+<section class="grid grid-cols-1 border-b border-[#e8e1d5] bg-white sm:grid-cols-2 lg:grid-cols-4">
 
-  <p>Pages: {{ product.pages }}</p>
+  <!-- Fast Delivery -->
+  <div class="flex items-center gap-4 border-b border-[#eee9df] px-8 py-6 lg:border-b-0 lg:border-r">
 
-  <p>{{ product.description }}</p>
+    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f2ece1] text-lg">
+      🚚
+    </div>
 
-  <p>Stock: {{ product.stock }}</p>
+    <div>
 
-  <button type="button" (click)="addToCart(product)">
-    Add to Cart
-  </button>
+      <h3 class="text-xs font-bold uppercase tracking-wide text-[#26342b]">
+        Fast Delivery
+      </h3>
 
-  <button type="button" (click)="addToWishlist(product)">
-    ♡ Add to Wishlist
-  </button>
+      <p class="mt-1 text-[11px] text-[#777d76]">
+        Delivered to your door
+      </p>
 
-  <button type="button" (click)="buyNow(product)">
-    Buy Now
-  </button>
+    </div>
 
-</div>
+  </div>
 
-}
 
-}
+  <!-- Easy Returns -->
+  <div class="flex items-center gap-4 border-b border-[#eee9df] px-8 py-6 lg:border-b-0 lg:border-r">
 
-<br><br>
+    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f2ece1] text-lg">
+      ↩
+    </div>
 
-<button type="button" (click)="goToCart()">
-  Cart ({{ cartCount$ | async }})
-</button>
+    <div>
 
-<br><br>
+      <h3 class="text-xs font-bold uppercase tracking-wide text-[#26342b]">
+        Easy Returns
+      </h3>
 
-<a routerLink="/wishlist">
-  Wishlist
-</a>
+      <p class="mt-1 text-[11px] text-[#777d76]">
+        Simple return experience
+      </p>
 
-<br><br>
+    </div>
 
-<a routerLink="/order-history">
-  Order History
-</a>
+  </div>
 
-<br><br>
 
-<button type="button" (click)="logout()">
-  Logout
-</button>
+  <!-- Secure Checkout -->
+  <div class="flex items-center gap-4 border-b border-[#eee9df] px-8 py-6 sm:border-b-0 lg:border-r">
+
+    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f2ece1] text-lg">
+      ✓
+    </div>
+
+    <div>
+
+      <h3 class="text-xs font-bold uppercase tracking-wide text-[#26342b]">
+        Secure Checkout
+      </h3>
+
+      <p class="mt-1 text-[11px] text-[#777d76]">
+        Safe and simple ordering
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- Reader Favorites -->
+  <div class="flex items-center gap-4 px-8 py-6">
+
+    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f2ece1] text-lg">
+      ♡
+    </div>
+
+    <div>
+
+      <h3 class="text-xs font-bold uppercase tracking-wide text-[#26342b]">
+        Reader Favorites
+      </h3>
+
+      <p class="mt-1 text-[11px] text-[#777d76]">
+        Books readers love
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- CATEGORIES -->
+<!-- ========================================================= -->
+
+<section id="categories" class="bg-[#f8f5ef] px-6 py-16 md:px-10 lg:px-[7%] lg:py-20">
+
+  <!-- Heading -->
+  <div class="mb-8 flex items-end justify-between gap-5">
+
+    <div>
+
+      <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#98784d]">
+        BROWSE BY CATEGORY
+      </p>
+
+      <h2 class="font-serif text-3xl font-medium text-[#202a24] md:text-4xl">
+        Find Your Next Read
+      </h2>
+
+    </div>
+
+    <a routerLink="/books"
+      class="hidden text-[10px] font-bold uppercase tracking-wide text-[#28392e] no-underline sm:block">
+      View All Books →
+    </a>
+
+  </div>
+
+
+  <!-- Category Cards -->
+  <div class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+
+    <!-- Fiction -->
+    <a href="javascript:void(0)" (click)="goToBooks('Fiction')"
+      class="group relative flex min-h-[155px] flex-col justify-end overflow-hidden bg-[#d7c9b5] p-5 no-underline transition duration-200 hover:-translate-y-1">
+
+      <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent"></div>
+
+      <div class="relative z-10">
+
+        <div
+          class="mb-6 flex h-9 w-9 items-center justify-center rounded-full border border-white/60 text-sm text-white">
+          📖
+        </div>
+
+        <h3 class="font-serif text-lg text-white">
+          Fiction
+        </h3>
+
+        <p class="mt-1 text-[10px] text-white/80">
+          Explore Stories
+        </p>
+
+      </div>
+
+    </a>
+
+
+    <!-- Non Fiction -->
+    <a href="javascript:void(0)" (click)="goToBooks('Non Fiction')"
+      class="group relative flex min-h-[155px] flex-col justify-end overflow-hidden bg-[#bca98e] p-5 no-underline transition duration-200 hover:-translate-y-1">
+
+      <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent"></div>
+
+      <div class="relative z-10">
+
+        <div
+          class="mb-6 flex h-9 w-9 items-center justify-center rounded-full border border-white/60 text-sm text-white">
+          ✦
+        </div>
+
+        <h3 class="font-serif text-lg text-white">
+          Non-Fiction
+        </h3>
+
+        <p class="mt-1 text-[10px] text-white/80">
+          Expand Knowledge
+        </p>
+
+      </div>
+
+    </a>
+
+
+    <!-- Self Help -->
+    <a href="javascript:void(0)" (click)="goToBooks('Self Help')"
+      class="group relative flex min-h-[155px] flex-col justify-end overflow-hidden bg-[#9ca994] p-5 no-underline transition duration-200 hover:-translate-y-1">
+
+      <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent"></div>
+
+      <div class="relative z-10">
+
+        <div
+          class="mb-6 flex h-9 w-9 items-center justify-center rounded-full border border-white/60 text-sm text-white">
+          🌿
+        </div>
+
+        <h3 class="font-serif text-lg text-white">
+          Self-Help
+        </h3>
+
+        <p class="mt-1 text-[10px] text-white/80">
+          Become Yourself
+        </p>
+
+      </div>
+
+    </a>
+
+
+    <!-- Romance -->
+    <a href="javascript:void(0)" (click)="goToBooks('Romance')"
+      class="group relative flex min-h-[155px] flex-col justify-end overflow-hidden bg-[#b58f88] p-5 no-underline transition duration-200 hover:-translate-y-1">
+
+      <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent"></div>
+
+      <div class="relative z-10">
+
+        <div
+          class="mb-6 flex h-9 w-9 items-center justify-center rounded-full border border-white/60 text-sm text-white">
+          ♡
+        </div>
+
+        <h3 class="font-serif text-lg text-white">
+          Romance
+        </h3>
+
+        <p class="mt-1 text-[10px] text-white/80">
+          Feel the Love
+        </p>
+
+      </div>
+
+    </a>
+
+
+    <!-- Children -->
+    <a href="javascript:void(0)" (click)="goToBooks('Children')"
+      class="group relative flex min-h-[155px] flex-col justify-end overflow-hidden bg-[#c8a96d] p-5 no-underline transition duration-200 hover:-translate-y-1">
+
+      <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent"></div>
+
+      <div class="relative z-10">
+
+        <div
+          class="mb-6 flex h-9 w-9 items-center justify-center rounded-full border border-white/60 text-sm text-white">
+          ✧
+        </div>
+
+        <h3 class="font-serif text-lg text-white">
+          Children
+        </h3>
+
+        <p class="mt-1 text-[10px] text-white/80">
+          Young Minds
+        </p>
+
+      </div>
+
+    </a>
+
+
+    <!-- Classics -->
+    <a href="javascript:void(0)" (click)="goToBooks('Classics')"
+      class="group relative flex min-h-[155px] flex-col justify-end overflow-hidden bg-[#687468] p-5 no-underline transition duration-200 hover:-translate-y-1">
+
+      <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent"></div>
+
+      <div class="relative z-10">
+
+        <div
+          class="mb-6 flex h-9 w-9 items-center justify-center rounded-full border border-white/60 text-sm text-white">
+          ▤
+        </div>
+
+        <h3 class="font-serif text-lg text-white">
+          Classics
+        </h3>
+
+        <p class="mt-1 text-[10px] text-white/80">
+          Timeless Reads
+        </p>
+
+      </div>
+
+    </a>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- BESTSELLERS / BOOKS -->
+<!-- ========================================================= -->
+
+<section id="books" class="bg-white px-6 py-16 md:px-10 lg:px-[7%] lg:py-20">
+
+  <!-- Heading -->
+  <div id="bestsellers" class="mb-8 flex flex-wrap items-end justify-between gap-3">
+
+    <div>
+
+      <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#98784d]">
+        CUSTOMER FAVORITES
+      </p>
+
+      <h2 class="font-serif text-3xl font-medium text-[#202a24] md:text-4xl">
+        Bestselling Books
+      </h2>
+
+      <p class="mt-2 max-w-xl text-sm leading-6 text-[#777d76]">
+        Our highest-rated, most-loved titles — ranked by reader rating and review count.
+      </p>
+
+    </div>
+
+    <a routerLink="/books"
+      class="hidden text-[10px] font-bold uppercase tracking-wide text-[#28392e] no-underline sm:block">
+      View All Books →
+    </a>
+
+  </div>
+
+
+  <!-- Loading -->
+  @if (loading$ | async) {
+
+  <div class="py-16 text-center">
+
+    <div class="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[#d8d0c2] border-t-[#193629]"></div>
+
+    <p class="mt-4 text-sm text-[#777d76]">
+      Loading books...
+    </p>
+
+  </div>
+
+  }
+
+
+  <!-- Error -->
+  @if (error$ | async; as error) {
+
+  <div class="border border-red-200 bg-red-50 p-5 text-center text-sm text-red-700">
+    {{ error }}
+  </div>
+
+  }
+
+
+  <!-- Products -->
+  @if (products$ | async) {
+
+  @if (bestsellingProducts.length > 0) {
+
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
+    @for (product of bestsellingProducts; track product.id) {
+
+    <article (click)="goToProduct(product)"
+      class="group cursor-pointer overflow-hidden border border-[#ebe6dd] bg-[#fffdf9] transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+
+      <!-- IMAGE -->
+      <div class="relative flex h-[320px] items-center justify-center bg-[#f2ede4] p-6">
+
+        <img [src]="product.images[0]" [alt]="product.title"
+          class="h-full w-full object-contain transition duration-300 group-hover:scale-105" />
+
+        <!-- Discount -->
+        @if (hasDiscount(product)) {
+
+        <span class="absolute left-3 top-3 bg-[#193629] px-2.5 py-1 text-[9px] font-bold text-white">
+          {{ product.discountPercent }}% OFF
+        </span>
+
+        }
+
+        @if (product.stock <= 0) { <span
+          class="absolute left-3 bottom-3 bg-[#26332b] px-2.5 py-1 text-[9px] font-bold text-white">
+          Out of Stock
+          </span>
+          }
+
+          <!-- Wishlist -->
+          <button type="button" (click)="toggleWishlist(product, $event)"
+            class="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-sm transition hover:scale-105"
+            [attr.aria-label]="isWishlisted(product) ? 'Remove from wishlist' : 'Add to wishlist'">
+            <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" [attr.fill]="isWishlisted(product) ? '#dc2626' : 'none'"
+              [attr.stroke]="isWishlisted(product) ? '#dc2626' : '#26332b'" stroke-width="1.6">
+              <path
+                d="M20.8 8.8c0-3-2.2-5.3-5.1-5.3-1.7 0-3 .8-3.7 2-0.7-1.2-2-2-3.7-2-2.9 0-5.1 2.3-5.1 5.3 0 5.3 8.8 10.1 8.8 10.1s8.8-4.8 8.8-10.1Z" />
+            </svg>
+          </button>
+
+      </div>
+
+
+      <!-- DETAILS -->
+      <div class="p-5">
+
+        <p class="mb-2 text-[9px] font-semibold uppercase tracking-[0.15em] text-[#98784d]">
+          {{ product.category }}
+        </p>
+
+        <h3 class="line-clamp-2 min-h-[44px] font-serif text-lg font-medium leading-6 text-[#26332b]">
+          {{ product.title }}
+        </h3>
+
+        <p class="mt-1 text-[11px] text-[#777d76]">
+          {{ product.author }}
+        </p>
+
+
+        <!-- Rating -->
+        <div class="mt-3 flex items-center gap-2">
+
+          <span class="text-xs text-[#a17b42]">
+            ★
+          </span>
+
+          <span class="text-[10px] text-[#555d57]">
+            {{ product.rating }}
+          </span>
+
+          <span class="text-[10px] text-[#999]">
+            ({{ product.reviewCount }})
+          </span>
+
+        </div>
+
+
+        <!-- Price -->
+        <div class="mt-4 flex items-center gap-2">
+
+          @if (hasValidPrice(product)) {
+          <span class="text-lg font-bold text-[#213027]">
+            ₹{{ product.price }}
+          </span>
+          } @else {
+          <span class="text-xs italic text-[#999]">Price unavailable</span>
+          }
+
+          @if (hasDiscount(product)) {
+
+          <span class="text-xs text-[#999] line-through">
+            ₹{{ product.mrp }}
+          </span>
+
+          }
+
+        </div>
+
+
+        <!-- Actions -->
+        <div class="mt-4 grid grid-cols-2 gap-2">
+
+          <button type="button" (click)="addToCart(product, $event)"
+            [disabled]="product.stock <= 0 || isInCart(product) || !hasValidPrice(product)"
+            class="h-10 bg-[#e9e0d1] text-[9px] font-bold uppercase tracking-wide text-[#29372e] transition hover:bg-[#dcd0bd] disabled:cursor-not-allowed disabled:opacity-50">
+            {{ isInCart(product) ? 'In Cart' : 'Add to Cart' }}
+          </button>
+
+          <button type="button" (click)="buyNow(product, $event)"
+            [disabled]="product.stock <= 0 || !hasValidPrice(product)"
+            class="h-10 bg-[#193629] text-[9px] font-bold uppercase tracking-wide text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-50">
+            Buy Now
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+    }
+
+  </div>
+
+  } @else {
+
+  <div class="py-12 text-center text-sm text-[#777d76]">
+    <p>No bestsellers to show yet.</p>
+  </div>
+
+  }
+
+  }
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- NEW ARRIVALS -->
+<!-- ========================================================= -->
+
+<section id="new-arrivals" class="bg-[#f8f5ef] px-6 py-16 md:px-10 lg:px-[7%] lg:py-20">
+
+  <!-- Heading -->
+  <div class="mb-8 flex items-end justify-between">
+
+    <div>
+
+      <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-[#98784d]">
+        JUST IN
+      </p>
+
+      <h2 class="font-serif text-3xl font-medium text-[#202a24] md:text-4xl">
+        New Arrivals
+      </h2>
+
+      <p class="mt-2 max-w-xl text-sm leading-6 text-[#777d76]">
+        Fresh stories and new ideas, waiting to become your next favorite read.
+      </p>
+
+    </div>
+
+    <a routerLink="/books"
+      class="hidden text-[10px] font-bold uppercase tracking-[0.15em] text-[#193629] transition hover:text-[#98784d] sm:block">
+      View All →
+    </a>
+
+  </div>
+
+
+  <!-- Products -->
+  @if (products$ | async; as products) {
+
+  @if (products.length > 0) {
+
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
+    @for (product of products.slice(0, 4); track product.id) {
+
+    <article (click)="goToProduct(product)"
+      class="group cursor-pointer overflow-hidden border border-[#ebe6dd] bg-[#fffdf9] transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+
+      <!-- Image -->
+      <div class="relative flex h-[300px] items-center justify-center bg-[#eee8dc] p-6">
+
+        <img [src]="product.images[0]" [alt]="product.title"
+          class="h-full w-full object-contain transition duration-300 group-hover:scale-105" />
+
+        <!-- New Badge -->
+        <span
+          class="absolute left-3 top-3 bg-[#98784d] px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide text-white">
+          New
+        </span>
+
+        @if (product.stock <= 0) { <span
+          class="absolute left-3 bottom-3 bg-[#26332b] px-2.5 py-1 text-[9px] font-bold text-white">
+          Out of Stock
+          </span>
+          }
+
+          <!-- Wishlist -->
+          <button type="button" (click)="toggleWishlist(product, $event)"
+            class="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-sm transition hover:scale-105"
+            [attr.aria-label]="isWishlisted(product) ? 'Remove from wishlist' : 'Add to wishlist'">
+            <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" [attr.fill]="isWishlisted(product) ? '#dc2626' : 'none'"
+              [attr.stroke]="isWishlisted(product) ? '#dc2626' : '#26332b'" stroke-width="1.6">
+              <path
+                d="M20.8 8.8c0-3-2.2-5.3-5.1-5.3-1.7 0-3 .8-3.7 2-0.7-1.2-2-2-3.7-2-2.9 0-5.1 2.3-5.1 5.3 0 5.3 8.8 10.1 8.8 10.1s8.8-4.8 8.8-10.1Z" />
+            </svg>
+          </button>
+
+      </div>
+
+
+      <!-- Details -->
+      <div class="p-5">
+
+        <p class="mb-2 text-[9px] font-semibold uppercase tracking-[0.15em] text-[#98784d]">
+          {{ product.category }}
+        </p>
+
+        <h3 class="line-clamp-2 min-h-[44px] font-serif text-lg font-medium leading-6 text-[#26332b]">
+          {{ product.title }}
+        </h3>
+
+        <p class="mt-1 text-[11px] text-[#777d76]">
+          {{ product.author }}
+        </p>
+
+
+        <!-- Rating -->
+        <div class="mt-3 flex items-center gap-2">
+
+          <span class="text-xs text-[#a17b42]">
+            ★
+          </span>
+
+          <span class="text-[10px] text-[#555d57]">
+            {{ product.rating }}
+          </span>
+
+          <span class="text-[10px] text-[#999]">
+            ({{ product.reviewCount }})
+          </span>
+
+        </div>
+
+
+        <!-- Price -->
+        <div class="mt-4 flex items-center gap-2">
+
+          @if (hasValidPrice(product)) {
+          <span class="text-lg font-bold text-[#213027]">
+            ₹{{ product.price }}
+          </span>
+          } @else {
+          <span class="text-xs italic text-[#999]">Price unavailable</span>
+          }
+
+          @if (hasDiscount(product)) {
+
+          <span class="text-xs text-[#999] line-through">
+            ₹{{ product.mrp }}
+          </span>
+
+          }
+
+        </div>
+
+
+        <!-- Actions -->
+        <div class="mt-4 grid grid-cols-2 gap-2">
+
+          <button type="button" (click)="addToCart(product, $event)"
+            [disabled]="product.stock <= 0 || isInCart(product) || !hasValidPrice(product)"
+            class="h-10 bg-[#e9e0d1] text-[9px] font-bold uppercase tracking-wide text-[#29372e] transition hover:bg-[#dcd0bd] disabled:cursor-not-allowed disabled:opacity-50">
+            {{ isInCart(product) ? 'In Cart' : 'Add to Cart' }}
+          </button>
+
+          <button type="button" (click)="buyNow(product, $event)"
+            [disabled]="product.stock <= 0 || !hasValidPrice(product)"
+            class="h-10 bg-[#193629] text-[9px] font-bold uppercase tracking-wide text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-50">
+            Buy Now
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+
+    }
+
+  </div>
+
+  } @else {
+
+  <div class="py-12 text-center text-sm text-[#777d76]">
+    No new arrivals available.
+  </div>
+
+  }
+
+  }
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- ABOUT NOVA -->
+<!-- ========================================================= -->
+
+<section class="bg-[#193629] px-6 py-16 text-white md:px-10 lg:px-[7%] lg:py-24">
+
+  <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
+
+    <!-- LEFT CONTENT -->
+    <div>
+
+      <p class="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-[#d2b783]">
+        ABOUT NOVA
+      </p>
+
+      <h2 class="max-w-xl font-serif text-4xl font-medium leading-tight md:text-5xl">
+        A little more than
+        <br />
+        just a bookshop.
+      </h2>
+
+      <p class="mt-6 max-w-xl text-sm leading-7 text-[#d6ddd7]">
+        At Nova, we believe the right book can change the way you
+        see the world. Our shelves bring together timeless classics,
+        fresh voices, thoughtful ideas, and stories for every kind
+        of reader.
+      </p>
+
+      <p class="mt-4 max-w-xl text-sm leading-7 text-[#b9c4bc]">
+        Whether you're looking for your next great story or a quiet
+        book for a slow evening, Nova is here to help you find it.
+      </p>
+
+      <a routerLink="/books"
+        class="mt-8 inline-flex h-11 items-center border border-[#d2b783] px-6 text-[10px] font-bold uppercase tracking-[0.15em] text-[#f5ead7] transition hover:bg-[#d2b783] hover:text-[#193629]">
+        Explore Our Books →
+      </a>
+
+    </div>
+
+
+    <!-- RIGHT STATS -->
+    <div class="grid grid-cols-2 gap-px bg-[#52675a]">
+
+      <div class="flex min-h-[170px] flex-col justify-center bg-[#193629] p-8">
+
+        <span class="font-serif text-4xl text-[#d2b783]">
+          10K+
+        </span>
+
+        <p class="mt-3 text-[10px] font-bold uppercase tracking-[0.15em] text-[#d6ddd7]">
+          Happy Readers
+        </p>
+
+      </div>
+
+
+      <div class="flex min-h-[170px] flex-col justify-center bg-[#193629] p-8">
+
+        <span class="font-serif text-4xl text-[#d2b783]">
+          5K+
+        </span>
+
+        <p class="mt-3 text-[10px] font-bold uppercase tracking-[0.15em] text-[#d6ddd7]">
+          Books
+        </p>
+
+      </div>
+
+
+      <div class="flex min-h-[170px] flex-col justify-center bg-[#193629] p-8">
+
+        <span class="font-serif text-4xl text-[#d2b783]">
+          25+
+        </span>
+
+        <p class="mt-3 text-[10px] font-bold uppercase tracking-[0.15em] text-[#d6ddd7]">
+          Categories
+        </p>
+
+      </div>
+
+
+      <div class="flex min-h-[170px] flex-col justify-center bg-[#193629] p-8">
+
+        <span class="font-serif text-4xl text-[#d2b783]">
+          4.8★
+        </span>
+
+        <p class="mt-3 text-[10px] font-bold uppercase tracking-[0.15em] text-[#d6ddd7]">
+          Reader Rating
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- NEWSLETTER -->
+<!-- ========================================================= -->
+
+<section class="bg-[#f2ecdf] px-6 py-16 md:px-10 lg:px-[7%] lg:py-20">
+
+  <div class="mx-auto max-w-4xl text-center">
+
+    <p class="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-[#98784d]">
+      STAY IN THE LOOP
+    </p>
+
+    <h2 class="font-serif text-3xl font-medium text-[#202a24] md:text-4xl">
+      Stories, recommendations & more.
+    </h2>
+
+    <p class="mx-auto mt-4 max-w-xl text-sm leading-6 text-[#777d76]">
+      Subscribe to the Nova newsletter and discover new arrivals,
+      reading recommendations, special offers, and stories from
+      the world of books.
+    </p>
+
+
+    <!-- Newsletter Form -->
+    <form class="mx-auto mt-8 flex max-w-xl flex-col gap-3 sm:flex-row">
+
+      <input type="email" placeholder="Enter your email address"
+        class="h-12 flex-1 border border-[#d8d0c2] bg-white px-4 text-sm text-[#26332b] outline-none placeholder:text-[#999] focus:border-[#193629]" />
+
+      <button type="submit"
+        class="h-12 bg-[#193629] px-7 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#28503b]">
+        Subscribe
+      </button>
+
+    </form>
+
+    <p class="mt-4 text-[10px] text-[#999]">
+      No spam. Just good books and occasional updates.
+    </p>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- FOOTER -->
+<!-- ========================================================= -->
+
+<app-footer></app-footer>

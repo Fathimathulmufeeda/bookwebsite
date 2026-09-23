@@ -1,187 +1,278 @@
-<h2>Checkout</h2>
+<app-header></app-header>
 
-<h3>Order Summary</h3>
+<main class="min-h-screen bg-[#f8f5ef] px-4 py-8 sm:px-6 lg:px-10">
 
-@if (buyNowProduct) {
+  <div class="mx-auto max-w-6xl">
 
-<div>
-    <p>{{ buyNowProduct.title }}</p>
+    <h1 class="font-serif text-2xl font-medium text-[#202a24] sm:text-3xl">Checkout</h1>
 
-   
-    <p>Price: ₹{{ buyNowProduct.price }}</p>
+    <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
 
-    <p>Quantity: 1</p>
+      <!-- LEFT: Address + Payment -->
+      <div class="space-y-6 lg:col-span-2">
 
-    <p>
-        Subtotal: ₹{{ buyNowProduct.price }}
-    </p>
-   
+        <!-- ADDRESS BOOK -->
+        <div class="rounded-md border border-[#ebe6dd] bg-white p-5 sm:p-6">
 
-</div>
+          <div class="flex items-center justify-between">
+            <h2 class="font-serif text-lg font-medium text-[#202a24]">Delivery Address</h2>
 
-<p>
-    <strong>Total: ₹{{ buyNowProduct.price }}</strong>
-</p>
+            @if (!showAddressForm) {
+            <button type="button" (click)="openAddForm()"
+              class="text-xs font-bold uppercase tracking-wide text-[#193629] hover:underline">
+              + Add New
+            </button>
+            }
+          </div>
 
-} @else {
+          <!-- Saved addresses -->
+          @if (addresses.length > 0 && !showAddressForm) {
+          <div class="mt-4 space-y-3">
 
-@if (cartItems$ | async; as items) {
+            @for (addr of addresses; track addr.id) {
+            <label (click)="selectAddress(addr.id)"
+              class="flex cursor-pointer items-start gap-3 rounded-sm border p-4 transition"
+              [ngClass]="selectedAddressId === addr.id ? 'border-[#193629] bg-[#f5f2ea]' : 'border-[#e5e0d5]'">
 
+              <input type="radio" name="address" class="mt-1 accent-[#193629]" [checked]="selectedAddressId === addr.id" />
 
-@if (items.length > 0) {
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <p class="text-sm font-semibold text-[#26332b]">{{ addr.name }}</p>
+                  @if (addr.isDefault) {
+                  <span class="rounded-full bg-[#193629]/10 px-2 py-0.5 text-[9px] font-bold uppercase text-[#193629]">Default</span>
+                  }
+                </div>
+                <p class="mt-1 text-xs leading-5 text-[#5c645d]">
+                  {{ addr.address }}, {{ addr.city }}@if (addr.state) {, {{ addr.state }}} - {{ addr.pincode }}
+                </p>
+                <p class="mt-0.5 text-xs text-[#999]">Phone: {{ addr.phone }}</p>
+              </div>
 
-@for (item of items; track item.product.id) {
+              <div class="flex shrink-0 flex-col items-end gap-2 text-[11px] font-bold uppercase tracking-wide">
+                <button type="button" (click)="openEditForm(addr); $event.stopPropagation()" class="text-[#193629] hover:underline">
+                  Edit
+                </button>
+                <button type="button" (click)="deleteAddress(addr, $event)" class="text-red-600 hover:underline">
+                  Delete
+                </button>
+              </div>
 
-<div>
-    <p>{{ item.product.title }}</p>
+            </label>
+            }
 
-    <p>Price: ₹{{ item.product.price }}</p>
+          </div>
+          }
 
-    <p>Quantity: {{ item.quantity }}</p>
+          @if (addresses.length === 0 && !showAddressForm) {
+          <p class="mt-4 text-sm text-[#999]">No saved addresses yet. Add one to continue.</p>
+          }
 
-    <p>
-        Subtotal:
-        ₹{{ item.product.price * item.quantity }}
-    </p>
-</div>
+          <!-- Address form -->
+          @if (showAddressForm) {
 
-}
+          <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="mt-5 space-y-4" novalidate>
 
-<p>
-    <strong>
-        Total: ₹{{ cartTotal$ | async }}
-    </strong>
-</p>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
-} @else {
+              <div>
+                <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">Full Name</label>
+                <input type="text" formControlName="name" placeholder="Jane Doe"
+                  class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm outline-none focus:border-[#193629]"
+                  [ngClass]="(addressForm.controls.name.touched && addressForm.controls.name.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+                @if (addressForm.controls.name.touched && addressForm.controls.name.invalid) {
+                <p class="mt-1 text-xs text-red-600">Enter a valid full name (2-50 letters).</p>
+                }
+              </div>
 
-<p>Your cart is empty.</p>
+              <div>
+                <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">Phone Number</label>
+                <input type="tel" formControlName="phone" placeholder="9876543210" maxlength="10"
+                  class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm outline-none focus:border-[#193629]"
+                  [ngClass]="(addressForm.controls.phone.touched && addressForm.controls.phone.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+                @if (addressForm.controls.phone.touched && addressForm.controls.phone.invalid) {
+                <p class="mt-1 text-xs text-red-600">Enter a valid 10-digit mobile number.</p>
+                }
+              </div>
 
-}
+            </div>
 
+            <div>
+              <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">Address</label>
+              <textarea formControlName="address" rows="2" placeholder="House no., street, locality"
+                class="w-full resize-none rounded-sm border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-[#193629]"
+                [ngClass]="(addressForm.controls.address.touched && addressForm.controls.address.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'"></textarea>
+              @if (addressForm.controls.address.touched && addressForm.controls.address.invalid) {
+              <p class="mt-1 text-xs text-red-600">Enter a complete address (at least 10 characters).</p>
+              }
+            </div>
 
-}
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
 
-}
+              <div>
+                <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">City</label>
+                <input type="text" formControlName="city" placeholder="Mumbai"
+                  class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm outline-none focus:border-[#193629]"
+                  [ngClass]="(addressForm.controls.city.touched && addressForm.controls.city.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+                @if (addressForm.controls.city.touched && addressForm.controls.city.invalid) {
+                <p class="mt-1 text-xs text-red-600">Enter a valid city.</p>
+                }
+              </div>
 
-<form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+              <div>
+                <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">State (optional)</label>
+                <input type="text" formControlName="state" placeholder="Maharashtra"
+                  class="h-11 w-full rounded-sm border border-[#d8d0c2] bg-white px-3.5 text-sm outline-none focus:border-[#193629]" />
+              </div>
 
-    <!-- Name -->
+              <div>
+                <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">Pincode</label>
+                <input type="text" formControlName="pincode" placeholder="400001" maxlength="6"
+                  class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm outline-none focus:border-[#193629]"
+                  [ngClass]="(addressForm.controls.pincode.touched && addressForm.controls.pincode.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+                @if (addressForm.controls.pincode.touched && addressForm.controls.pincode.invalid) {
+                <p class="mt-1 text-xs text-red-600">Enter a valid 6-digit pincode.</p>
+                }
+              </div>
 
-    <div>
+            </div>
 
+            <div class="flex gap-3 pt-1">
+              <button type="submit" [disabled]="addressForm.invalid"
+                class="h-11 flex-1 rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-wide text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-40">
+                {{ editingAddressId ? 'Update Address' : 'Save Address' }}
+              </button>
+
+              @if (addresses.length > 0) {
+              <button type="button" (click)="cancelAddressForm()"
+                class="h-11 rounded-sm border border-[#d8d0c2] px-5 text-xs font-bold uppercase tracking-wide text-[#3a3f3b] hover:bg-[#f2ece1]">
+                Cancel
+              </button>
+              }
+            </div>
+
+          </form>
+
+          }
+
+        </div>
+
+        <!-- PAYMENT METHOD -->
+        <div class="rounded-md border border-[#ebe6dd] bg-white p-5 sm:p-6">
+
+          <h2 class="font-serif text-lg font-medium text-[#202a24]">Payment Method</h2>
+
+          <div class="mt-4 space-y-3">
+
+            <label class="flex cursor-pointer items-center gap-3 rounded-sm border p-4"
+              [ngClass]="paymentMethod === 'COD' ? 'border-[#193629] bg-[#f5f2ea]' : 'border-[#e5e0d5]'">
+              <input type="radio" name="payment" class="accent-[#193629]" [checked]="paymentMethod === 'COD'"
+                (change)="paymentMethod = 'COD'" />
+              <div>
+                <p class="text-sm font-semibold text-[#26332b]">Cash on Delivery</p>
+                <p class="text-xs text-[#999]">Pay when your order arrives</p>
+              </div>
+            </label>
+
+            <label class="flex cursor-pointer items-center gap-3 rounded-sm border p-4"
+              [ngClass]="paymentMethod === 'Card' ? 'border-[#193629] bg-[#f5f2ea]' : 'border-[#e5e0d5]'">
+              <input type="radio" name="payment" class="accent-[#193629]" [checked]="paymentMethod === 'Card'"
+                (change)="paymentMethod = 'Card'" />
+              <div>
+                <p class="text-sm font-semibold text-[#26332b]">Credit / Debit Card</p>
+                <p class="text-xs text-[#999]">Visa, Mastercard, RuPay</p>
+              </div>
+            </label>
+
+            <label class="flex cursor-pointer items-center gap-3 rounded-sm border p-4"
+              [ngClass]="paymentMethod === 'UPI' ? 'border-[#193629] bg-[#f5f2ea]' : 'border-[#e5e0d5]'">
+              <input type="radio" name="payment" class="accent-[#193629]" [checked]="paymentMethod === 'UPI'"
+                (change)="paymentMethod = 'UPI'" />
+              <div>
+                <p class="text-sm font-semibold text-[#26332b]">UPI</p>
+                <p class="text-xs text-[#999]">Pay via any UPI app</p>
+              </div>
+            </label>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Order Summary -->
+      <div class="h-fit rounded-md border border-[#ebe6dd] bg-white p-6">
+
+        <h2 class="font-serif text-lg font-medium text-[#202a24]">Order Summary</h2>
+
+        @if (buyNowProduct) {
+
+        <div class="mt-4 flex items-center gap-3">
+          <img [src]="buyNowProduct.images?.[0]" [alt]="buyNowProduct.title" class="h-16 w-12 rounded-sm object-cover" />
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm font-medium text-[#26332b]">{{ buyNowProduct.title }}</p>
+            <p class="text-xs text-[#999]">Qty 1</p>
+          </div>
+          <p class="text-sm font-semibold text-[#213027]">₹{{ buyNowProduct.price }}</p>
+        </div>
+
+        <div class="mt-4 flex justify-between border-t border-[#f0ece3] pt-4">
+          <span class="font-semibold text-[#26332b]">Total</span>
+          <span class="font-serif text-xl font-medium text-[#193629]">₹{{ buyNowProduct.price }}</span>
+        </div>
+
+        }  @else {
         
-        <label>Name</label>
-
-        <input type="text" formControlName="name" placeholder="Enter your name">
-
-        @if (
-        checkoutForm.controls.name.touched &&
-        checkoutForm.controls.name.invalid
-        ) {
-
-        @if (checkoutForm.controls.name.hasError('required')) {
-        <p>Name is required.</p>
-        }
-
-        @if (checkoutForm.controls.name.hasError('minlength')) {
-        <p>Name must be at least 3 characters.</p>
-        }
-
-        @if (checkoutForm.controls.name.hasError('pattern')) {
-        <p>Name can contain only letters and spaces.</p>
-        }
-
-    }
+        @if (cartItems$ | async; as items) {
         
+        <div class="mt-4 max-h-56 space-y-3 overflow-y-auto pr-1">
+          @for (item of items; track item.product.id) {
+          <div class="flex items-center gap-3">
+            <img [src]="item.product.images[0]" [alt]="item.product.title" class="h-14 w-11 rounded-sm object-cover" />
+        
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-xs font-medium text-[#26332b]">
+                {{ item.product.title }}
+              </p>
+        
+              <p class="text-[11px] text-[#999]">
+                Qty {{ item.quantity }}
+              </p>
+            </div>
+        
+            <p class="text-xs font-semibold text-[#213027]">
+              ₹{{ item.product.price * item.quantity }}
+            </p>
+          </div>
+          }
+        </div>
+        
+        <div class="mt-4 flex justify-between border-t border-[#f0ece3] pt-4">
+          <span class="font-semibold text-[#26332b]">Total</span>
+        
+          <span class="font-serif text-xl font-medium text-[#193629]">
+            ₹{{ cartTotal$ | async }}
+          </span>
+        </div>
+        
+        }      
+       }
+
+        <button type="button" (click)="placeOrder()" [disabled]="!canPlaceOrder"
+          class="mt-5 h-12 w-full rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-40">
+          {{ submitting ? 'Placing Order...' : 'Place Order' }}
+        </button>
+
+        @if (!selectedAddress) {
+        <p class="mt-2 text-center text-[11px] text-[#a17b19]">Select or add a delivery address to continue.</p>
+        }
+
+      </div>
 
     </div>
 
-    <!-- Address -->
+  </div>
 
-    <div>
+</main>
 
-        
-        <label>Address</label>
-
-        <textarea formControlName="address" placeholder="Enter your delivery address">
-</textarea>
-
-        @if (
-        checkoutForm.controls.address.touched &&
-        checkoutForm.controls.address.invalid
-        ) {
-
-        @if (checkoutForm.controls.address.hasError('required')) {
-        <p>Address is required.</p>
-        }
-
-        @if (checkoutForm.controls.address.hasError('minlength')) {
-        <p>Address must be at least 10 characters.</p>
-        }
-
-        }
-        
-
-    </div>
-
-    <!-- City -->
-
-    <div>
-
-        
-        <label>City</label>
-
-        <input type="text" formControlName="city" placeholder="Enter your city">
-
-        @if (
-        checkoutForm.controls.city.touched &&
-        checkoutForm.controls.city.invalid
-        ) {
-
-        @if (checkoutForm.controls.city.hasError('required')) {
-        <p>City is required.</p>
-        }
-
-        @if (checkoutForm.controls.city.hasError('pattern')) {
-        <p>City can contain only letters and spaces.</p>
-        }
-
-        }
-        
-
-    </div>
-
-    <!-- Pincode -->
-
-    <div>
-
-        
-        <label>Pincode</label>
-
-        <input type="text" formControlName="pincode" placeholder="Enter 6-digit pincode" maxlength="6">
-
-        @if (
-        checkoutForm.controls.pincode.touched &&
-        checkoutForm.controls.pincode.invalid
-        ) {
-
-        @if (checkoutForm.controls.pincode.hasError('required')) {
-        <p>Pincode is required.</p>
-        }
-
-        @if (checkoutForm.controls.pincode.hasError('pattern')) {
-        <p>Pincode must contain exactly 6 digits.</p>
-        }
-
-        }
-        
-
-    </div>
-
-    <!-- Submit -->
-
-    <button type="submit" [disabled]="checkoutForm.invalid">
-        Place Order </button>
-
-</form>
+<app-footer></app-footer>

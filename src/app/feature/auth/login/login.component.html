@@ -1,48 +1,111 @@
-<h2>Login page</h2>
-<form [formGroup]="loginForm" (ngSubmit)="login()">
+<div class="flex min-h-screen items-center justify-center bg-[#f8f5ef] px-4 py-10">
 
-    <label>Email</label>
-    <input type="email" formControlName="email">
+  <div class="w-full max-w-md rounded-md border border-[#ebe6dd] bg-white p-8 shadow-sm sm:p-10">
 
-    @if (loginForm.controls['email'].touched &&
-    loginForm.controls['email'].invalid) {
+    <!-- Brand -->
+    <a routerLink="/login" class="mb-8 flex items-center justify-center gap-2 text-[#26332b] no-underline">
+      <svg class="h-8 w-6 text-[#867354]" viewBox="0 0 32 40" fill="none">
+        <path d="M4 6h9c4 0 7 2 7 5v25c-2-2-4-3-7-3H4V6Z" stroke="currentColor" stroke-width="1.3" />
+        <path d="M28 6h-9c-4 0-7 2-7 5v25c2-2 4-3 7-3h9V6Z" stroke="currentColor" stroke-width="1.3" />
+        <path d="M16 8v25" stroke="currentColor" stroke-width="1.3" />
+      </svg>
+      <div>
+        <h1 class="font-serif text-lg font-medium tracking-[0.18em]">NOVA</h1>
+        <p class="mt-0.5 text-[7px] tracking-[0.32em]">BOOKSHOP</p>
+      </div>
+    </a>
 
-    @if (loginForm.controls['email'].hasError('required')) {
-    <small>Email is required.</small>
-    }
-
-    @if (loginForm.controls['email'].hasError('email')) {
-    <small>Enter a valid email address.</small>
-    }
-    }
-
-    <br><br>
-
-    <label>Password</label>
-    <input type="password" formControlName="password">
-
-    @if (loginForm.controls['password'].touched &&
-    loginForm.controls['password'].invalid) {
-
-    @if (loginForm.controls['password'].hasError('required')) {
-    <small>Password is required.</small>
-    }
-    }
-
-    <br><br>
-
-    <button type="submit" [disabled]="loginForm.invalid">
-        Sign In
-    </button>
-    <p>
-        Don't have an account?
-        <a routerLink="/register">Register</a> 
+    <h2 class="text-center font-serif text-2xl font-medium text-[#202a24]">
+      Welcome back
+    </h2>
+    <p class="mt-2 text-center text-sm text-[#777d76]">
+      Sign in to continue to your account.
     </p>
 
-    @if (error) {
-    <p>{{ error }}</p>     }
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="mt-8 space-y-5" novalidate>
 
-    
+      <!-- Email -->
+      <div>
+        <label for="email" class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
+          Email Address
+        </label>
+        <input id="email" type="email" formControlName="email" placeholder="you@example.com" autocomplete="email"
+          class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]"
+          [ngClass]="(loginForm.controls.email.touched && loginForm.controls.email.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
 
+        @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+        <div class="mt-1.5 space-y-0.5">
+          @if (loginForm.controls.email.hasError('required')) {
+          <p class="text-xs text-red-600">Email is required.</p>
+          }
+          @if (loginForm.controls.email.hasError('email')) {
+          <p class="text-xs text-red-600">Enter a valid email address.</p>
+          }
+        </div>
+        }
+      </div>
 
-</form>
+      <!-- Password -->
+      <div>
+        <div class="mb-1.5 flex items-center justify-between">
+          <label for="password" class="block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
+            Password
+          </label>
+          <a routerLink="/forgot-password" class="text-[11px] font-semibold text-[#193629] hover:underline">
+            Forgot password?
+          </a>
+        </div>
+
+        <div class="relative">
+          <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+            placeholder="Enter your password" autocomplete="current-password"
+            class="h-11 w-full rounded-sm border bg-white px-3.5 pr-11 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]"
+            [ngClass]="(loginForm.controls.password.touched && loginForm.controls.password.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+
+          <button type="button" (click)="togglePasswordVisibility()"
+            class="absolute right-0 top-0 flex h-11 w-11 items-center justify-center text-[#777d76] hover:text-[#193629]"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+            @if (showPassword) {
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M3 3l18 18" />
+              <path d="M10.6 5.1A10.7 10.7 0 0 1 12 5c6 0 9.5 6 9.9 7a17 17 0 0 1-3.2 4.1M6.2 6.2C3.6 7.9 2 10.6 2.1 12c.3.9 3 6 9.9 7 1.2 0 2.3-.2 3.3-.6" />
+              <path d="M9.9 10a3 3 0 0 0 4.2 4.2" />
+            </svg>
+            } @else {
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M2.1 12S5.6 5 12 5s9.9 7 9.9 7-3.5 7-9.9 7-9.9-7-9.9-7Z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            }
+          </button>
+        </div>
+
+        @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+        @if (loginForm.controls.password.hasError('required')) {
+        <p class="mt-1.5 text-xs text-red-600">Password is required.</p>
+        }
+        }
+      </div>
+
+      <!-- Sign in error -->
+      @if (error) {
+      <div class="rounded-sm border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs leading-5 text-red-700">
+        {{ error }}
+      </div>
+      }
+
+      <button type="submit" [disabled]="loginForm.invalid || submitting"
+        class="h-12 w-full rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-40">
+        {{ submitting ? 'Signing in...' : 'Sign In' }}
+      </button>
+
+    </form>
+
+    <p class="mt-6 text-center text-sm text-[#777d76]">
+      Don't have an account?
+      <a routerLink="/register" class="font-semibold text-[#193629] hover:underline">Register</a>
+    </p>
+
+  </div>
+
+</div>

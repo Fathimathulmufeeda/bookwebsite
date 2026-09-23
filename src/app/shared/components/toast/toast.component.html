@@ -1,0 +1,39 @@
+<div class="pointer-events-none fixed inset-x-0 bottom-4 z-[100] flex flex-col items-center gap-2 px-4 sm:bottom-6 sm:items-end sm:px-6">
+
+  @for (toast of toastService.toasts(); track toast.id) {
+
+  <div
+    class="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-md border bg-white px-4 py-3 shadow-lg transition-all animate-[fadeIn_0.2s_ease-out]"
+    [class.border-l-4]="true"
+    [ngClass]="{
+      'border-[#e5e0d5] border-l-[#193629]': toast.type === 'success',
+      'border-[#f3d9d9] border-l-red-600': toast.type === 'error',
+      'border-[#f2e6c9] border-l-[#a17b19]': toast.type === 'warning',
+      'border-[#dde3f0] border-l-[#2a4d8f]': toast.type === 'info'
+    }">
+
+    <span
+      class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white"
+      [ngClass]="{
+        'bg-[#193629]': toast.type === 'success',
+        'bg-red-600': toast.type === 'error',
+        'bg-[#a17b19]': toast.type === 'warning',
+        'bg-[#2a4d8f]': toast.type === 'info'
+      }">
+      {{ iconFor(toast.type) }}
+    </span>
+
+    <p class="flex-1 text-[13px] leading-5 text-[#26332b]">
+      {{ toast.message }}
+    </p>
+
+    <button type="button" (click)="dismiss(toast.id)" class="shrink-0 text-[#999] transition hover:text-[#26332b]"
+      aria-label="Dismiss notification">
+      ✕
+    </button>
+
+  </div>
+
+  }
+
+</div>

@@ -5,7 +5,21 @@
       "email": "fathi@gmail.com",
       "password": "Fathi@12",
       "role": "user",
-      "id": 1
+      "id": "1"
+    },
+    {
+      "name": "subi",
+      "email": "subi@gmail.com",
+      "password": "Subi@123",
+      "role": "user",
+      "id": "ZXqAdl_"
+    },
+    {
+      "name": "saj",
+      "email": "saj@gmail.com",
+      "password": "Zz123456@",
+      "role": "user",
+      "id": "YupD3mu"
     }
   ],
   "products": [
@@ -17,27 +31,1079 @@
       "mrp": 599,
       "discountPercent": 25,
       "images": [
-        "https://example.com/atomic-habits-front.jpg",
-        "https://example.com/atomic-habits-back.jpg"
+        "/images/atomic-habit3.jpg",
+        "/images/atomic-habit4.jpg"
       ],
-      "category": "Self Help",
+      "category": "selfhelp",
       "genre": [
         "Self Help",
-        "Psychology"
+        "Habits",
+        "Productivity"
       ],
       "rating": 4.8,
       "reviewCount": 1250,
-      "publisher": "Penguin",
+      "publisher": "Avery",
       "language": "English",
       "pages": 320,
       "createdAt": "2026-09-19",
-      "description": "A practical guide to building good habits and breaking bad ones.",
+      "description": "A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.",
+      "stock": 45
+    },
+    {
+      "id": 2,
+      "title": "The 7 Habits of Highly Effective People",
+      "author": "Stephen R. Covey",
+      "price": 499,
+      "mrp": 799,
+      "discountPercent": 38,
+      "images": [
+        "/images/habitsof-people1.png",
+        "/images/habitsof-people2.png"
+      ],
+      "category": "selfhelp",
+      "genre": [
+        "Self Help",
+        "Personal Development",
+        "Leadership"
+      ],
+      "rating": 4.7,
+      "reviewCount": 980,
+      "publisher": "Simon & Schuster",
+      "language": "English",
+      "pages": 464,
+      "createdAt": "2026-09-18",
+      "description": "A principle-centered approach to personal and professional effectiveness.",
+      "stock": 32
+    },
+    {
+      "id": 3,
+      "title": "How to Win Friends and Influence People",
+      "author": "Dale Carnegie",
+      "price": 299,
+      "mrp": 499,
+      "discountPercent": 40,
+      "images": [
+        "/images/howto-winfriends1.jpg",
+        "/images/howto-winfriends2.jpg"
+      ],
+      "category": "selfhelp",
+      "genre": [
+        "Self Help",
+        "Communication",
+        "Personal Development"
+      ],
+      "rating": 4.7,
+      "reviewCount": 1100,
+      "publisher": "Simon & Schuster",
+      "language": "English",
+      "pages": 288,
+      "createdAt": "2026-09-17",
+      "description": "A classic guide to improving relationships, communication, and social skills.",
+      "stock": 40
+    },
+    {
+      "id": 4,
+      "title": "Think and Grow Rich",
+      "author": "Napoleon Hill",
+      "price": 199,
+      "mrp": 299,
+      "discountPercent": 33,
+      "images": [
+        "/images/thinkandrich1.png",
+        "/images/thinkandrich1.png"
+      ],
+      "category": "selfhelp",
+      "genre": [
+        "Self Help",
+        "Success",
+        "Motivation"
+      ],
+      "rating": 4.5,
+      "reviewCount": 760,
+      "publisher": "Fingerprint Publishing",
+      "language": "English",
+      "pages": 320,
+      "createdAt": "2026-09-16",
+      "description": "A classic personal success book focused on mindset, ambition, and achievement.",
+      "stock": 28
+    },
+    {
+      "id": 5,
+      "title": "The Power of Now",
+      "author": "Eckhart Tolle",
+      "price": 399,
+      "mrp": 599,
+      "discountPercent": 33,
+      "images": [
+        "/images/thepowerofnow1.jpg",
+        "/images/thepowerofnow1.jpg"
+      ],
+      "category": "selfhelp",
+      "genre": [
+        "Self Help",
+        "Mindfulness",
+        "Spirituality"
+      ],
+      "rating": 4.6,
+      "reviewCount": 890,
+      "publisher": "New World Library",
+      "language": "English",
+      "pages": 236,
+      "createdAt": "2026-09-15",
+      "description": "A guide to living more consciously by focusing attention on the present moment.",
+      "stock": 35
+    },
+    {
+      "id": 6,
+      "title": "Deep Work",
+      "author": "Cal Newport",
+      "price": 449,
+      "mrp": 699,
+      "discountPercent": 36,
+      "images": [
+        "/images/deepwork1.jpg",
+        "/images/deepwork1.png"
+      ],
+      "category": "selfhelp",
+      "genre": [
+        "Productivity",
+        "Self Help",
+        "Career"
+      ],
+      "rating": 4.6,
+      "reviewCount": 720,
+      "publisher": "Grand Central Publishing",
+      "language": "English",
+      "pages": 304,
+      "createdAt": "2026-09-14",
+      "description": "A guide to developing focused work habits in a distracted world.",
+      "stock": 30
+    },
+    {
+      "id": 7,
+      "title": "The Subtle Art of Not Giving a F*ck",
+      "author": "Mark Manson",
+      "price": 349,
+      "mrp": 499,
+      "discountPercent": 30,
+      "images": [
+        "/images/thesubtleart1.jpg",
+        "/images/thesubtleart2.png"
+      ],
+      "category": "selfhelp",
+      "genre": [
+        "Self Help",
+        "Psychology",
+        "Motivation"
+      ],
+      "rating": 4.4,
+      "reviewCount": 940,
+      "publisher": "Harper",
+      "language": "English",
+      "pages": 224,
+      "createdAt": "2026-09-13",
+      "description": "A counterintuitive approach to living a meaningful life by focusing on what truly matters.",
+      "stock": 38
+    },
+    {
+      "id": 8,
+      "title": "The Kite Runner",
+      "author": "Khaled Hosseini",
+      "price": 399,
+      "mrp": 599,
+      "discountPercent": 33,
+      "images": [
+        "/images/kiterunner1.jpg"
+      ],
+      "category": "fiction",
+      "genre": [
+        "Fiction",
+        "Drama",
+        "Historical"
+      ],
+      "rating": 4.8,
+      "reviewCount": 1350,
+      "publisher": "Riverhead Books",
+      "language": "English",
+      "pages": 371,
+      "createdAt": "2026-09-12",
+      "description": "A powerful story of friendship, family, betrayal, and redemption set against the history of Afghanistan.",
+      "stock": 25
+    },
+    {
+      "id": 9,
+      "title": "The Alchemist",
+      "author": "Paulo Coelho",
+      "price": 299,
+      "mrp": 399,
+      "discountPercent": 25,
+      "images": [
+        "/images/thealchemist1.jpg",
+        "/images/thealchemist2.jpg"
+      ],
+      "category": "fiction",
+      "genre": [
+        "Fiction",
+        "Adventure",
+        "Philosophical"
+      ],
+      "rating": 4.7,
+      "reviewCount": 1500,
+      "publisher": "HarperOne",
+      "language": "English",
+      "pages": 208,
+      "createdAt": "2026-09-11",
+      "description": "A young shepherd travels in search of treasure and discovers the importance of following his dreams.",
+      "stock": 42
+    },
+    {
+      "id": 10,
+      "title": "Life of Pi",
+      "author": "Yann Martel",
+      "price": 349,
+      "mrp": 499,
+      "discountPercent": 30,
+      "images": [
+        "/images/lifeofpi1.jpg",
+        "/images/lifeofpi2.jpg"
+      ],
+      "category": "fiction",
+      "genre": [
+        "Fiction",
+        "Adventure",
+        "Drama"
+      ],
+      "rating": 4.6,
+      "reviewCount": 870,
+      "publisher": "Mariner Books",
+      "language": "English",
+      "pages": 352,
+      "createdAt": "2026-09-10",
+      "description": "An extraordinary survival story about a young boy stranded at sea with a Bengal tiger.",
+      "stock": 34
+    },
+    {
+      "id": 11,
+      "title": "The Book Thief",
+      "author": "Markus Zusak",
+      "price": 399,
+      "mrp": 599,
+      "discountPercent": 33,
+      "images": [
+        "/images/bookthief1.jpg",
+        "/images/bookthief2.jpg"
+      ],
+      "category": "fiction",
+      "genre": [
+        "Fiction",
+        "Historical",
+        "Drama"
+      ],
+      "rating": 4.7,
+      "reviewCount": 1020,
+      "publisher": "Knopf Books",
+      "language": "English",
+      "pages": 552,
+      "createdAt": "2026-09-09",
+      "description": "A moving story of a young girl discovering the power of words during World War II.",
+      "stock": 27
+    },
+    {
+      "id": 12,
+      "title": "The Midnight Library",
+      "author": "Matt Haig",
+      "price": 349,
+      "mrp": 499,
+      "discountPercent": 30,
+      "images": [
+        "/images/themidnightlibrary1.jpg"
+      ],
+      "category": "fiction",
+      "genre": [
+        "Fiction",
+        "Contemporary",
+        "Magical Realism"
+      ],
+      "rating": 4.5,
+      "reviewCount": 930,
+      "publisher": "Viking",
+      "language": "English",
+      "pages": 304,
+      "createdAt": "2026-09-08",
+      "description": "A novel about the infinite possibilities of life and the choices that shape our future.",
+      "stock": 39
+    },
+    {
+      "id": 13,
+      "title": "The Night Circus",
+      "author": "Erin Morgenstern",
+      "price": 449,
+      "mrp": 699,
+      "discountPercent": 36,
+      "images": [
+        "/images/nightcircus1.webp",
+        "/images/nightcircus2.jpg"
+      ],
+      "category": "fiction",
+      "genre": [
+        "Fiction",
+        "Mystery",
+        "Magical"
+      ],
+      "rating": 4.5,
+      "reviewCount": 640,
+      "publisher": "Doubleday",
+      "language": "English",
+      "pages": 516,
+      "createdAt": "2026-09-07",
+      "description": "A mysterious competition unfolds inside a magical circus that appears without warning.",
+      "stock": 22
+    },
+    {
+      "id": 14,
+      "title": "Where the Crawdads Sing",
+      "author": "Delia Owens",
+      "price": 399,
+      "mrp": 599,
+      "discountPercent": 33,
+      "images": [
+        "/images/wherethecrawdads1.webp"
+      ],
+      "category": "fiction",
+      "genre": [
+        "Fiction",
+        "Mystery",
+        "Drama"
+      ],
+      "rating": 4.6,
+      "reviewCount": 810,
+      "publisher": "G.P. Putnam's Sons",
+      "language": "English",
+      "pages": 384,
+      "createdAt": "2026-09-06",
+      "description": "A coming-of-age mystery about a young woman growing up isolated in the marshes of North Carolina.",
+      "stock": 31
+    },
+    {
+      "id": 15,
+      "title": "Sapiens",
+      "author": "Yuval Noah Harari",
+      "price": 499,
+      "mrp": 799,
+      "discountPercent": 38,
+      "images": [
+        "/images/sapiens.jpg"
+      ],
+      "category": "nonfiction",
+      "genre": [
+        "History",
+        "Nonfiction",
+        "Anthropology"
+      ],
+      "rating": 4.7,
+      "reviewCount": 1240,
+      "publisher": "Harper",
+      "language": "English",
+      "pages": 464,
+      "createdAt": "2026-09-05",
+      "description": "An exploration of human history from the emergence of Homo sapiens to the modern world.",
+      "stock": 29
+    },
+    {
+      "id": 16,
+      "title": "Educated",
+      "author": "Tara Westover",
+      "price": 399,
+      "mrp": 599,
+      "discountPercent": 33,
+      "images": [
+        "/images/educated.webp"
+      ],
+      "category": "nonfiction",
+      "genre": [
+        "Memoir",
+        "Nonfiction",
+        "Biography"
+      ],
+      "rating": 4.7,
+      "reviewCount": 910,
+      "publisher": "Random House",
+      "language": "English",
+      "pages": 352,
+      "createdAt": "2026-09-04",
+      "description": "A memoir about education, family, identity, and the transformative power of learning.",
+      "stock": 26
+    },
+    {
+      "id": 17,
+      "title": "Becoming",
+      "author": "Michelle Obama",
+      "price": 499,
+      "mrp": 799,
+      "discountPercent": 38,
+      "images": [
+        "/images/becoming.jpg"
+      ],
+      "category": "nonfiction",
+      "genre": [
+        "Memoir",
+        "Biography",
+        "Nonfiction"
+      ],
+      "rating": 4.8,
+      "reviewCount": 1180,
+      "publisher": "Crown",
+      "language": "English",
+      "pages": 448,
+      "createdAt": "2026-09-03",
+      "description": "A deeply personal memoir tracing the life, experiences, and journey of Michelle Obama.",
+      "stock": 33
+    },
+    {
+      "id": 18,
+      "title": "Into the Wild",
+      "author": "Jon Krakauer",
+      "price": 349,
+      "mrp": 499,
+      "discountPercent": 30,
+      "images": [
+        "/images/intothewild1.jpg",
+        "/images/intothewild2.jpg"
+      ],
+      "category": "nonfiction",
+      "genre": [
+        "Biography",
+        "Adventure",
+        "Nonfiction"
+      ],
+      "rating": 4.5,
+      "reviewCount": 730,
+      "publisher": "Anchor Books",
+      "language": "English",
+      "pages": 224,
+      "createdAt": "2026-09-02",
+      "description": "The true story of Christopher McCandless and his journey into the Alaskan wilderness.",
+      "stock": 24
+    },
+    {
+      "id": 19,
+      "title": "The Immortal Life of Henrietta Lacks",
+      "author": "Rebecca Skloot",
+      "price": 449,
+      "mrp": 699,
+      "discountPercent": 36,
+      "images": [
+        "/images/immortallife1.jpg"
+      ],
+      "category": "nonfiction",
+      "genre": [
+        "Science",
+        "Biography",
+        "Nonfiction"
+      ],
+      "rating": 4.6,
+      "reviewCount": 620,
+      "publisher": "Crown",
+      "language": "English",
+      "pages": 381,
+      "createdAt": "2026-09-01",
+      "description": "The story of Henrietta Lacks and the scientific legacy of her cells.",
+      "stock": 21
+    },
+    {
+      "id": 20,
+      "title": "Quiet",
+      "author": "Susan Cain",
+      "price": 399,
+      "mrp": 599,
+      "discountPercent": 33,
+      "images": [
+        "/images/quiet1.jpg"
+      ],
+      "category": "nonfiction",
+      "genre": [
+        "Psychology",
+        "Nonfiction",
+        "Society"
+      ],
+      "rating": 4.5,
+      "reviewCount": 780,
+      "publisher": "Crown",
+      "language": "English",
+      "pages": 368,
+      "createdAt": "2026-08-31",
+      "description": "An exploration of introversion and the strengths of quiet people in a world that values constant social activity.",
+      "stock": 36
+    },
+    {
+      "id": 21,
+      "title": "Freakonomics",
+      "author": "Steven D. Levitt and Stephen J. Dubner",
+      "price": 349,
+      "mrp": 499,
+      "discountPercent": 30,
+      "images": [
+        "/images/Freakonomic1.webp",
+        "/images/Freakonomic2.jpg"
+      ],
+      "category": "nonfiction",
+      "genre": [
+        "Economics",
+        "Nonfiction",
+        "Social Science"
+      ],
+      "rating": 4.4,
+      "reviewCount": 690,
+      "publisher": "William Morrow",
+      "language": "English",
+      "pages": 336,
+      "createdAt": "2026-08-30",
+      "description": "An unconventional look at everyday behavior through economics and data.",
+      "stock": 19
+    },
+    {
+      "id": 22,
+      "title": "The Notebook",
+      "author": "Nicholas Sparks",
+      "price": 299,
+      "mrp": 499,
+      "discountPercent": 40,
+      "images": [
+        "/images/thenotebook1.jpg"
+      ],
+      "category": "romance",
+      "genre": [
+        "Romance",
+        "Drama",
+        "Contemporary"
+      ],
+      "rating": 4.5,
+      "reviewCount": 820,
+      "publisher": "Grand Central Publishing",
+      "language": "English",
+      "pages": 224,
+      "createdAt": "2026-08-29",
+      "description": "A timeless love story about two people whose connection survives the passage of time.",
+      "stock": 30
+    },
+    {
+      "id": 23,
+      "title": "Me Before You",
+      "author": "Jojo Moyes",
+      "price": 349,
+      "mrp": 499,
+      "discountPercent": 30,
+      "images": [
+        "/images/MeBeforeYou1.jpg"
+      ],
+      "category": "romance",
+      "genre": [
+        "Romance",
+        "Drama",
+        "Contemporary"
+      ],
+      "rating": 4.6,
+      "reviewCount": 1050,
+      "publisher": "Pamela Dorman Books",
+      "language": "English",
+      "pages": 400,
+      "createdAt": "2026-08-28",
+      "description": "An emotional contemporary romance about two people whose lives change after meeting each other.",
+      "stock": 27
+    },
+    {
+      "id": 24,
+      "title": "The Fault in Our Stars",
+      "author": "John Green",
+      "price": 299,
+      "mrp": 399,
+      "discountPercent": 25,
+      "images": [
+        "/images/faultinourstar.jpg"
+      ],
+      "category": "romance",
+      "genre": [
+        "Romance",
+        "Young Adult",
+        "Drama"
+      ],
+      "rating": 4.6,
+      "reviewCount": 990,
+      "publisher": "Dutton Books",
+      "language": "English",
+      "pages": 336,
+      "createdAt": "2026-08-27",
+      "description": "A touching story about love, friendship, and finding meaning in difficult circumstances.",
+      "stock": 35
+    },
+    {
+      "id": 25,
+      "title": "The Hating Game",
+      "author": "Sally Thorne",
+      "price": 399,
+      "mrp": 599,
+      "discountPercent": 33,
+      "images": [
+        "/images/hating-game1.jpg"
+      ],
+      "category": "romance",
+      "genre": [
+        "Romance",
+        "Contemporary",
+        "Comedy"
+      ],
+      "rating": 4.4,
+      "reviewCount": 610,
+      "publisher": "William Morrow",
+      "language": "English",
+      "pages": 384,
+      "createdAt": "2026-08-26",
+      "description": "A workplace romance built around rivalry, competition, and unexpected attraction.",
+      "stock": 23
+    },
+    {
+      "id": 26,
+      "title": "The Love Hypothesis",
+      "author": "Ali Hazelwood",
+      "price": 399,
+      "mrp": 599,
+      "discountPercent": 33,
+      "images": [
+        "/images/lovehypothesis.webp"
+      ],
+      "category": "romance",
+      "genre": [
+        "Romance",
+        "Contemporary",
+        "Comedy"
+      ],
+      "rating": 4.6,
+      "reviewCount": 880,
+      "publisher": "Berkley",
+      "language": "English",
+      "pages": 400,
+      "createdAt": "2026-08-25",
+      "description": "A contemporary romance set in academia involving a fake relationship that becomes complicated.",
+      "stock": 41
+    },
+    {
+      "id": 27,
+      "title": "It Ends with Us",
+      "author": "Colleen Hoover",
+      "price": 349,
+      "mrp": 499,
+      "discountPercent": 30,
+      "images": [
+        "/images/itendswithus1.jpg",
+        "/images/lifeofpi2.jpg"
+      ],
+      "category": "romance",
+      "genre": [
+        "Romance",
+        "Contemporary",
+        "Drama"
+      ],
+      "rating": 4.5,
+      "reviewCount": 1130,
+      "publisher": "Atria Books",
+      "language": "English",
+      "pages": 384,
+      "createdAt": "2026-08-24",
+      "description": "A contemporary romance exploring love, difficult choices, and personal strength.",
+      "stock": 37
+    },
+    {
+      "id": 28,
+      "title": "Beach Read",
+      "author": "Emily Henry",
+      "price": 399,
+      "mrp": 599,
+      "discountPercent": 33,
+      "images": [
+        "/images/beachread1.jpg"
+      ],
+      "category": "romance",
+      "genre": [
+        "Romance",
+        "Contemporary",
+        "Comedy"
+      ],
+      "rating": 4.5,
+      "reviewCount": 740,
+      "publisher": "Berkley",
+      "language": "English",
+      "pages": 384,
+      "createdAt": "2026-08-23",
+      "description": "A romantic story about two writers who challenge each other to write outside their usual genres.",
+      "stock": 28
+    },
+    {
+      "id": 29,
+      "title": "Harry Potter and the Philosopher's Stone",
+      "author": "J.K. Rowling",
+      "price": 499,
+      "mrp": 799,
+      "discountPercent": 38,
+      "images": [
+        "/images/hp1.jpg",
+        "/images/hp2.jpg"
+      ],
+      "category": "children",
+      "genre": [
+        "Children",
+        "Adventure",
+        "Magic"
+      ],
+      "rating": 4.9,
+      "reviewCount": 1800,
+      "publisher": "Bloomsbury",
+      "language": "English",
+      "pages": 223,
+      "createdAt": "2026-08-22",
+      "description": "A young boy discovers that he is a wizard and begins his magical education at Hogwarts.",
+      "stock": 50
+    },
+    {
+      "id": 30,
+      "title": "Matilda",
+      "author": "Roald Dahl",
+      "price": 249,
+      "mrp": 399,
+      "discountPercent": 38,
+      "images": [
+        "/images/Matilda1.jpg"
+      ],
+      "category": "children",
+      "genre": [
+        "Children",
+        "Adventure",
+        "Humor"
+      ],
+      "rating": 4.8,
+      "reviewCount": 920,
+      "publisher": "Puffin Books",
+      "language": "English",
+      "pages": 240,
+      "createdAt": "2026-08-21",
+      "description": "A brilliant young girl uses her intelligence and extraordinary abilities to overcome difficult circumstances.",
+      "stock": 34
+    },
+    {
+      "id": 31,
+      "title": "The Lion, the Witch and the Wardrobe",
+      "author": "C.S. Lewis",
+      "price": 299,
+      "mrp": 499,
+      "discountPercent": 40,
+      "images": [
+        "/images/lionwitch1.jpg",
+        "/images/lionwitch2.jpg",
+        "/images/lionwitch3.jpg",
+        "/images/lionwitch4.jpg",
+        "/images/lionwitch5.jpg"
+      ],
+      "category": "children",
+      "genre": [
+        "Children",
+        "Adventure",
+        "Fantasy"
+      ],
+      "rating": 4.8,
+      "reviewCount": 1150,
+      "publisher": "HarperCollins",
+      "language": "English",
+      "pages": 208,
+      "createdAt": "2026-08-20",
+      "description": "Four siblings enter a magical world through a wardrobe and become part of an epic adventure.",
+      "stock": 31
+    },
+    {
+      "id": 32,
+      "title": "Charlie and the Chocolate Factory",
+      "author": "Roald Dahl",
+      "price": 249,
+      "mrp": 399,
+      "discountPercent": 38,
+      "images": [
+        "/images/charlichoco1.jpg",
+        "/images/charlichoco2.jpg"
+      ],
+      "category": "children",
+      "genre": [
+        "Children",
+        "Adventure",
+        "Humor"
+      ],
+      "rating": 4.8,
+      "reviewCount": 970,
+      "publisher": "Puffin Books",
+      "language": "English",
+      "pages": 176,
+      "createdAt": "2026-08-19",
+      "description": "Charlie Bucket wins a golden ticket and discovers the magical world inside Willy Wonka's chocolate factory.",
+      "stock": 43
+    },
+    {
+      "id": 33,
+      "title": "Charlotte's Web",
+      "author": "E.B. White",
+      "price": 249,
+      "mrp": 399,
+      "discountPercent": 38,
+      "images": [
+        "/images/Charlotte'sWeb1.jpg"
+      ],
+      "category": "children",
+      "genre": [
+        "Children",
+        "Animals",
+        "Friendship"
+      ],
+      "rating": 4.8,
+      "reviewCount": 860,
+      "publisher": "HarperCollins",
+      "language": "English",
+      "pages": 192,
+      "createdAt": "2026-08-18",
+      "description": "A heartwarming story about friendship between a pig named Wilbur and a spider named Charlotte.",
+      "stock": 29
+    },
+    {
+      "id": 34,
+      "title": "The Very Hungry Caterpillar",
+      "author": "Eric Carle",
+      "price": 199,
+      "mrp": 299,
+      "discountPercent": 33,
+      "images": [
+        "/images/caterpiller1.jpg"
+      ],
+      "category": "children",
+      "genre": [
+        "Children",
+        "Picture Book",
+        "Learning"
+      ],
+      "rating": 4.8,
+      "reviewCount": 760,
+      "publisher": "World of Eric Carle",
+      "language": "English",
+      "pages": 26,
+      "createdAt": "2026-08-17",
+      "description": "A colorful picture book following a caterpillar as it eats its way through different foods before transforming.",
+      "stock": 55
+    },
+    {
+      "id": 35,
+      "title": "Diary of a Wimpy Kid",
+      "author": "Jeff Kinney",
+      "price": 299,
+      "mrp": 399,
+      "discountPercent": 25,
+      "images": [
+        "/images/wimpykid1.jpg",
+        "/images/wimpykid2.jpg"
+      ],
+      "category": "children",
+      "genre": [
+        "Children",
+        "Comedy",
+        "School"
+      ],
+      "rating": 4.6,
+      "reviewCount": 890,
+      "publisher": "Amulet Books",
+      "language": "English",
+      "pages": 224,
+      "createdAt": "2026-08-16",
+      "description": "A humorous illustrated diary following Greg Heffley's adventures through middle school.",
+      "stock": 46
+    },
+    {
+      "id": 36,
+      "title": "1984",
+      "author": "George Orwell",
+      "price": 299,
+      "mrp": 499,
+      "discountPercent": 40,
+      "images": [
+        "/images/1984.jpg"
+      ],
+      "category": "classics",
+      "genre": [
+        "Classic",
+        "Dystopian",
+        "Political Fiction"
+      ],
+      "rating": 4.8,
+      "reviewCount": 1320,
+      "publisher": "Penguin Classics",
+      "language": "English",
+      "pages": 328,
+      "createdAt": "2026-08-15",
+      "description": "A dystopian classic about surveillance, control, truth, and individual freedom.",
+      "stock": 38
+    },
+    {
+      "id": 37,
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "price": 299,
+      "mrp": 499,
+      "discountPercent": 40,
+      "images": [
+        "/images/killamockin1.jpg",
+        "/images/killamockin2.jpg"
+      ],
+      "category": "classics",
+      "genre": [
+        "Classic",
+        "Drama",
+        "Historical"
+      ],
+      "rating": 4.8,
+      "reviewCount": 1270,
+      "publisher": "Harper Perennial",
+      "language": "English",
+      "pages": 336,
+      "createdAt": "2026-08-14",
+      "description": "A classic novel exploring justice, morality, childhood, and social inequality in the American South.",
+      "stock": 32
+    },
+    {
+      "id": 38,
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "price": 249,
+      "mrp": 399,
+      "discountPercent": 38,
+      "images": [
+        "/images/greatgatsby1.jpg",
+        "/images/greatgatsby2.jpg"
+      ],
+      "category": "classics",
+      "genre": [
+        "Classic",
+        "Literary Fiction",
+        "Drama"
+      ],
+      "rating": 4.5,
+      "reviewCount": 980,
+      "publisher": "Scribner",
+      "language": "English",
+      "pages": 180,
+      "createdAt": "2026-08-13",
+      "description": "A classic story of ambition, wealth, love, and the American Dream during the Jazz Age.",
+      "stock": 36
+    },
+    {
+      "id": 39,
+      "title": "Jane Eyre",
+      "author": "Charlotte Bronte",
+      "price": 249,
+      "mrp": 399,
+      "discountPercent": 38,
+      "images": [
+        "/images/janeeyre1.jpg"
+      ],
+      "category": "classics",
+      "genre": [
+        "Classic",
+        "Romance",
+        "Gothic"
+      ],
+      "rating": 4.7,
+      "reviewCount": 920,
+      "publisher": "Penguin Classics",
+      "language": "English",
+      "pages": 532,
+      "createdAt": "2026-08-12",
+      "description": "A classic coming-of-age novel following Jane Eyre through hardship, independence, and love.",
+      "stock": 24
+    },
+    {
+      "id": 40,
+      "title": "Wuthering Heights",
+      "author": "Emily Bronte",
+      "price": 249,
+      "mrp": 399,
+      "discountPercent": 38,
+      "images": [
+        "/images/wuthering1.webp",
+        "/images/wuthering2.webp"
+      ],
+      "category": "classics",
+      "genre": [
+        "Classic",
+        "Romance",
+        "Gothic"
+      ],
+      "rating": 4.5,
+      "reviewCount": 780,
+      "publisher": "Penguin Classics",
+      "language": "English",
+      "pages": 416,
+      "createdAt": "2026-08-11",
+      "description": "A dramatic tale of passion, revenge, and destructive love across generations.",
       "stock": 20
+    },
+    {
+      "id": 41,
+      "title": "Moby-Dick",
+      "author": "Herman Melville",
+      "price": 399,
+      "mrp": 599,
+      "discountPercent": 33,
+      "images": [
+        "/images/moby1.jpg",
+        "/images/moby2.jpg"
+      ],
+      "category": "classics",
+      "genre": [
+        "Classic",
+        "Adventure",
+        "Literary Fiction"
+      ],
+      "rating": 4.4,
+      "reviewCount": 610,
+      "publisher": "Penguin Classics",
+      "language": "English",
+      "pages": 720,
+      "createdAt": "2026-08-10",
+      "description": "An epic maritime adventure centered on Captain Ahab's obsessive pursuit of a great white whale.",
+      "stock": 18
+    },
+    {
+      "id": 42,
+      "title": "The Picture of Dorian Gray",
+      "author": "Oscar Wilde",
+      "price": 249,
+      "mrp": 399,
+      "discountPercent": 38,
+      "images": [
+        "/images/pictureofdorian1.webp",
+        "/images/pictureofdorian2.webp"
+      ],
+      "category": "classics",
+      "genre": [
+        "Classic",
+        "Gothic",
+        "Philosophical"
+      ],
+      "rating": 4.6,
+      "reviewCount": 690,
+      "publisher": "Penguin Classics",
+      "language": "English",
+      "pages": 304,
+      "createdAt": "2026-08-09",
+      "description": "A gothic classic exploring beauty, morality, temptation, and the consequences of a life devoted to pleasure.",
+      "stock": 26
     }
   ],
   "orders": [
     {
-      "id": 1789974253705,
+      "id": "1",
+      "userId": "1",
       "items": [
         {
           "product": {
@@ -48,38 +1114,84 @@
             "mrp": 599,
             "discountPercent": 25,
             "images": [
-              "https://example.com/atomic-habits-front.jpg",
-              "https://example.com/atomic-habits-back.jpg"
+              "https://example.com/atomic-habits.jpg"
             ],
             "category": "Self Help",
             "genre": [
-              "Self Help",
-              "Psychology"
+              "Habits",
+              "Productivity"
             ],
             "rating": 4.8,
             "reviewCount": 1250,
-            "publisher": "Penguin",
+            "publisher": "Avery",
             "language": "English",
             "pages": 320,
             "createdAt": "2026-09-19",
             "description": "A practical guide to building good habits and breaking bad ones.",
-            "stock": 20
+            "stock": 45
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 450,
+      "shippingAddress": {
+        "name": "fathima",
+        "address": "Kerala",
+        "city": "Malappuram",
+        "state": "Kerala",
+        "pincode": "676505",
+        "phone": "9876543210"
+      },
+      "orderDate": "2026-09-19T10:30:00.000Z",
+      "status": "Delivered"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 1,
+            "title": "Atomic Habits",
+            "author": "James Clear",
+            "price": 450,
+            "mrp": 599,
+            "discountPercent": 25,
+            "images": [
+              "https://example.com/atomic-habits.jpg"
+            ],
+            "category": "Self Help",
+            "genre": [
+              "Habits",
+              "Productivity"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1250,
+            "publisher": "Avery",
+            "language": "English",
+            "pages": 320,
+            "createdAt": "2026-09-19",
+            "description": "A practical guide to building good habits and breaking bad ones.",
+            "stock": 45
           },
           "quantity": 2
         }
       ],
-      "total": 900,
+      "totalAmount": 900,
       "shippingAddress": {
-        "name": "FATHIMATHUL MUFEEDA",
-        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
-        "city": "sedrt",
-        "pincode": "670308"
+        "name": "fathima",
+        "address": "Kerala",
+        "city": "Malappuram",
+        "state": "Kerala",
+        "pincode": "676505",
+        "phone": "9876543210"
       },
-      "createdAt": "2026-09-21T07:04:13.705Z",
-      "status": "Placed"
+      "orderDate": "2026-09-18T14:20:00.000Z",
+      "status": "Delivered"
     },
     {
-      "id": 1789974317053,
+      "id": "3",
+      "userId": "1",
       "items": [
         {
           "product": {
@@ -90,38 +1202,40 @@
             "mrp": 599,
             "discountPercent": 25,
             "images": [
-              "https://example.com/atomic-habits-front.jpg",
-              "https://example.com/atomic-habits-back.jpg"
+              "https://example.com/atomic-habits.jpg"
             ],
             "category": "Self Help",
             "genre": [
-              "Self Help",
-              "Psychology"
+              "Habits",
+              "Productivity"
             ],
             "rating": 4.8,
             "reviewCount": 1250,
-            "publisher": "Penguin",
+            "publisher": "Avery",
             "language": "English",
             "pages": 320,
             "createdAt": "2026-09-19",
             "description": "A practical guide to building good habits and breaking bad ones.",
-            "stock": 20
+            "stock": 45
           },
           "quantity": 1
         }
       ],
-      "total": 450,
+      "totalAmount": 450,
       "shippingAddress": {
-        "name": "FATHIMATHUL MUFEEDA",
-        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
-        "city": "sedrt",
-        "pincode": "670308"
+        "name": "fathima",
+        "address": "Kerala",
+        "city": "Malappuram",
+        "state": "Kerala",
+        "pincode": "676505",
+        "phone": "9876543210"
       },
-      "createdAt": "2026-09-21T07:05:17.053Z",
-      "status": "Placed"
+      "orderDate": "2026-09-17T09:15:00.000Z",
+      "status": "Shipped"
     },
     {
-      "id": 1789976604756,
+      "id": "4",
+      "userId": "1",
       "items": [
         {
           "product": {
@@ -132,38 +1246,40 @@
             "mrp": 599,
             "discountPercent": 25,
             "images": [
-              "https://example.com/atomic-habits-front.jpg",
-              "https://example.com/atomic-habits-back.jpg"
+              "https://example.com/atomic-habits.jpg"
             ],
             "category": "Self Help",
             "genre": [
-              "Self Help",
-              "Psychology"
+              "Habits",
+              "Productivity"
             ],
             "rating": 4.8,
             "reviewCount": 1250,
-            "publisher": "Penguin",
+            "publisher": "Avery",
             "language": "English",
             "pages": 320,
             "createdAt": "2026-09-19",
             "description": "A practical guide to building good habits and breaking bad ones.",
-            "stock": 20
+            "stock": 45
           },
-          "quantity": 1
+          "quantity": 3
         }
       ],
-      "total": 450,
+      "totalAmount": 1350,
       "shippingAddress": {
-        "name": "FATHIMATHUL MUFEEDA",
-        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
-        "city": "sedrt",
-        "pincode": "670308"
+        "name": "fathima",
+        "address": "Kerala",
+        "city": "Malappuram",
+        "state": "Kerala",
+        "pincode": "676505",
+        "phone": "9876543210"
       },
-      "createdAt": "2026-09-21T07:43:24.756Z",
-      "status": "Placed"
+      "orderDate": "2026-09-16T16:45:00.000Z",
+      "status": "Delivered"
     },
     {
-      "id": 1789987093442,
+      "id": "5",
+      "userId": "1",
       "items": [
         {
           "product": {
@@ -174,38 +1290,40 @@
             "mrp": 599,
             "discountPercent": 25,
             "images": [
-              "https://example.com/atomic-habits-front.jpg",
-              "https://example.com/atomic-habits-back.jpg"
+              "https://example.com/atomic-habits.jpg"
             ],
             "category": "Self Help",
             "genre": [
-              "Self Help",
-              "Psychology"
+              "Habits",
+              "Productivity"
             ],
             "rating": 4.8,
             "reviewCount": 1250,
-            "publisher": "Penguin",
+            "publisher": "Avery",
             "language": "English",
             "pages": 320,
             "createdAt": "2026-09-19",
             "description": "A practical guide to building good habits and breaking bad ones.",
-            "stock": 20
+            "stock": 45
           },
           "quantity": 1
         }
       ],
-      "total": 450,
+      "totalAmount": 450,
       "shippingAddress": {
-        "name": "FATHIMATHUL MUFEEDA",
-        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
-        "city": "sedrt",
-        "pincode": "670308"
+        "name": "fathima",
+        "address": "Kerala",
+        "city": "Malappuram",
+        "state": "Kerala",
+        "pincode": "676505",
+        "phone": "9876543210"
       },
-      "createdAt": "2026-09-21T10:38:13.442Z",
-      "status": "Placed"
+      "orderDate": "2026-09-15T11:10:00.000Z",
+      "status": "Delivered"
     },
     {
-      "id": 1789987129958,
+      "id": "6",
+      "userId": "1",
       "items": [
         {
           "product": {
@@ -216,38 +1334,40 @@
             "mrp": 599,
             "discountPercent": 25,
             "images": [
-              "https://example.com/atomic-habits-front.jpg",
-              "https://example.com/atomic-habits-back.jpg"
+              "https://example.com/atomic-habits.jpg"
             ],
             "category": "Self Help",
             "genre": [
-              "Self Help",
-              "Psychology"
+              "Habits",
+              "Productivity"
             ],
             "rating": 4.8,
             "reviewCount": 1250,
-            "publisher": "Penguin",
+            "publisher": "Avery",
             "language": "English",
             "pages": 320,
             "createdAt": "2026-09-19",
             "description": "A practical guide to building good habits and breaking bad ones.",
-            "stock": 20
+            "stock": 45
           },
-          "quantity": 1
+          "quantity": 2
         }
       ],
-      "total": 450,
+      "totalAmount": 900,
       "shippingAddress": {
-        "name": "FATHIMATHUL MUFEEDA",
-        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
-        "city": "sedrt",
-        "pincode": "670308"
+        "name": "fathima",
+        "address": "Kerala",
+        "city": "Malappuram",
+        "state": "Kerala",
+        "pincode": "676505",
+        "phone": "9876543210"
       },
-      "createdAt": "2026-09-21T10:38:49.958Z",
-      "status": "Placed"
+      "orderDate": "2026-09-14T13:30:00.000Z",
+      "status": "Delivered"
     },
     {
-      "id": 1789992644911,
+      "id": "7",
+      "userId": "1",
       "items": [
         {
           "product": {
@@ -258,38 +1378,40 @@
             "mrp": 599,
             "discountPercent": 25,
             "images": [
-              "https://example.com/atomic-habits-front.jpg",
-              "https://example.com/atomic-habits-back.jpg"
+              "https://example.com/atomic-habits.jpg"
             ],
             "category": "Self Help",
             "genre": [
-              "Self Help",
-              "Psychology"
+              "Habits",
+              "Productivity"
             ],
             "rating": 4.8,
             "reviewCount": 1250,
-            "publisher": "Penguin",
+            "publisher": "Avery",
             "language": "English",
             "pages": 320,
             "createdAt": "2026-09-19",
             "description": "A practical guide to building good habits and breaking bad ones.",
-            "stock": 20
+            "stock": 45
           },
           "quantity": 1
         }
       ],
-      "total": 450,
+      "totalAmount": 450,
       "shippingAddress": {
-        "name": "FATHIMATHUL MUFEEDA",
-        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
-        "city": "sedrt",
-        "pincode": "670308"
+        "name": "fathima",
+        "address": "Kerala",
+        "city": "Malappuram",
+        "state": "Kerala",
+        "pincode": "676505",
+        "phone": "9876543210"
       },
-      "createdAt": "2026-09-21T12:10:44.911Z",
-      "status": "Placed"
+      "orderDate": "2026-09-13T10:00:00.000Z",
+      "status": "Delivered"
     },
     {
-      "id": 1789992668034,
+      "id": "8",
+      "userId": "1",
       "items": [
         {
           "product": {
@@ -300,38 +1422,40 @@
             "mrp": 599,
             "discountPercent": 25,
             "images": [
-              "https://example.com/atomic-habits-front.jpg",
-              "https://example.com/atomic-habits-back.jpg"
+              "https://example.com/atomic-habits.jpg"
             ],
             "category": "Self Help",
             "genre": [
-              "Self Help",
-              "Psychology"
+              "Habits",
+              "Productivity"
             ],
             "rating": 4.8,
             "reviewCount": 1250,
-            "publisher": "Penguin",
+            "publisher": "Avery",
             "language": "English",
             "pages": 320,
             "createdAt": "2026-09-19",
             "description": "A practical guide to building good habits and breaking bad ones.",
-            "stock": 20
+            "stock": 45
           },
           "quantity": 1
         }
       ],
-      "total": 450,
+      "totalAmount": 450,
       "shippingAddress": {
-        "name": "FATHIMATHUL MUFEEDA",
-        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
-        "city": "sedrt",
-        "pincode": "670308"
+        "name": "fathima",
+        "address": "Kerala",
+        "city": "Malappuram",
+        "state": "Kerala",
+        "pincode": "676505",
+        "phone": "9876543210"
       },
-      "createdAt": "2026-09-21T12:11:08.034Z",
-      "status": "Placed"
+      "orderDate": "2026-09-12T15:25:00.000Z",
+      "status": "Delivered"
     },
     {
-      "id": 1789992678331,
+      "id": "9",
+      "userId": "1",
       "items": [
         {
           "product": {
@@ -342,38 +1466,40 @@
             "mrp": 599,
             "discountPercent": 25,
             "images": [
-              "https://example.com/atomic-habits-front.jpg",
-              "https://example.com/atomic-habits-back.jpg"
+              "https://example.com/atomic-habits.jpg"
             ],
             "category": "Self Help",
             "genre": [
-              "Self Help",
-              "Psychology"
+              "Habits",
+              "Productivity"
             ],
             "rating": 4.8,
             "reviewCount": 1250,
-            "publisher": "Penguin",
+            "publisher": "Avery",
             "language": "English",
             "pages": 320,
             "createdAt": "2026-09-19",
             "description": "A practical guide to building good habits and breaking bad ones.",
-            "stock": 20
+            "stock": 45
           },
-          "quantity": 1
+          "quantity": 2
         }
       ],
-      "total": 450,
+      "totalAmount": 900,
       "shippingAddress": {
-        "name": "FATHIMATHUL MUFEEDA",
-        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
-        "city": "sedrt",
-        "pincode": "670308"
+        "name": "fathima",
+        "address": "Kerala",
+        "city": "Malappuram",
+        "state": "Kerala",
+        "pincode": "676505",
+        "phone": "9876543210"
       },
-      "createdAt": "2026-09-21T12:11:18.331Z",
-      "status": "Placed"
+      "orderDate": "2026-09-11T12:40:00.000Z",
+      "status": "Delivered"
     },
     {
-      "id": 1789992795568,
+      "id": "10",
+      "userId": "1",
       "items": [
         {
           "product": {
@@ -384,34 +1510,328 @@
             "mrp": 599,
             "discountPercent": 25,
             "images": [
-              "https://example.com/atomic-habits-front.jpg",
-              "https://example.com/atomic-habits-back.jpg"
+              "https://example.com/atomic-habits.jpg"
             ],
             "category": "Self Help",
             "genre": [
-              "Self Help",
-              "Psychology"
+              "Habits",
+              "Productivity"
             ],
             "rating": 4.8,
             "reviewCount": 1250,
-            "publisher": "Penguin",
+            "publisher": "Avery",
             "language": "English",
             "pages": 320,
             "createdAt": "2026-09-19",
             "description": "A practical guide to building good habits and breaking bad ones.",
-            "stock": 20
+            "stock": 45
           },
           "quantity": 1
         }
       ],
-      "total": 450,
+      "totalAmount": 450,
       "shippingAddress": {
-        "name": "FATHIMATHUL MUFEEDA",
+        "name": "fathima",
+        "address": "Kerala",
+        "city": "Malappuram",
+        "state": "Kerala",
+        "pincode": "676505",
+        "phone": "9876543210"
+      },
+      "orderDate": "2026-09-10T09:50:00.000Z",
+      "status": "Delivered"
+    },
+    {
+      "id": 1790169954533,
+      "userId": 1,
+      "items": [
+        {
+          "product": {
+            "id": 31,
+            "title": "The Lion, the Witch and the Wardrobe",
+            "author": "C.S. Lewis",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/lionwitch1.jpg",
+              "/images/lionwitch2.jpg",
+              "/images/lionwitch3.jpg",
+              "/images/lionwitch4.jpg",
+              "/images/lionwitch5.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Fantasy"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1150,
+            "publisher": "HarperCollins",
+            "language": "English",
+            "pages": 208,
+            "createdAt": "2026-08-20",
+            "description": "Four siblings enter a magical world through a wardrobe and become part of an epic adventure.",
+            "stock": 31
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 299,
+      "shippingAddress": {
+        "name": "fathima",
+        "phone": "9876543212",
         "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
         "city": "sedrt",
+        "state": "wsss",
         "pincode": "670308"
       },
-      "createdAt": "2026-09-21T12:13:15.568Z",
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-23T13:25:54.533Z",
+      "status": "Cancelled"
+    },
+    {
+      "id": 1790171500850,
+      "userId": "YupD3mu",
+      "items": [
+        {
+          "product": {
+            "id": 29,
+            "title": "Harry Potter and the Philosopher's Stone",
+            "author": "J.K. Rowling",
+            "price": 499,
+            "mrp": 799,
+            "discountPercent": 38,
+            "images": [
+              "/images/hp1.jpg",
+              "/images/hp2.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Magic"
+            ],
+            "rating": 4.9,
+            "reviewCount": 1800,
+            "publisher": "Bloomsbury",
+            "language": "English",
+            "pages": 223,
+            "createdAt": "2026-08-22",
+            "description": "A young boy discovers that he is a wizard and begins his magical education at Hogwarts.",
+            "stock": 50
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 8,
+            "title": "The Kite Runner",
+            "author": "Khaled Hosseini",
+            "price": 399,
+            "mrp": 599,
+            "discountPercent": 33,
+            "images": [
+              "/images/kiterunner1.jpg"
+            ],
+            "category": "fiction",
+            "genre": [
+              "Fiction",
+              "Drama",
+              "Historical"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1350,
+            "publisher": "Riverhead Books",
+            "language": "English",
+            "pages": 371,
+            "createdAt": "2026-09-12",
+            "description": "A powerful story of friendship, family, betrayal, and redemption set against the history of Afghanistan.",
+            "stock": 25
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 1,
+            "title": "Atomic Habits",
+            "author": "James Clear",
+            "price": 450,
+            "mrp": 599,
+            "discountPercent": 25,
+            "images": [
+              "/images/atomic-habit3.jpg",
+              "/images/atomic-habit4.jpg"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Habits",
+              "Productivity"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1250,
+            "publisher": "Avery",
+            "language": "English",
+            "pages": 320,
+            "createdAt": "2026-09-19",
+            "description": "A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.",
+            "stock": 45
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 1348,
+      "shippingAddress": {
+        "name": "saj",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "fjufjyu",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-23T13:51:40.850Z",
+      "status": "Cancelled"
+    },
+    {
+      "id": 1790171544403,
+      "userId": "YupD3mu",
+      "items": [
+        {
+          "product": {
+            "id": 8,
+            "title": "The Kite Runner",
+            "author": "Khaled Hosseini",
+            "price": 399,
+            "mrp": 599,
+            "discountPercent": 33,
+            "images": [
+              "/images/kiterunner1.jpg"
+            ],
+            "category": "fiction",
+            "genre": [
+              "Fiction",
+              "Drama",
+              "Historical"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1350,
+            "publisher": "Riverhead Books",
+            "language": "English",
+            "pages": 371,
+            "createdAt": "2026-09-12",
+            "description": "A powerful story of friendship, family, betrayal, and redemption set against the history of Afghanistan.",
+            "stock": 25
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 399,
+      "shippingAddress": {
+        "name": "saj",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "fjufjyu",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-23T13:52:24.403Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790171567665,
+      "userId": "YupD3mu",
+      "items": [
+        {
+          "product": {
+            "id": 36,
+            "title": "1984",
+            "author": "George Orwell",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/1984.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Dystopian",
+              "Political Fiction"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1320,
+            "publisher": "Penguin Classics",
+            "language": "English",
+            "pages": 328,
+            "createdAt": "2026-08-15",
+            "description": "A dystopian classic about surveillance, control, truth, and individual freedom.",
+            "stock": 38
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 299,
+      "shippingAddress": {
+        "name": "saj",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "fjufjyu",
+        "pincode": "670308"
+      },
+      "paymentMethod": "UPI",
+      "createdAt": "2026-09-23T13:52:47.665Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790172043481,
+      "userId": "YupD3mu",
+      "items": [
+        {
+          "product": {
+            "id": 29,
+            "title": "Harry Potter and the Philosopher's Stone",
+            "author": "J.K. Rowling",
+            "price": 499,
+            "mrp": 799,
+            "discountPercent": 38,
+            "images": [
+              "/images/hp1.jpg",
+              "/images/hp2.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Magic"
+            ],
+            "rating": 4.9,
+            "reviewCount": 1800,
+            "publisher": "Bloomsbury",
+            "language": "English",
+            "pages": 223,
+            "createdAt": "2026-08-22",
+            "description": "A young boy discovers that he is a wizard and begins his magical education at Hogwarts.",
+            "stock": 50
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 499,
+      "shippingAddress": {
+        "name": "saj",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "fjufjyu",
+        "pincode": "670308"
+      },
+      "paymentMethod": "UPI",
+      "createdAt": "2026-09-23T14:00:43.481Z",
       "status": "Placed"
     }
   ]

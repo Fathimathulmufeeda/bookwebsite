@@ -1,6 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import { Order } from '../../core/Models/order.model';
-import { addOrder, loadOrdersFailure, loadOrdersSuccess } from './orders.action';
+import {
+  addOrder,
+  cancelOrderFailure,
+  cancelOrderSuccess,
+  loadOrdersFailure,
+  loadOrdersSuccess
+} from './orders.action';
 
 export interface OrdersState {
   orders: Order[];
@@ -29,10 +35,20 @@ export const ordersReducer = createReducer(
     loading: false,
     error: null
   })),
-  
+
   on(loadOrdersFailure, (state, { error }) => ({
     ...state,
     loading: false,
+    error
+  })),
+
+  on(cancelOrderSuccess, (state, { order }) => ({
+    ...state,
+    orders: state.orders.map(o => o.id === order.id ? order : o)
+  })),
+
+  on(cancelOrderFailure, (state, { error }) => ({
+    ...state,
     error
   }))
 

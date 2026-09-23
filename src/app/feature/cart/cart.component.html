@@ -1,57 +1,127 @@
-<h2>Cart page</h2>
-<h2>My Cart</h2>
+<app-header></app-header>
 
-@if (cartItems$ | async; as items) {
+<main class="min-h-screen bg-[#f8f5ef] px-4 py-8 sm:px-6 lg:px-10">
 
-@if (items.length > 0) {
+  <div class="mx-auto max-w-6xl">
 
-@for (item of items; track item.product.id) {
+    <h1 class="font-serif text-2xl font-medium text-[#202a24] sm:text-3xl">Shopping Cart</h1>
 
-<div class="cart-item">
+    @if (cartItems$ | async; as items) {
 
-    <h3>{{ item.product.title }}</h3>
+    @if (items.length > 0) {
 
-    <p>Author: {{ item.product.author }}</p>
+    <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
 
-    <p>Price: ₹{{ item.product.price }}</p>
+      <!-- Items list -->
+      <div class="space-y-4 lg:col-span-2">
 
-    <button type="button" (click)="onDecreaseQuantity(item.product.id)">
-        −
-    </button>
+        @for (item of items; track item.product.id) {
 
-    <span>{{ item.quantity }}</span>
+        <div class="flex gap-4 rounded-md border border-[#ebe6dd] bg-white p-4 sm:p-5">
 
-    <button type="button" [disabled]="item.quantity >= maxBookQuantity || item.quantity >= item.product.stock"
-        (click)="increaseQuantity(item.product.id)">
-        +
-    </button>
-    @if (item.quantity >= maxBookQuantity) {
-    <p>Maximum {{ maxBookQuantity }} copies allowed per book.</p>     } 
-    @else if (item.quantity >= item.product.stock) {
-    <p>Only {{ item.product.stock }} copies available.</p>     }
+          <a [routerLink]="['/product', item.product.id]" class="shrink-0">
+            <img [src]="item.product.images?.[0]" [alt]="item.product.title"
+              class="h-28 w-20 rounded-sm object-cover sm:h-32 sm:w-24" />
+          </a>
 
-    <p>
-        Subtotal: ₹{{ item.product.price * item.quantity }}
-    </p>
+          <div class="flex flex-1 flex-col justify-between">
 
-    <button type="button" (click)="onRemoveFromCart(item.product.id)">
-        Remove
-    </button>
+            <div>
+              <a [routerLink]="['/product', item.product.id]"
+                class="line-clamp-2 font-serif text-base font-medium text-[#26332b] no-underline hover:text-[#193629] sm:text-lg">
+                {{ item.product.title }}
+              </a>
+              <p class="mt-0.5 text-xs text-[#999]">{{ item.product.author }}</p>
 
-</div>
+              @if (item.quantity >= effectiveMax(item)) {
+              <p class="mt-1 text-[11px] font-medium text-[#a17b19]">Maximum quantity reached</p>
+              }
+            </div>
 
-}
+            <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
 
-<p>Total: ₹{{ cartTotal$ | async }}</p>
+              <div class="flex h-9 w-fit items-center rounded-sm border border-[#d8d0c2]">
+                <button type="button" (click)="decrease(item)"
+                  class="flex h-full w-9 items-center justify-center text-[#26332b]" aria-label="Decrease quantity">−</button>
+                <span class="flex h-full w-9 items-center justify-center text-sm font-semibold">{{ item.quantity }}</span>
+                <button type="button" (click)="increase(item)" [disabled]="item.quantity >= effectiveMax(item)"
+                  class="flex h-full w-9 items-center justify-center text-[#26332b] disabled:opacity-30" aria-label="Increase quantity">+</button>
+              </div>
 
-<button type="button" (click)="goToCheckout()">
-    Proceed to Checkout
-</button>
+              <div class="flex items-center gap-4">
+                <span class="text-sm font-semibold text-[#213027]">
+                  ₹{{ item.product.price * item.quantity }}
+                </span>
+                <button type="button" (click)="remove(item)" class="text-[11px] font-bold uppercase tracking-wide text-red-600 hover:underline">
+                  Remove
+                </button>
+              </div>
 
-} @else {
+            </div>
 
-<p>Your cart is empty.</p>
+          </div>
 
-}
+        </div>
 
-}
+        }
+
+      </div>
+
+      <!-- Summary -->
+      <div class="h-fit rounded-md border border-[#ebe6dd] bg-white p-6">
+
+        <h2 class="font-serif text-lg font-medium text-[#202a24]">Order Summary</h2>
+
+        <div class="mt-4 space-y-2 text-sm">
+          <div class="flex justify-between text-[#5c645d]">
+            <span>Subtotal</span>
+            <span>₹{{ cartTotal$ | async }}</span>
+          </div>
+          <div class="flex justify-between text-[#5c645d]">
+            <span>Shipping</span>
+            <span class="text-[#193629]">Free</span>
+          </div>
+        </div>
+
+        <div class="mt-4 flex justify-between border-t border-[#f0ece3] pt-4">
+          <span class="font-semibold text-[#26332b]">Total</span>
+          <span class="font-serif text-xl font-medium text-[#193629]">₹{{ cartTotal$ | async }}</span>
+        </div>
+
+        <button type="button" (click)="goToCheckout()"
+          class="mt-5 h-12 w-full rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#28503b]">
+          Proceed to Checkout
+        </button>
+
+        <a routerLink="/home"
+          class="mt-3 block text-center text-xs font-semibold text-[#193629] no-underline hover:underline">
+          Continue Shopping
+        </a>
+
+      </div>
+
+    </div>
+
+    } @else {
+
+    <div class="mt-16 flex flex-col items-center text-center">
+      <div class="flex h-16 w-16 items-center justify-center rounded-full bg-[#f0ece3] text-2xl text-[#867354]">
+        🛒
+      </div>
+      <p class="mt-4 font-serif text-lg text-[#26332b]">Your cart is empty</p>
+      <p class="mt-1 text-sm text-[#999]">Looks like you haven't added anything yet.</p>
+      <a routerLink="/home"
+        class="mt-5 rounded-sm bg-[#193629] px-6 py-3 text-[11px] font-bold uppercase tracking-wide text-white no-underline hover:bg-[#28503b]">
+        Browse Books
+      </a>
+    </div>
+
+    }
+
+    }
+
+  </div>
+
+</main>
+
+<app-footer></app-footer>

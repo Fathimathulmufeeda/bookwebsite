@@ -1,0 +1,247 @@
+<header class="sticky top-0 z-50 w-full bg-white shadow-sm">
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div
+    class="flex h-7 items-center justify-between bg-[#193629] px-4 text-[8px] text-white sm:px-6 sm:text-[9px] lg:px-8">
+
+    <span class="flex items-center gap-1 whitespace-nowrap">
+      <svg class="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 7h11v10H3z" />
+        <path d="M14 10h4l3 3v4h-7z" />
+        <circle cx="7" cy="19" r="1.5" />
+        <circle cx="18" cy="19" r="1.5" />
+      </svg>
+      <span class="hidden sm:inline">Free shipping on orders over $50</span>
+      <span class="sm:hidden">Free shipping over $50</span>
+    </span>
+
+    <span class="hidden md:block">Books that inspire, stories that stay.</span>
+
+    <div class="flex items-center gap-3 sm:gap-4">
+      <span class="hidden sm:block">Customer Support</span>
+      <span class="flex items-center gap-1">
+        EN
+        <svg class="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </span>
+    </div>
+
+  </div>
+
+
+  <!-- MAIN NAVBAR -->
+  <div class="flex h-[64px] items-center px-4 sm:h-[68px] sm:px-6 lg:h-[72px] lg:px-10">
+
+    <!-- MOBILE HAMBURGER -->
+    <button type="button" (click)="toggleMobileMenu(); $event.stopPropagation()"
+      class="mr-3 flex h-9 w-9 shrink-0 items-center justify-center text-[#253129] xl:hidden" aria-label="Menu">
+      @if (mobileMenuOpen) {
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+      } @else {
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 6h18M3 12h18M3 18h18" />
+      </svg>
+      }
+    </button>
+
+    <!-- LOGO -->
+    <a routerLink="/home" (click)="closeMobileMenu()"
+      class="flex shrink-0 items-center gap-2 text-[#26332b] no-underline">
+      <svg class="h-8 w-6 text-[#867354] sm:h-9 sm:w-7" viewBox="0 0 32 40" fill="none">
+        <path d="M4 6h9c4 0 7 2 7 5v25c-2-2-4-3-7-3H4V6Z" stroke="currentColor" stroke-width="1.3" />
+        <path d="M28 6h-9c-4 0-7 2-7 5v25c2-2 4-3 7-3h9V6Z" stroke="currentColor" stroke-width="1.3" />
+        <path d="M16 8v25" stroke="currentColor" stroke-width="1.3" />
+      </svg>
+      <div>
+        <h1 class="font-serif text-[16px] font-medium tracking-[0.18em] sm:text-[18px] sm:tracking-[0.22em]">NOVA</h1>
+        <p class="mt-0.5 text-[6px] tracking-[0.28em] sm:text-[7px] sm:tracking-[0.32em]">BOOKSHOP</p>
+      </div>
+    </a>
+
+    <!-- DESKTOP NAVIGATION -->
+    <nav class="hidden flex-1 items-center justify-center gap-5 xl:flex 2xl:gap-7">
+
+      <a routerLink="/home" [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="border-[#193629] text-[#193629]"
+        [ngClass]="(activeFragment === '') ? 'text-[#193629] border-[#193629]' : ''"
+        class="border-b-2 border-transparent pb-2 text-[10px] font-bold uppercase text-[#2d332f] no-underline hover:text-[#193629]">
+        Home
+      </a>
+
+      <a routerLink="/books" routerLinkActive="text-[#193629] border-[#193629]"
+        class="border-b-2 border-transparent pb-2 text-[10px] font-bold uppercase text-[#2d332f] no-underline hover:text-[#193629]">
+        Books
+      </a>
+
+      <a routerLink="/home" fragment="categories"
+        [ngClass]="(isFragmentActive('categories')) ? 'text-[#193629] border-[#193629]' : ''"
+        class="border-b-2 border-transparent pb-2 text-[10px] font-bold uppercase text-[#2d332f] no-underline hover:text-[#193629]">
+        Categories
+      </a>
+
+      <a routerLink="/home" fragment="bestsellers"
+        [ngClass]="(isFragmentActive('bestsellers')) ? 'text-[#193629] border-[#193629]' : ''"
+        class="border-b-2 border-transparent pb-2 text-[10px] font-bold uppercase text-[#2d332f] no-underline hover:text-[#193629]">
+        Bestsellers
+      </a>
+
+      <a routerLink="/home" fragment="new-arrivals"
+        [ngClass]="(isFragmentActive('new-arrivals')) ? 'text-[#193629] border-[#193629]' : ''"
+        class="border-b-2 border-transparent pb-2 text-[10px] font-bold uppercase text-[#2d332f] no-underline hover:text-[#193629]">
+        New Arrivals
+      </a>
+
+      <a routerLink="/wishlist" routerLinkActive="border-[#193629] text-[#193629]"
+        class="border-b-2 border-transparent pb-2 text-[10px] font-bold uppercase text-[#2d332f] no-underline hover:text-[#193629]">
+        Wishlist
+      </a>
+
+      <a routerLink="/order-history" routerLinkActive="border-[#193629] text-[#193629]"
+        class="border-b-2 border-transparent pb-2 text-[10px] font-bold uppercase text-[#2d332f] no-underline hover:text-[#193629]">
+        Orders
+      </a>
+
+    </nav>
+
+
+    <!-- RIGHT ICONS -->
+    <div class="ml-auto flex shrink-0 items-center gap-3 sm:gap-4">
+
+      <!-- SEARCH -->
+      <button type="button" (click)="toggleSearch()" class="text-[#253129] transition hover:text-[#92724b]"
+        aria-label="Search">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="6.5" />
+          <path d="m16 16 5 5" />
+        </svg>
+      </button>
+
+      <!-- WISHLIST -->
+      <button type="button" (click)="goToWishlist()" class="relative text-[#253129] transition hover:text-[#92724b]"
+        aria-label="Wishlist">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path
+            d="M20.8 8.8c0-3-2.2-5.3-5.1-5.3-1.7 0-3 .8-3.7 2-0.7-1.2-2-2-3.7-2-2.9 0-5.1 2.3-5.1 5.3 0 5.3 8.8 10.1 8.8 10.1s8.8-4.8 8.8-10.1Z" />
+        </svg>
+        <span
+          class="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#193629] px-1 text-[8px] font-bold text-white">
+          {{ wishlistCount$ | async }}
+        </span>
+      </button>
+
+      <!-- ACCOUNT -->
+      <div class="relative">
+        <button type="button" (click)="toggleProfileMenu(); $event.stopPropagation()"
+          class="text-[#253129] transition hover:text-[#92724b]" aria-label="Account">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="8" r="3.5" />
+            <path d="M5 20c.8-3.3 3.2-5 7-5s6.2 1.7 7 5" />
+          </svg>
+        </button>
+
+        @if (profileMenuOpen) {
+        <div (click)="$event.stopPropagation()"
+          class="absolute right-0 top-9 z-50 w-52 rounded-sm border border-[#ebe6dd] bg-white py-2 shadow-lg">
+
+          @if (currentUser) {
+          <div class="border-b border-[#f0ece3] px-4 py-2">
+            <p class="truncate text-xs font-semibold text-[#26332b]">{{ currentUser.name }}</p>
+            <p class="truncate text-[11px] text-[#999]">{{ currentUser.email }}</p>
+          </div>
+          }
+
+          <button type="button" (click)="goToOrders()"
+            class="flex w-full items-center px-4 py-2 text-left text-xs text-[#3a3f3b] hover:bg-[#f8f5ef]">
+            My Orders
+          </button>
+
+          <button type="button" (click)="logout()"
+            class="flex w-full items-center px-4 py-2 text-left text-xs text-red-600 hover:bg-red-50">
+            Log Out
+          </button>
+
+        </div>
+        }
+      </div>
+
+      <!-- CART -->
+      <button type="button" (click)="goToCart()" class="relative text-[#253129] transition hover:text-[#92724b]"
+        aria-label="Cart">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 4h2l2.2 11.5a2 2 0 0 0 2 1.5h7.8a2 2 0 0 0 2-1.6L21 8H6" />
+          <circle cx="10" cy="20" r="1" />
+          <circle cx="18" cy="20" r="1" />
+        </svg>
+        <span
+          class="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#193629] px-1 text-[8px] font-bold text-white">
+          {{ cartCount$ | async }}
+        </span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- SEARCH BAR (slides open under navbar) -->
+  @if (searchOpen) {
+  <div class="flex items-center gap-2 border-t border-[#eeeae3] bg-[#faf8f5] px-4 py-2 sm:px-6 lg:px-10">
+    <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="onSearchSubmit()"
+      placeholder="Search for books, authors, genres..."
+      class="flex-1 border-none bg-transparent text-[12px] text-[#253129] outline-none placeholder:text-[#9c9284]" />
+    <button type="button" (click)="onSearchSubmit()" class="text-[#193629]" aria-label="Submit search">
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="6.5" />
+        <path d="m16 16 5 5" />
+      </svg>
+    </button>
+    <button type="button" (click)="toggleSearch()" class="text-[#253129]" aria-label="Close search">
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  </div>
+  }
+
+  <!-- MOBILE NAV PANEL -->
+  @if (mobileMenuOpen) {
+  <nav class="flex flex-col border-t border-[#eeeae3] bg-white px-4 py-2 xl:hidden" (click)="$event.stopPropagation()">
+
+    <a routerLink="/home" (click)="closeMobileMenu()" [ngClass]="activeFragment === '' ? 'text-[#193629]' : ''"
+      class="border-b border-[#f4f1ea] py-3 text-xs font-bold uppercase text-[#2d332f] no-underline">
+      Home
+    </a>
+    <a routerLink="/books" (click)="closeMobileMenu()"
+      class="border-b border-[#f4f1ea] py-3 text-xs font-bold uppercase text-[#2d332f] no-underline">
+      Books
+    </a>
+    <a routerLink="/home" fragment="categories" (click)="closeMobileMenu()"
+      class="border-b border-[#f4f1ea] py-3 text-xs font-bold uppercase text-[#2d332f] no-underline">
+      Categories
+    </a>
+    <a routerLink="/home" fragment="bestsellers" (click)="closeMobileMenu()"
+      class="border-b border-[#f4f1ea] py-3 text-xs font-bold uppercase text-[#2d332f] no-underline">
+      Bestsellers
+    </a>
+    <a routerLink="/home" fragment="new-arrivals" (click)="closeMobileMenu()"
+      class="border-b border-[#f4f1ea] py-3 text-xs font-bold uppercase text-[#2d332f] no-underline">
+      New Arrivals
+    </a>
+    <a routerLink="/wishlist" routerLinkActive="text-[#193629]" (click)="closeMobileMenu()"
+      class="border-b border-[#f4f1ea] py-3 text-xs font-bold uppercase text-[#2d332f] no-underline">
+      Wishlist
+    </a>
+    <a routerLink="/cart" routerLinkActive="text-[#193629]" (click)="closeMobileMenu()"
+      class="border-b border-[#f4f1ea] py-3 text-xs font-bold uppercase text-[#2d332f] no-underline">
+      Cart
+    </a>
+    <a routerLink="/order-history" routerLinkActive="text-[#193629]" (click)="closeMobileMenu()"
+      class="py-3 text-xs font-bold uppercase text-[#2d332f] no-underline">
+      My Orders
+    </a>
+
+  </nav>
+  }
+
+</header>

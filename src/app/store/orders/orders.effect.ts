@@ -4,6 +4,9 @@ import { catchError, map, of, switchMap } from 'rxjs';
 
 import {
   addOrder,
+  cancelOrder,
+  cancelOrderFailure,
+  cancelOrderSuccess,
   loadOrders,
   loadOrdersFailure,
   loadOrdersSuccess
@@ -29,13 +32,13 @@ export class OrdersEffect {
     { dispatch: false }
   );
 
-  // Load existing orders from JSON Server
+  // Load existing orders from JSON Server, scoped to the current user when provided
   loadOrders$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadOrders),
 
-      switchMap(() =>
-        this.orderService.getOrders().pipe(
+      switchMap(({ userId }) =>
+        this.orderService.getOrders(userId).pipe(
 
           map(orders =>
             loadOrdersSuccess({ orders })
@@ -44,6 +47,31 @@ export class OrdersEffect {
           catchError(error =>
             of(
               loadOrdersFailure({
+                error: error.message
+              })
+            )
+          )
+
+        )
+      )
+    )
+  );
+
+  // Cancel an order
+  cancelOrder$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(cancelOrder),
+
+      switchMap(({ orderId }) =>
+        this.orderService.updateOrderStatus(orderId, 'Cancelled').pipe(
+
+          map(order =>
+            cancelOrderSuccess({ order })
+          ),
+
+          catchError(error =>
+            of(
+              cancelOrderFailure({
                 error: error.message
               })
             )

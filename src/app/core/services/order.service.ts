@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Order } from '../Models/order.model';
+import { Order, OrderStatus } from '../Models/order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,16 @@ export class OrderService {
     return this.http.post<Order>(this.apiUrl, order);
   }
 
-  getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(this.apiUrl);
+  getOrders(userId?: number): Observable<Order[]> {
+
+    const url = userId != null
+      ? `${this.apiUrl}?userId=${userId}&_sort=id&_order=desc`
+      : `${this.apiUrl}?_sort=id&_order=desc`;
+
+    return this.http.get<Order[]>(url);
+  }
+
+  updateOrderStatus(id: number, status: OrderStatus): Observable<Order> {
+    return this.http.patch<Order>(`${this.apiUrl}/${id}`, { status });
   }
 }

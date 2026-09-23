@@ -1,0 +1,196 @@
+<app-header></app-header>
+
+<main class="min-h-screen bg-[#f8f5ef] px-4 py-8 sm:px-6 lg:px-10">
+
+  @if (loading) {
+  <div class="flex min-h-[50vh] items-center justify-center">
+    <p class="text-sm text-[#999]">Loading book details...</p>
+  </div>
+  }
+
+  @if (!loading && notFound) {
+  <div class="flex min-h-[50vh] flex-col items-center justify-center text-center">
+    <p class="font-serif text-2xl text-[#26332b]">Book not found</p>
+    <p class="mt-2 text-sm text-[#999]">The book you're looking for doesn't exist or was removed.</p>
+    <a routerLink="/home" class="mt-5 rounded-sm bg-[#193629] px-6 py-3 text-[11px] font-bold uppercase tracking-wide text-white no-underline hover:bg-[#28503b]">
+      Back to Home
+    </a>
+  </div>
+  }
+
+  @if (!loading && product) {
+
+  <div class="mx-auto max-w-6xl">
+
+    <!-- Breadcrumb -->
+    <div class="mb-6 flex items-center gap-2 text-[11px] text-[#999]">
+      <a routerLink="/home" class="no-underline hover:text-[#193629]">Home</a>
+      <span>/</span>
+      <span>{{ product.category }}</span>
+      <span>/</span>
+      <span class="truncate text-[#5c645d]">{{ product.title }}</span>
+    </div>
+
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-[100px_1fr_1fr]">
+
+      <!-- Thumbnails (desktop, left rail) -->
+      <div class="order-2 hidden flex-row gap-3 lg:order-1 lg:flex lg:flex-col">
+        @for (img of images; track $index) {
+        <button type="button" (click)="selectImage($index)"
+          class="h-20 w-16 shrink-0 overflow-hidden rounded-sm border-2 transition"
+          [ngClass]="selectedImageIndex === $index ? 'border-[#193629]' : 'border-transparent'">
+          <img [src]="img" [alt]="product.title + ' image ' + ($index + 1)" class="h-full w-full object-cover" />
+        </button>
+        }
+      </div>
+
+      <!-- Main image with zoom -->
+      <div class="order-1 lg:order-2">
+
+        <div class="relative aspect-[3/4] w-full overflow-hidden rounded-md border border-[#ebe6dd] bg-white"
+          (mousemove)="onMouseMove($event)" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+
+          @if (images.length) {
+          <img [src]="images[selectedImageIndex]" [alt]="product.title" class="h-full w-full object-contain" />
+          } @else {
+          <div class="flex h-full items-center justify-center text-sm text-[#bbb]">No image available</div>
+          }
+
+          @if (isZooming && images.length) {
+          <div class="pointer-events-none absolute inset-0 hidden sm:block"
+            [style.backgroundImage]="'url(' + images[selectedImageIndex] + ')'"
+            [style.backgroundPosition]="zoomBackgroundPosition"
+            style="background-size: 200%; background-repeat: no-repeat;">
+          </div>
+          }
+
+          @if (product.stock <= 0) {
+          <span class="absolute left-3 top-3 rounded-sm bg-[#26332b] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+            Out of Stock
+          </span>
+          } @else if (product.stock <= 5) {
+          <span class="absolute left-3 top-3 rounded-sm bg-[#a17b19] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+            Only {{ product.stock }} left
+          </span>
+          }
+
+          @if (images.length > 1) {
+          <button type="button" (click)="prevImage()"
+            class="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#26332b] shadow hover:bg-white"
+            aria-label="Previous image">‹</button>
+          <button type="button" (click)="nextImage()"
+            class="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#26332b] shadow hover:bg-white"
+            aria-label="Next image">›</button>
+          }
+        </div>
+
+        <p class="mt-2 hidden text-center text-[11px] text-[#b3ada0] sm:block">Hover the image to zoom</p>
+
+        <!-- Thumbnails (mobile, below image) -->
+        @if (images.length > 1) {
+        <div class="mt-3 flex gap-2 overflow-x-auto lg:hidden">
+          @for (img of images; track $index) {
+          <button type="button" (click)="selectImage($index)"
+            class="h-16 w-14 shrink-0 overflow-hidden rounded-sm border-2 transition"
+            [ngClass]="selectedImageIndex === $index ? 'border-[#193629]' : 'border-transparent'">
+            <img [src]="img" [alt]="product.title" class="h-full w-full object-cover" />
+          </button>
+          }
+        </div>
+        }
+      </div>
+
+      <!-- Details -->
+      <div class="order-3">
+
+        <p class="text-xs font-bold uppercase tracking-widest text-[#867354]">{{ product.category }}</p>
+        <h1 class="mt-2 font-serif text-2xl font-medium text-[#202a24] sm:text-3xl">{{ product.title }}</h1>
+        <p class="mt-1 text-sm text-[#777d76]">by {{ product.author }}</p>
+
+        <div class="mt-3 flex items-center gap-2">
+          <span class="flex items-center gap-1 text-sm text-[#a17b19]">
+            ★ {{ product.rating }}
+          </span>
+          <span class="text-xs text-[#999]">({{ product.reviewCount }} reviews)</span>
+        </div>
+
+        <div class="mt-5 flex items-baseline gap-3">
+          <span class="font-serif text-3xl font-medium text-[#193629]">₹{{ product.price }}</span>
+          @if (product.mrp > product.price) {
+          <span class="text-base text-[#b3ada0] line-through">₹{{ product.mrp }}</span>
+          <span class="text-sm font-semibold text-[#c0392b]">
+            {{ product.discountPercent || (discountAmount() / product.mrp * 100 | number:'1.0-0') }}% off
+          </span>
+          }
+        </div>
+        <p class="mt-1 text-xs text-[#999]">Inclusive of all taxes</p>
+
+        <p class="mt-5 text-sm leading-6 text-[#5c645d]">{{ product.description }}</p>
+
+        <div class="mt-5 grid grid-cols-2 gap-3 text-xs text-[#5c645d] sm:grid-cols-3">
+          <p><span class="font-semibold text-[#26332b]">Publisher:</span> {{ product.publisher }}</p>
+          <p><span class="font-semibold text-[#26332b]">Language:</span> {{ product.language }}</p>
+          <p><span class="font-semibold text-[#26332b]">Pages:</span> {{ product.pages }}</p>
+        </div>
+
+        <!-- Quantity selector -->
+        <div class="mt-6">
+          <p class="mb-2 text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">Quantity</p>
+
+          @if (product.stock > 0 && !alreadyInCart) {
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-fit items-center rounded-sm border border-[#d8d0c2]">
+              <button type="button" (click)="decreaseQty()" [disabled]="quantity <= 1"
+                class="flex h-full w-10 items-center justify-center text-[#26332b] disabled:opacity-30">−</button>
+              <span class="flex h-full w-10 items-center justify-center text-sm font-semibold">{{ quantity }}</span>
+              <button type="button" (click)="increaseQty()" [disabled]="quantity >= effectiveMax"
+                class="flex h-full w-10 items-center justify-center text-[#26332b] disabled:opacity-30">+</button>
+            </div>
+            <span class="text-xs text-[#999]">Max {{ effectiveMax }} per order</span>
+          </div>
+          }
+
+          @if (alreadyInCart) {
+          <p class="text-xs text-[#193629]">
+            ✓ Already in your cart ({{ currentCartQuantity }} {{ currentCartQuantity === 1 ? 'copy' : 'copies' }}).
+            <a routerLink="/cart" class="font-semibold underline">View cart</a> to change quantity.
+          </p>
+          }
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+
+          <button type="button" (click)="addToCart()" [disabled]="product.stock <= 0 || alreadyInCart"
+            class="h-12 flex-1 rounded-sm border border-[#193629] text-xs font-bold uppercase tracking-[0.12em] text-[#193629] transition hover:bg-[#193629] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#193629]">
+            {{ alreadyInCart ? 'In Cart' : (product.stock <= 0 ? 'Out of Stock' : 'Add to Cart') }}
+          </button>
+
+          <button type="button" (click)="buyNow()" [disabled]="product.stock <= 0"
+            class="h-12 flex-1 rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-[0.12em] text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-40">
+            Buy Now
+          </button>
+
+          <button type="button" (click)="toggleWishlist()"
+            class="flex h-12 w-12 shrink-0 items-center justify-center self-center rounded-sm border transition sm:self-auto"
+            [ngClass]="isWishlisted ? 'border-red-300 bg-red-50' : 'border-[#d8d0c2]'"
+            [attr.aria-label]="isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" [attr.fill]="isWishlisted ? '#dc2626' : 'none'"
+              [attr.stroke]="isWishlisted ? '#dc2626' : '#26332b'" stroke-width="1.5">
+              <path d="M20.8 8.8c0-3-2.2-5.3-5.1-5.3-1.7 0-3 .8-3.7 2-0.7-1.2-2-2-3.7-2-2.9 0-5.1 2.3-5.1 5.3 0 5.3 8.8 10.1 8.8 10.1s8.8-4.8 8.8-10.1Z" />
+            </svg>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+</main>
+
+<app-footer></app-footer>
