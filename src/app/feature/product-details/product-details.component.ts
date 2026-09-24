@@ -17,6 +17,7 @@ import { selectWishlistProducts } from '../../store/wishlist/wishlist.selectors'
 
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-product-details',
@@ -32,6 +33,7 @@ export class ProductDetailsComponent implements OnInit {
   private productService = inject(ProductService);
   private store = inject(Store);
   private toast = inject(ToastService);
+  private authService = inject(AuthService);
 
   product: Product | null = null;
   loading = true;
@@ -169,56 +171,111 @@ export class ProductDetailsComponent implements OnInit {
   addToCart(): void {
 
     if (!this.product) return;
-
+  
+    // Check authentication first
+    if (!this.authService.isLoggedIn()) {
+      this.authService.savePendingAction({
+        type: 'cart',
+        productId: this.product.id,
+        quantity: this.quantity
+      });
+    
+      this.router.navigate(['/login']);
+      return;
+    }
+  
     if (this.product.stock <= 0) {
       this.toast.error('This book is currently out of stock.');
       return;
     }
-
+  
     if (this.alreadyInCart) {
-      this.toast.info(`${this.product.title} is already in your cart. Adjust the quantity from your cart.`);
+      this.toast.info(
+        `${this.product.title} is already in your cart. Adjust the quantity from your cart.`
+      );
       return;
     }
-
+  
     if (this.effectiveMax <= 0) {
       this.toast.warning('No more stock available to add.');
       return;
     }
-
+  
     this.store.dispatch(addToCart({
-      item: { product: this.product, quantity: this.quantity }
+      item: {
+        product: this.product,
+        quantity: this.quantity
+      }
     }));
-
+  
     this.toast.success(`${this.product.title} added to cart.`);
   }
 
   buyNow(): void {
 
     if (!this.product) return;
-
+  
+    // Check authentication first
+    if (!this.authService.isLoggedIn()) {
+      this.authService.savePendingAction({
+        type: 'buyNow',
+        productId: this.product.id,
+        quantity: this.quantity
+      });
+    
+      this.router.navigate(['/login']);
+      return;
+    }
+  
     if (this.product.stock <= 0) {
       this.toast.error('This book is currently out of stock.');
       return;
     }
-
+  
     if (!this.alreadyInCart) {
       this.store.dispatch(addToCart({
-        item: { product: this.product, quantity: this.quantity }
+        item: {
+          product: this.product,
+          quantity: this.quantity
+        }
       }));
     }
-
+  
     this.router.navigate(['/checkout']);
   }
 
   toggleWishlist(): void {
 
     if (!this.product) return;
-
+  
+    // Check authentication first
+    if (!this.authService.isLoggedIn()) {
+      this.authService.savePendingAction({
+        type: 'wishlist',
+        productId: this.product.id,
+        quantity: 1
+      });
+    
+      this.router.navigate(['/login']);
+      return;
+    }
+  
     if (this.isWishlisted) {
-      this.store.dispatch(removeFromWishlist({ productId: this.product.id }));
+      this.store.dispatch(
+        removeFromWishlist({
+          productId: this.product.id
+        })
+      );
+  
       this.toast.info(`${this.product.title} removed from wishlist.`);
+  
     } else {
-      this.store.dispatch(addToWishlist({ product: this.product }));
+      this.store.dispatch(
+        addToWishlist({
+          product: this.product
+        })
+      );
+  
       this.toast.success(`${this.product.title} added to wishlist.`);
     }
   }

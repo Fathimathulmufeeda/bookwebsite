@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { Product } from '../../core/Models/Product.model';
 
-import { addToWishlist,loadWishlistSuccess,removeFromWishlist} from './wishlist.action';
+import { addToWishlist,clearWishlist,loadWishlistSuccess,removeFromWishlist} from './wishlist.action';
 
 export interface WishlistState {
   products: Product[];
@@ -40,6 +40,9 @@ export const wishlistReducer = createReducer(
   on(loadWishlistSuccess, (state, { products }) => ({
     ...state,
     products
-  }))
+  })),
+  on(clearWishlist, () => ({
+    products: []
+  })),
 
 );

@@ -1,27 +1,57 @@
-import { Injectable } from '@angular/core';
+
+import { Injectable, inject } from '@angular/core';
 import { Product } from '../Models/Product.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WishlistService {
 
-  private storageKey = 'wishlist';
+  private authService = inject(AuthService);
+
+  private getStorageKey(): string | null {
+    const user = this.authService.getCurrentUser();
+
+    if (!user) {
+      return null;
+    }
+
+    return `wishlist_${user.id}`;
+  }
 
   saveWishlist(products: Product[]): void {
+    const storageKey = this.getStorageKey();
+
+    if (!storageKey || typeof localStorage === 'undefined') {
+      return;
+    }
+
     localStorage.setItem(
-      this.storageKey,
+      storageKey,
       JSON.stringify(products)
     );
   }
 
   getWishlist(): Product[] {
-    const data = localStorage.getItem(this.storageKey);
+    const storageKey = this.getStorageKey();
+
+    if (!storageKey || typeof localStorage === 'undefined') {
+      return [];
+    }
+
+    const data = localStorage.getItem(storageKey);
 
     return data ? JSON.parse(data) : [];
   }
 
   clearWishlist(): void {
-    localStorage.removeItem(this.storageKey);
+    const storageKey = this.getStorageKey();
+
+    if (!storageKey || typeof localStorage === 'undefined') {
+      return;
+    }
+
+    localStorage.removeItem(storageKey);
   }
 }

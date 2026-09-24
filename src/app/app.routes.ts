@@ -5,7 +5,7 @@ import { authGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
   {
@@ -26,20 +26,29 @@ export const routes: Routes = [
       import('./feature/auth/forgot-password/forgot-password.component')
         .then(m => m.ForgotPasswordComponent)
   },
+  //public
   {
     path: 'product/:id',
     loadComponent: () =>
       import('./feature/product-details/product-details.component')
         .then(m => m.ProductDetailsComponent),
-    canActivate: [authGuard]
   },
   {
     path: 'home',
     loadComponent: () =>
       import('./feature/home/home.component')
         .then(m => m.HomeComponent),
-        canActivate:[authGuard]
+        
   },
+  {
+    path: 'books',
+    loadComponent: () =>
+      import('./feature/books/books.component')
+        .then(m => m.BooksComponent),
+    
+  },
+
+  //prvate
   {
     path: 'cart',
     loadComponent: () =>
@@ -75,15 +84,9 @@ export const routes: Routes = [
         .then(m => m.WishlistComponent),
     canActivate: [authGuard]
   },
-  {
-    path: 'books',
-    loadComponent: () =>
-      import('./feature/books/books.component')
-        .then(m => m.BooksComponent),
-    canActivate: [authGuard]
-  },
+  
   {
     path: '**',
-    redirectTo: 'login'
+    redirectTo: 'home'
   }
 ];

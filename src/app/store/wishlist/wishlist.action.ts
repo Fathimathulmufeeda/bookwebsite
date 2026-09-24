@@ -18,3 +18,6 @@ export const loadWishlistSuccess = createAction(
     '[Wishlist] Load Wishlist Success',
     props<{ products: Product[] }>()
 );
+export const clearWishlist = createAction(
+  '[Wishlist] Clear Wishlist'
+);

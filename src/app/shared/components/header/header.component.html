@@ -94,15 +94,16 @@
         New Arrivals
       </a>
 
+      @if (isLoggedIn()) {
       <a routerLink="/wishlist" routerLinkActive="border-[#193629] text-[#193629]"
         class="border-b-2 border-transparent pb-2 text-[10px] font-bold uppercase text-[#2d332f] no-underline hover:text-[#193629]">
         Wishlist
       </a>
-
+      
       <a routerLink="/order-history" routerLinkActive="border-[#193629] text-[#193629]"
         class="border-b-2 border-transparent pb-2 text-[10px] font-bold uppercase text-[#2d332f] no-underline hover:text-[#193629]">
         Orders
-      </a>
+      </a>     }
 
     </nav>
 
@@ -145,23 +146,41 @@
         @if (profileMenuOpen) {
         <div (click)="$event.stopPropagation()"
           class="absolute right-0 top-9 z-50 w-52 rounded-sm border border-[#ebe6dd] bg-white py-2 shadow-lg">
-
+          @if (isLoggedIn()) {
+          
           @if (currentUser) {
           <div class="border-b border-[#f0ece3] px-4 py-2">
-            <p class="truncate text-xs font-semibold text-[#26332b]">{{ currentUser.name }}</p>
-            <p class="truncate text-[11px] text-[#999]">{{ currentUser.email }}</p>
+            <p class="truncate text-xs font-semibold text-[#26332b]">
+              {{ currentUser.name }}
+            </p>
+          
+            <p class="truncate text-[11px] text-[#999]">
+              {{ currentUser.email }}
+            </p>
           </div>
           }
-
+          
           <button type="button" (click)="goToOrders()"
             class="flex w-full items-center px-4 py-2 text-left text-xs text-[#3a3f3b] hover:bg-[#f8f5ef]">
             My Orders
           </button>
-
+          
           <button type="button" (click)="logout()"
             class="flex w-full items-center px-4 py-2 text-left text-xs text-red-600 hover:bg-red-50">
             Log Out
           </button>
+          
+          } @else {
+          
+          <a routerLink="/login" (click)="profileMenuOpen = false"
+            class="block px-4 py-2 text-xs text-[#3a3f3b] no-underline hover:bg-[#f8f5ef]">
+            Login
+          </a>
+          
+          <a routerLink="/register" (click)="profileMenuOpen = false"
+            class="block px-4 py-2 text-xs text-[#3a3f3b] no-underline hover:bg-[#f8f5ef]">
+            Register
+          </a>         }
 
         </div>
         }
@@ -236,10 +255,11 @@
       class="border-b border-[#f4f1ea] py-3 text-xs font-bold uppercase text-[#2d332f] no-underline">
       Cart
     </a>
+    @if (isLoggedIn()) {
     <a routerLink="/order-history" routerLinkActive="text-[#193629]" (click)="closeMobileMenu()"
       class="py-3 text-xs font-bold uppercase text-[#2d332f] no-underline">
       My Orders
-    </a>
+    </a>   }
 
   </nav>
   }

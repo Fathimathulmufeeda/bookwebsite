@@ -20,6 +20,27 @@
       "password": "Zz123456@",
       "role": "user",
       "id": "YupD3mu"
+    },
+    {
+      "name": "ayisha",
+      "email": "a@gmail.com",
+      "password": "Ayisha@12",
+      "role": "user",
+      "id": "vXtw2xU"
+    },
+    {
+      "name": "muthu",
+      "email": "muthu@gmail.com",
+      "password": "Muthu@12",
+      "role": "user",
+      "id": "vXdHsWU"
+    },
+    {
+      "name": "sajith",
+      "email": "saji@gmail.com",
+      "password": "Saji@123",
+      "role": "user",
+      "id": "96jSbVU"
     }
   ],
   "products": [
@@ -2110,6 +2131,188 @@
       },
       "paymentMethod": "UPI",
       "createdAt": "2026-09-24T10:20:58.568Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790268124447,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 2,
+            "title": "The 7 Habits of Highly Effective People",
+            "author": "Stephen R. Covey",
+            "price": 499,
+            "mrp": 799,
+            "discountPercent": 38,
+            "images": [
+              "/images/habitsof-people1.png",
+              "/images/habitsof-people2.png"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Personal Development",
+              "Leadership"
+            ],
+            "rating": 4.7,
+            "reviewCount": 980,
+            "publisher": "Simon & Schuster",
+            "language": "English",
+            "pages": 464,
+            "createdAt": "2026-09-18",
+            "description": "A principle-centered approach to personal and professional effectiveness.",
+            "stock": 32
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 4,
+            "title": "Think and Grow Rich",
+            "author": "Napoleon Hill",
+            "price": 199,
+            "mrp": 299,
+            "discountPercent": 33,
+            "images": [
+              "/images/thinkandrich1.png",
+              "/images/thinkandrich1.png"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Success",
+              "Motivation"
+            ],
+            "rating": 4.5,
+            "reviewCount": 760,
+            "publisher": "Fingerprint Publishing",
+            "language": "English",
+            "pages": 320,
+            "createdAt": "2026-09-16",
+            "description": "A classic personal success book focused on mindset, ambition, and achievement.",
+            "stock": 28
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 31,
+            "title": "The Lion, the Witch and the Wardrobe",
+            "author": "C.S. Lewis",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/lionwitch1.jpg",
+              "/images/lionwitch2.jpg",
+              "/images/lionwitch3.jpg",
+              "/images/lionwitch4.jpg",
+              "/images/lionwitch5.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Fantasy"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1150,
+            "publisher": "HarperCollins",
+            "language": "English",
+            "pages": 208,
+            "createdAt": "2026-08-20",
+            "description": "Four siblings enter a magical world through a wardrobe and become part of an epic adventure.",
+            "stock": 31
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 8,
+            "title": "The Kite Runner",
+            "author": "Khaled Hosseini",
+            "price": 399,
+            "mrp": 599,
+            "discountPercent": 33,
+            "images": [
+              "/images/kiterunner1.jpg"
+            ],
+            "category": "fiction",
+            "genre": [
+              "Fiction",
+              "Drama",
+              "Historical"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1350,
+            "publisher": "Riverhead Books",
+            "language": "English",
+            "pages": 371,
+            "createdAt": "2026-09-12",
+            "description": "A powerful story of friendship, family, betrayal, and redemption set against the history of Afghanistan.",
+            "stock": 25
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 1396,
+      "shippingAddress": {
+        "name": "fathima",
+        "phone": "9876543212",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "sedrt",
+        "state": "wsss",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-24T16:42:04.447Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790270417239,
+      "userId": "96jSbVU",
+      "items": [
+        {
+          "product": {
+            "id": 24,
+            "title": "The Fault in Our Stars",
+            "author": "John Green",
+            "price": 299,
+            "mrp": 399,
+            "discountPercent": 25,
+            "images": [
+              "/images/faultinourstar.jpg"
+            ],
+            "category": "romance",
+            "genre": [
+              "Romance",
+              "Young Adult",
+              "Drama"
+            ],
+            "rating": 4.6,
+            "reviewCount": 990,
+            "publisher": "Dutton Books",
+            "language": "English",
+            "pages": 336,
+            "createdAt": "2026-08-27",
+            "description": "A touching story about love, friendship, and finding meaning in difficult circumstances.",
+            "stock": 35
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 299,
+      "shippingAddress": {
+        "name": "sajith",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "UPI",
+      "createdAt": "2026-09-24T17:20:17.239Z",
       "status": "Placed"
     }
   ]

@@ -3,6 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, switchMap, tap, map, catchError, throwError } from 'rxjs';
 import { User } from '../Models/user.model';
 
+
+export interface PendingAction {
+  type: 'cart' | 'wishlist' | 'buyNow';
+  productId: number;
+  quantity: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +21,7 @@ export class AuthService {
 
   private readonly LOGGED_IN_KEY = 'loggedIn';
   private readonly CURRENT_USER_KEY = 'currentUser';
-
+  private readonly PENDING_ACTION_KEY = 'pendingAction';
   /**
    * Checks whether an email is already registered.
    */
@@ -116,6 +123,7 @@ export class AuthService {
 
     localStorage.removeItem(this.LOGGED_IN_KEY);
     localStorage.removeItem(this.CURRENT_USER_KEY);
+    localStorage.removeItem(this.PENDING_ACTION_KEY);
   }
 
   /**
@@ -154,5 +162,38 @@ export class AuthService {
     return this.http.patch<User>(`${this.apiUrl}/${userId}`, { password: newPassword }).pipe(
       catchError(() => throwError(() => new Error('NETWORK_ERROR')))
     );
+
   }
+  savePendingAction(action: PendingAction): void {
+
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
+  
+    localStorage.setItem(
+      this.PENDING_ACTION_KEY,
+      JSON.stringify(action)
+    );
+  }
+
+  getPendingAction(): PendingAction | null {
+
+    if (typeof localStorage === 'undefined') {
+      return null;
+    }
+  
+    const data = localStorage.getItem(this.PENDING_ACTION_KEY);
+  
+    return data ? JSON.parse(data) : null;
+  }
+
+  clearPendingAction(): void {
+
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
+  
+    localStorage.removeItem(this.PENDING_ACTION_KEY);
+  }
+
 }

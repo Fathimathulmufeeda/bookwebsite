@@ -7,6 +7,8 @@ import { Store } from '@ngrx/store';
 import { selectCartCount } from '../../../store/cart/cart.selectors';
 import { selectWishlistCount } from '../../../store/wishlist/wishlist.selectors';
 import { AuthService } from '../../../core/services/auth.service';
+import { clearCart } from '../../../store/cart/cart.action';
+import { clearWishlist } from '../../../store/wishlist/wishlist.action';
 
 @Component({
   selector: 'app-header',
@@ -23,7 +25,6 @@ export class HeaderComponent {
   cartCount$ = this.store.select(selectCartCount);
   wishlistCount$ = this.store.select(selectWishlistCount);
 
-  currentUser = this.authService.getCurrentUser();
 
   searchOpen = false;
   searchTerm = '';
@@ -33,6 +34,9 @@ export class HeaderComponent {
   // Fragment-based nav links are highlighted manually since routerLinkActive
   // does not track URL fragments the way it tracks path segments.
   activeFragment = '';
+  get currentUser() {
+    return this.authService.getCurrentUser();
+  }
 
   constructor() {
     this.router.events.subscribe(() => {
@@ -74,6 +78,9 @@ export class HeaderComponent {
   toggleProfileMenu(): void {
     this.profileMenuOpen = !this.profileMenuOpen;
   }
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
 
   @HostListener('document:click')
   closeProfileMenu(): void {
@@ -89,8 +96,14 @@ export class HeaderComponent {
   }
 
   logout(): void {
+
     this.profileMenuOpen = false;
+  
     this.authService.logout();
-    this.router.navigate(['/login']);
+  
+    this.store.dispatch(clearCart());
+    this.store.dispatch(clearWishlist());
+  
+    this.router.navigate(['/home']);
   }
 }
