@@ -85,6 +85,13 @@ export class CheckoutComponent implements OnInit {
     ])
 
   });
+  
+  upiForm = new FormGroup({
+    upiId: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z]{2,}$/)
+    ])
+  });
 
   ngOnInit(): void {
 
@@ -220,7 +227,15 @@ export class CheckoutComponent implements OnInit {
   }
 
   get canPlaceOrder(): boolean {
-    return !!this.selectedAddress && !this.submitting;
+    if (!this.selectedAddress || this.submitting) {
+      return false;
+    }
+  
+    if (this.paymentMethod === 'UPI') {
+      return this.upiForm.valid;
+    }
+  
+    return true;
   }
 
   placeOrder(): void {
@@ -231,6 +246,16 @@ export class CheckoutComponent implements OnInit {
     }
 
     if (this.submitting) {
+      return;
+    }
+    if (
+      this.paymentMethod === 'UPI' &&
+      this.upiForm.invalid
+    ) {
+      this.upiForm.controls.upiId.markAsTouched();
+    
+      this.toast.error('Please enter a valid UPI ID.');
+    
       return;
     }
 

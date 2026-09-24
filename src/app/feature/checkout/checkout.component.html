@@ -77,7 +77,7 @@
 
               <div>
                 <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">Full Name</label>
-                <input type="text" formControlName="name" placeholder="Jane Doe"
+                <input type="text" formControlName="name" placeholder="enter your name"
                   class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm outline-none focus:border-[#193629]"
                   [ngClass]="(addressForm.controls.name.touched && addressForm.controls.name.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
                 @if (addressForm.controls.name.touched && addressForm.controls.name.invalid) {
@@ -87,7 +87,7 @@
 
               <div>
                 <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">Phone Number</label>
-                <input type="tel" formControlName="phone" placeholder="9876543210" maxlength="10"
+                <input type="tel" formControlName="phone" placeholder="enter your phone number" maxlength="10"
                   class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm outline-none focus:border-[#193629]"
                   [ngClass]="(addressForm.controls.phone.touched && addressForm.controls.phone.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
                 @if (addressForm.controls.phone.touched && addressForm.controls.phone.invalid) {
@@ -111,7 +111,7 @@
 
               <div>
                 <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">City</label>
-                <input type="text" formControlName="city" placeholder="Mumbai"
+                <input type="text" formControlName="city" placeholder="enter your city"
                   class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm outline-none focus:border-[#193629]"
                   [ngClass]="(addressForm.controls.city.touched && addressForm.controls.city.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
                 @if (addressForm.controls.city.touched && addressForm.controls.city.invalid) {
@@ -120,14 +120,14 @@
               </div>
 
               <div>
-                <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">State (optional)</label>
-                <input type="text" formControlName="state" placeholder="Maharashtra"
+                <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">State</label>
+                <input type="text" formControlName="state" placeholder="enter your state"
                   class="h-11 w-full rounded-sm border border-[#d8d0c2] bg-white px-3.5 text-sm outline-none focus:border-[#193629]" />
               </div>
 
               <div>
                 <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">Pincode</label>
-                <input type="text" formControlName="pincode" placeholder="400001" maxlength="6"
+                <input type="text" formControlName="pincode" placeholder="enter pincode" maxlength="6"
                   class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm outline-none focus:border-[#193629]"
                   [ngClass]="(addressForm.controls.pincode.touched && addressForm.controls.pincode.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
                 @if (addressForm.controls.pincode.touched && addressForm.controls.pincode.invalid) {
@@ -157,48 +157,141 @@
 
         </div>
 
+        <!-- ========================================================= -->
         <!-- PAYMENT METHOD -->
+        <!-- ========================================================= -->
+        
         <div class="rounded-md border border-[#ebe6dd] bg-white p-5 sm:p-6">
-
-          <h2 class="font-serif text-lg font-medium text-[#202a24]">Payment Method</h2>
-
+        
+          <h2 class="font-serif text-lg font-medium text-[#202a24]">
+            Payment Method
+          </h2>
+        
+        
           <div class="mt-4 space-y-3">
-
-            <label class="flex cursor-pointer items-center gap-3 rounded-sm border p-4"
-              [ngClass]="paymentMethod === 'COD' ? 'border-[#193629] bg-[#f5f2ea]' : 'border-[#e5e0d5]'">
+        
+        
+            <!-- ===================================================== -->
+            <!-- CASH ON DELIVERY -->
+            <!-- ===================================================== -->
+        
+            <label class="flex cursor-pointer items-center gap-3 rounded-sm border p-4" [ngClass]="
+                paymentMethod === 'COD'
+                  ? 'border-[#193629] bg-[#f5f2ea]'
+                  : 'border-[#e5e0d5]'
+              ">
+        
               <input type="radio" name="payment" class="accent-[#193629]" [checked]="paymentMethod === 'COD'"
                 (change)="paymentMethod = 'COD'" />
+        
+        
               <div>
-                <p class="text-sm font-semibold text-[#26332b]">Cash on Delivery</p>
-                <p class="text-xs text-[#999]">Pay when your order arrives</p>
+        
+                <p class="text-sm font-semibold text-[#26332b]">
+                  Cash on Delivery
+                </p>
+        
+                <p class="text-xs text-[#999]">
+                  Pay when your order arrives
+                </p>
+        
               </div>
+        
             </label>
-
-            <label class="flex cursor-pointer items-center gap-3 rounded-sm border p-4"
-              [ngClass]="paymentMethod === 'Card' ? 'border-[#193629] bg-[#f5f2ea]' : 'border-[#e5e0d5]'">
-              <input type="radio" name="payment" class="accent-[#193629]" [checked]="paymentMethod === 'Card'"
-                (change)="paymentMethod = 'Card'" />
-              <div>
-                <p class="text-sm font-semibold text-[#26332b]">Credit / Debit Card</p>
-                <p class="text-xs text-[#999]">Visa, Mastercard, RuPay</p>
-              </div>
-            </label>
-
-            <label class="flex cursor-pointer items-center gap-3 rounded-sm border p-4"
-              [ngClass]="paymentMethod === 'UPI' ? 'border-[#193629] bg-[#f5f2ea]' : 'border-[#e5e0d5]'">
+        
+        
+        
+            <!-- ===================================================== -->
+            <!-- UPI -->
+            <!-- ===================================================== -->
+        
+            <label class="flex cursor-pointer items-center gap-3 rounded-sm border p-4" [ngClass]="
+                paymentMethod === 'UPI'
+                  ? 'border-[#193629] bg-[#f5f2ea]'
+                  : 'border-[#e5e0d5]'
+              ">
+        
               <input type="radio" name="payment" class="accent-[#193629]" [checked]="paymentMethod === 'UPI'"
                 (change)="paymentMethod = 'UPI'" />
+        
+        
               <div>
-                <p class="text-sm font-semibold text-[#26332b]">UPI</p>
-                <p class="text-xs text-[#999]">Pay via any UPI app</p>
+        
+                <p class="text-sm font-semibold text-[#26332b]">
+                  UPI
+                </p>
+        
+                <p class="text-xs text-[#999]">
+                  Pay via any UPI app
+                </p>
+        
               </div>
+        
             </label>
-
+        
+        
+        
+            <!-- ===================================================== -->
+            <!-- UPI DETAILS -->
+            <!-- ===================================================== -->
+        
+            @if (paymentMethod === 'UPI') {
+        
+            <div class="rounded-sm border border-[#e5e0d5] bg-[#faf9f6] p-4">
+        
+              <label class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
+                UPI ID
+              </label>
+        
+        
+              <input type="text" [formControl]="upiForm.controls.upiId" placeholder="upi id" autocomplete="off"
+                class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm outline-none focus:border-[#193629]" [ngClass]="
+                    upiForm.controls.upiId.touched &&
+                    upiForm.controls.upiId.invalid
+                      ? 'border-red-400'
+                      : 'border-[#d8d0c2]'
+                  " />
+        
+        
+              <!-- REQUIRED ERROR -->
+        
+              @if (
+              upiForm.controls.upiId.touched &&
+              upiForm.controls.upiId.hasError('required')
+              ) {
+        
+              <p class="mt-1 text-xs text-red-600">
+                UPI ID is required.
+              </p>
+        
+              }
+        
+        
+              <!-- INVALID UPI ERROR -->
+        
+              @if (
+              upiForm.controls.upiId.touched &&
+              upiForm.controls.upiId.hasError('pattern')
+              ) {
+        
+              <p class="mt-1 text-xs text-red-600">
+                Enter a valid UPI ID, for example name&#64;upi.
+              </p>
+        
+              }
+        
+        
+              <!-- <p class="mt-2 text-[11px] text-[#999]">
+                Example: yourname&#64;upi
+              </p> -->
+        
+            </div>
+        
+            }
+        
           </div>
-
         </div>
-
-      </div>
+        </div>
 
       <!-- RIGHT: Order Summary -->
       <div class="h-fit rounded-md border border-[#ebe6dd] bg-white p-6">
