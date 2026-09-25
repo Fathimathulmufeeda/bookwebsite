@@ -23,7 +23,7 @@ export class CartEffect {
   private store = inject(Store);
   private cartService = inject(CartService);
 
-  // Save cart whenever it changes
+  // Save cart whenever cart changes
   saveCart$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -34,11 +34,9 @@ export class CartEffect {
           removeFromCart,
           clearCart
         ),
-
         withLatestFrom(
           this.store.select(selectCartItems)
         ),
-
         tap(([, items]) => {
           this.cartService.saveCart(items);
         })
@@ -50,7 +48,6 @@ export class CartEffect {
   loadCart$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadCart),
-
       map(() =>
         loadCartSuccess({
           items: this.cartService.getCart()
@@ -58,6 +55,4 @@ export class CartEffect {
       )
     )
   );
-  
-
 }

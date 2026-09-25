@@ -30,3 +30,7 @@ export const clearCart = createAction(
     '[Cart] Load Cart Success',
     props<{ items: CartItem[] }>()
   );
+  export const addToCartSuccess = createAction(
+    '[Cart] Add To Cart Success',
+    props<{ item: CartItem }>()
+  );

@@ -1,4 +1,4 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -7,8 +7,8 @@ import { Store } from '@ngrx/store';
 import { selectCartCount } from '../../../store/cart/cart.selectors';
 import { selectWishlistCount } from '../../../store/wishlist/wishlist.selectors';
 import { AuthService } from '../../../core/services/auth.service';
-import { clearCart } from '../../../store/cart/cart.action';
-import { clearWishlist } from '../../../store/wishlist/wishlist.action';
+import { clearCart, loadCart } from '../../../store/cart/cart.action';
+import { clearWishlist, loadWishlist } from '../../../store/wishlist/wishlist.action';
 
 @Component({
   selector: 'app-header',
@@ -16,8 +16,7 @@ import { clearWishlist } from '../../../store/wishlist/wishlist.action';
   imports: [CommonModule, RouterLink, RouterLinkActive, FormsModule],
   templateUrl: './header.component.html'
 })
-export class HeaderComponent {
-
+export class HeaderComponent implements OnInit {
   private router = inject(Router);
   private store = inject(Store);
   private authService = inject(AuthService);
@@ -25,6 +24,12 @@ export class HeaderComponent {
   cartCount$ = this.store.select(selectCartCount);
   wishlistCount$ = this.store.select(selectWishlistCount);
 
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.store.dispatch(loadCart());
+      this.store.dispatch(loadWishlist());
+    }
+  }
 
   searchOpen = false;
   searchTerm = '';

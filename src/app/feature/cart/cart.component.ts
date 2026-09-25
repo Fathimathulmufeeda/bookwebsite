@@ -1,18 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import {
-  decreaseQuantity,
-  increaseQuantity,
-  removeFromCart
-} from '../../store/cart/cart.action';
+import {decreaseQuantity,increaseQuantity,loadCart,removeFromCart} from '../../store/cart/cart.action';
 
-import {
-  selectCartItems,
-  selectCartTotal
-} from '../../store/cart/cart.selectors';
+import {selectCartItems,selectCartTotal} from '../../store/cart/cart.selectors';
 
 import { MAX_BOOK_QUANTITY } from '../../store/cart/cart.constant';
 import { CartItem } from '../../core/Models/cart-item.model';
@@ -29,7 +22,7 @@ import { ConfirmDialogService } from '../../shared/services/confirm-dialog.servi
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
 
   private store = inject(Store);
   private router = inject(Router);
@@ -40,6 +33,9 @@ export class CartComponent {
   cartTotal$ = this.store.select(selectCartTotal);
 
   maxQuantity = MAX_BOOK_QUANTITY;
+  ngOnInit(): void {
+    this.store.dispatch(loadCart());
+  }
 
   effectiveMax(item: CartItem): number {
     return Math.min(this.maxQuantity, item.product.stock);

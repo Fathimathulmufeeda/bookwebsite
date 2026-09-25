@@ -1,4 +1,3 @@
-
 import { Injectable, inject } from '@angular/core';
 import { CartItem } from '../Models/cart-item.model';
 import { AuthService } from './auth.service';
@@ -11,7 +10,6 @@ export class CartService {
   private authService = inject(AuthService);
 
   private getStorageKey(): string | null {
-
     const user = this.authService.getCurrentUser();
 
     if (!user) {
@@ -22,7 +20,6 @@ export class CartService {
   }
 
   saveCart(items: CartItem[]): void {
-
     const storageKey = this.getStorageKey();
 
     if (!storageKey || typeof localStorage === 'undefined') {
@@ -36,7 +33,6 @@ export class CartService {
   }
 
   getCart(): CartItem[] {
-
     const storageKey = this.getStorageKey();
 
     if (!storageKey || typeof localStorage === 'undefined') {
@@ -49,7 +45,6 @@ export class CartService {
   }
 
   clearCart(): void {
-
     const storageKey = this.getStorageKey();
 
     if (!storageKey || typeof localStorage === 'undefined') {

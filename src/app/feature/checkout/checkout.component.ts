@@ -95,8 +95,6 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // Defense in depth: the route already has authGuard, but a stale
-    // session (e.g. cleared in another tab) should still bounce to login.
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
       return;

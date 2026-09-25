@@ -1,11 +1,6 @@
 
 import { Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import {FormControl,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -15,12 +10,12 @@ import { Store } from '@ngrx/store';
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/Models/Product.model';
 
-import { addToCart } from '../../../store/cart/cart.action';
+import { addToCart, loadCart, loadCartSuccess } from '../../../store/cart/cart.action';
 
-import {
-  addToWishlist,
-  loadWishlist
-} from '../../../store/wishlist/wishlist.action';
+import {addToWishlist,loadWishlist} from '../../../store/wishlist/wishlist.action';
+import { selectCartItems } from '../../../store/cart/cart.selectors';
+import { take } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
   selector: 'app-login',
@@ -40,6 +35,7 @@ export class LoginComponent {
   private toast = inject(ToastService);
   private store = inject(Store);
   private productService = inject(ProductService);
+  private actions$ = inject(Actions);
 
   error = '';
   submitting = false;
@@ -69,27 +65,16 @@ export class LoginComponent {
 
     const pendingAction = this.authService.getPendingAction();
 
-    /*
-     * No pending action.
-     * This was a normal login.
-     */
     if (!pendingAction) {
       this.router.navigate(['/home']);
       return;
     }
 
 
-    /*
-     * There is a pending action.
-     * Get the product and complete the action automatically.
-     */
     this.productService.getProductById(pendingAction.productId).subscribe({
 
       next: (product: Product) => {
 
-        /*
-         * ADD TO CART
-         */
         if (pendingAction.type === 'cart') {
 
           this.store.dispatch(
@@ -111,9 +96,6 @@ export class LoginComponent {
         }
 
 
-        /*
-         * ADD TO WISHLIST
-         */
         else if (pendingAction.type === 'wishlist') {
 
           this.store.dispatch(
@@ -131,10 +113,6 @@ export class LoginComponent {
           this.router.navigate(['/home']);
         }
 
-
-        /*
-         * BUY NOW
-         */
         else if (pendingAction.type === 'buyNow') {
 
           this.store.dispatch(
@@ -195,38 +173,21 @@ export class LoginComponent {
 
       next: (user) => {
 
-        /*
-         * Login is successful.
-         * AuthService has already saved the current user.
-         */
-
         this.submitting = false;
-
+      
         this.toast.success(
           `Welcome back, ${user.name.split(' ')[0]}!`
         );
-
-
-        /*
-         * IMPORTANT:
-         *
-         * Load this user's wishlist.
-         *
-         * WishlistService now uses:
-         *
-         * wishlist_<userId>
-         *
-         * instead of one shared "wishlist" key.
-         */
+      
+        this.actions$.pipe(
+          ofType(loadCartSuccess),
+          take(1)
+        ).subscribe(() => {
+          this.handlePendingAction();
+        });
+      
+        this.store.dispatch(loadCart());
         this.store.dispatch(loadWishlist());
-
-
-        /*
-         * Now continue the action that
-         * the guest originally requested.
-         */
-        this.handlePendingAction();
-
       },
 
 

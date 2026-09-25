@@ -10,7 +10,7 @@ import { ToastService } from '../../shared/services/toast.service';
 
 import { addToCart } from '../../store/cart/cart.action';
 import { selectCartItems } from '../../store/cart/cart.selectors';
-import { MAX_BOOK_QUANTITY } from '../../store/cart/cart.constant';
+import { MAX_BOOK_QUANTITY, MAX_CART_PRODUCTS } from '../../store/cart/cart.constant';
 
 import { addToWishlist, removeFromWishlist } from '../../store/wishlist/wishlist.action';
 import { selectWishlistProducts } from '../../store/wishlist/wishlist.selectors';
@@ -51,6 +51,8 @@ export class ProductDetailsComponent implements OnInit {
   alreadyInCart = false;
   currentCartQuantity = 0;
   isWishlisted = false;
+  cartProductCount = 0;
+maxCartProducts = MAX_CART_PRODUCTS;
 
   wishlistProducts$: Observable<Product[]> = this.store.select(selectWishlistProducts);
 
@@ -93,10 +95,14 @@ export class ProductDetailsComponent implements OnInit {
 
   private watchCartStatus(productId: number): void {
     this.store.select(selectCartItems).pipe(
-      map(items => items.find(i => i.product.id === productId))
-    ).subscribe(item => {
+      map(items => ({
+        item: items.find(i => i.product.id === productId),
+        count: items.length
+      }))
+    ).subscribe(({ item, count }) => {
       this.alreadyInCart = !!item;
       this.currentCartQuantity = item?.quantity ?? 0;
+      this.cartProductCount = count;
     });
   }
 
@@ -195,6 +201,12 @@ export class ProductDetailsComponent implements OnInit {
       );
       return;
     }
+    if (this.cartProductCount >= this.maxCartProducts) {
+      this.toast.warning(
+        `You can add a maximum of ${this.maxCartProducts} different books to your cart.`
+      );
+      return;
+    }
   
     if (this.effectiveMax <= 0) {
       this.toast.warning('No more stock available to add.');
@@ -233,6 +245,14 @@ export class ProductDetailsComponent implements OnInit {
     }
   
     if (!this.alreadyInCart) {
+
+      if (this.cartProductCount >= this.maxCartProducts) {
+        this.toast.warning(
+          `You can add a maximum of ${this.maxCartProducts} different books to your cart.`
+        );
+        return;
+      }
+    
       this.store.dispatch(addToCart({
         item: {
           product: this.product,
@@ -240,7 +260,7 @@ export class ProductDetailsComponent implements OnInit {
         }
       }));
     }
-  
+    
     this.router.navigate(['/checkout']);
   }
 

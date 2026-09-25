@@ -2314,6 +2314,81 @@
       "paymentMethod": "UPI",
       "createdAt": "2026-09-24T17:20:17.239Z",
       "status": "Placed"
+    },
+    {
+      "id": 1790345827586,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 2,
+            "title": "The 7 Habits of Highly Effective People",
+            "author": "Stephen R. Covey",
+            "price": 499,
+            "mrp": 799,
+            "discountPercent": 38,
+            "images": [
+              "/images/habitsof-people1.png",
+              "/images/habitsof-people2.png"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Personal Development",
+              "Leadership"
+            ],
+            "rating": 4.7,
+            "reviewCount": 980,
+            "publisher": "Simon & Schuster",
+            "language": "English",
+            "pages": 464,
+            "createdAt": "2026-09-18",
+            "description": "A principle-centered approach to personal and professional effectiveness.",
+            "stock": 32
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 36,
+            "title": "1984",
+            "author": "George Orwell",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/1984.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Dystopian",
+              "Political Fiction"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1320,
+            "publisher": "Penguin Classics",
+            "language": "English",
+            "pages": 328,
+            "createdAt": "2026-08-15",
+            "description": "A dystopian classic about surveillance, control, truth, and individual freedom.",
+            "stock": 38
+          },
+          "quantity": 2
+        }
+      ],
+      "total": 1097,
+      "shippingAddress": {
+        "name": "fathima mufeeda",
+        "phone": "9876543212",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "sedrt",
+        "state": "wsss",
+        "pincode": "670308"
+      },
+      "paymentMethod": "UPI",
+      "createdAt": "2026-09-25T14:17:07.586Z",
+      "status": "Placed"
     }
   ]
 }

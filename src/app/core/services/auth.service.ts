@@ -22,9 +22,7 @@ export class AuthService {
   private readonly LOGGED_IN_KEY = 'loggedIn';
   private readonly CURRENT_USER_KEY = 'currentUser';
   private readonly PENDING_ACTION_KEY = 'pendingAction';
-  /**
-   * Checks whether an email is already registered.
-   */
+  
   checkEmailExists(email: string): Observable<boolean> {
     return this.http
       .get<User[]>(`${this.apiUrl}?email=${encodeURIComponent(email)}`)
@@ -126,10 +124,7 @@ export class AuthService {
     localStorage.removeItem(this.PENDING_ACTION_KEY);
   }
 
-  /**
-   * Looks up the account for a given email so a password reset can proceed.
-   * Rejects with NO_ACCOUNT if nothing matches.
-   */
+  
   requestPasswordReset(email: string): Observable<User> {
 
     return this.http
@@ -154,10 +149,7 @@ export class AuthService {
       );
   }
 
-  /**
-   * Sets a new password for the given user id (used after a verified
-   * forgot-password lookup).
-   */
+  
   resetPassword(userId: number, newPassword: string): Observable<User> {
     return this.http.patch<User>(`${this.apiUrl}/${userId}`, { password: newPassword }).pipe(
       catchError(() => throwError(() => new Error('NETWORK_ERROR')))
