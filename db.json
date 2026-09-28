@@ -2710,6 +2710,310 @@
       "paymentMethod": "COD",
       "createdAt": "2026-09-28T07:47:38.947Z",
       "status": "Cancelled"
+    },
+    {
+      "id": 1790592486502,
+      "userId": "8Ulmt0Q",
+      "items": [
+        {
+          "product": {
+            "id": 36,
+            "title": "1984",
+            "author": "George Orwell",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/1984.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Dystopian",
+              "Political Fiction"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1320,
+            "publisher": "Penguin Classics",
+            "language": "English",
+            "pages": 328,
+            "createdAt": "2026-08-15",
+            "description": "A dystopian classic about surveillance, control, truth, and individual freedom.",
+            "stock": 38
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 31,
+            "title": "The Lion, the Witch and the Wardrobe",
+            "author": "C.S. Lewis",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/lionwitch1.jpg",
+              "/images/lionwitch2.jpg",
+              "/images/lionwitch3.jpg",
+              "/images/lionwitch4.jpg",
+              "/images/lionwitch5.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Fantasy"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1150,
+            "publisher": "HarperCollins",
+            "language": "English",
+            "pages": 208,
+            "createdAt": "2026-08-20",
+            "description": "Four siblings enter a magical world through a wardrobe and become part of an epic adventure.",
+            "stock": 31
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 32,
+            "title": "Charlie and the Chocolate Factory",
+            "author": "Roald Dahl",
+            "price": 249,
+            "mrp": 399,
+            "discountPercent": 38,
+            "images": [
+              "/images/charlichoco1.jpg",
+              "/images/charlichoco2.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Humor"
+            ],
+            "rating": 4.8,
+            "reviewCount": 970,
+            "publisher": "Puffin Books",
+            "language": "English",
+            "pages": 176,
+            "createdAt": "2026-08-19",
+            "description": "Charlie Bucket wins a golden ticket and discovers the magical world inside Willy Wonka's chocolate factory.",
+            "stock": 43
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 847,
+      "shippingAddress": {
+        "name": "anees",
+        "phone": "9874563210",
+        "address": "anees villa",
+        "city": "kozhikode",
+        "state": "kerala",
+        "pincode": "650809"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-28T10:48:06.502Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790592630628,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 29,
+            "title": "Harry Potter and the Philosopher's Stone",
+            "author": "J.K. Rowling",
+            "price": 499,
+            "mrp": 799,
+            "discountPercent": 38,
+            "images": [
+              "/images/hp1.jpg",
+              "/images/hp2.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Magic"
+            ],
+            "rating": 4.9,
+            "reviewCount": 1800,
+            "publisher": "Bloomsbury",
+            "language": "English",
+            "pages": 223,
+            "createdAt": "2026-08-22",
+            "description": "A young boy discovers that he is a wizard and begins his magical education at Hogwarts.",
+            "stock": 50
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 499,
+      "shippingAddress": {
+        "name": "fathima",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-28T10:50:30.628Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790593349931,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 36,
+            "title": "1984",
+            "author": "George Orwell",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/1984.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Dystopian",
+              "Political Fiction"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1320,
+            "publisher": "Penguin Classics",
+            "language": "English",
+            "pages": 328,
+            "createdAt": "2026-08-15",
+            "description": "A dystopian classic about surveillance, control, truth, and individual freedom.",
+            "stock": 38
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 19,
+            "title": "The Immortal Life of Henrietta Lacks",
+            "author": "Rebecca Skloot",
+            "price": 449,
+            "mrp": 699,
+            "discountPercent": 36,
+            "images": [
+              "/images/immortallife1.jpg"
+            ],
+            "category": "nonfiction",
+            "genre": [
+              "Science",
+              "Biography",
+              "Nonfiction"
+            ],
+            "rating": 4.6,
+            "reviewCount": 620,
+            "publisher": "Crown",
+            "language": "English",
+            "pages": 381,
+            "createdAt": "2026-09-01",
+            "description": "The story of Henrietta Lacks and the scientific legacy of her cells.",
+            "stock": 21
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 32,
+            "title": "Charlie and the Chocolate Factory",
+            "author": "Roald Dahl",
+            "price": 249,
+            "mrp": 399,
+            "discountPercent": 38,
+            "images": [
+              "/images/charlichoco1.jpg",
+              "/images/charlichoco2.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Humor"
+            ],
+            "rating": 4.8,
+            "reviewCount": 970,
+            "publisher": "Puffin Books",
+            "language": "English",
+            "pages": 176,
+            "createdAt": "2026-08-19",
+            "description": "Charlie Bucket wins a golden ticket and discovers the magical world inside Willy Wonka's chocolate factory.",
+            "stock": 43
+          },
+          "quantity": 2
+        }
+      ],
+      "total": 1246,
+      "shippingAddress": {
+        "name": "fathima",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-28T11:02:29.931Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790603264601,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 37,
+            "title": "To Kill a Mockingbird",
+            "author": "Harper Lee",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/killamockin1.jpg",
+              "/images/killamockin2.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Drama",
+              "Historical"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1270,
+            "publisher": "Harper Perennial",
+            "language": "English",
+            "pages": 336,
+            "createdAt": "2026-08-14",
+            "description": "A classic novel exploring justice, morality, childhood, and social inequality in the American South.",
+            "stock": 32
+          },
+          "quantity": 5
+        }
+      ],
+      "total": 1495,
+      "shippingAddress": {
+        "name": "fathima",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-28T13:47:44.601Z",
+      "status": "Placed"
     }
   ],
   "cart": [
@@ -2720,27 +3024,9 @@
       "quantity": 1
     },
     {
-      "id": "1_29",
+      "id": "1_36",
       "userId": "1",
-      "productId": 29,
-      "quantity": 1
-    },
-    {
-      "id": "8Ulmt0Q_36",
-      "userId": "8Ulmt0Q",
       "productId": 36,
-      "quantity": 1
-    },
-    {
-      "id": "8Ulmt0Q_31",
-      "userId": "8Ulmt0Q",
-      "productId": 31,
-      "quantity": 1
-    },
-    {
-      "id": "8Ulmt0Q_32",
-      "userId": "8Ulmt0Q",
-      "productId": 32,
       "quantity": 1
     }
   ],
@@ -2748,11 +3034,6 @@
     {
       "id": "YupD3mu_36",
       "userId": "YupD3mu",
-      "productId": 36
-    },
-    {
-      "id": "1_36",
-      "userId": "1",
       "productId": 36
     },
     {
@@ -2794,6 +3075,17 @@
       "isDefault": false,
       "id": "addr_1790583933307_604",
       "userId": "YupD3mu"
+    },
+    {
+      "name": "anees",
+      "phone": "9874563210",
+      "address": "anees villa",
+      "city": "kozhikode",
+      "state": "kerala",
+      "pincode": "650809",
+      "isDefault": true,
+      "id": "addr_1790592482998_139",
+      "userId": "8Ulmt0Q"
     }
   ]
 }

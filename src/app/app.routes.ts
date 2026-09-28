@@ -23,12 +23,12 @@ export const routes: Routes = [
         .then(m => m.LoginComponent),
     canActivate: [guestGuard]
   },
-  {
-    path: 'forgot-password',
-    loadComponent: () =>
-      import('./feature/auth/forgot-password/forgot-password.component')
-        .then(m => m.ForgotPasswordComponent)
-  },
+  // {
+  //   path: 'forgot-password',
+  //   loadComponent: () =>
+  //     import('./feature/auth/forgot-password/forgot-password.component')
+  //       .then(m => m.ForgotPasswordComponent)
+  // },
   //public
   {
     path: 'product/:id',
