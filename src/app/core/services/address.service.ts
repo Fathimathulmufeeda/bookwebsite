@@ -1,4 +1,12 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {
+  forkJoin,
+  Observable,
+  of,
+  switchMap
+} from 'rxjs';
+
 import { SavedAddress } from '../Models/address.model';
 import { AuthService } from './auth.service';
 
@@ -7,88 +15,213 @@ import { AuthService } from './auth.service';
 })
 export class AddressService {
 
+  private http = inject(HttpClient);
   private authService = inject(AuthService);
 
-  private storageKey(): string {
+  private apiUrl = 'http://localhost:3000/addresses';
+
+
+  // Get the currently logged-in user's ID
+  private getUserId(): string | null {
+
     const user = this.authService.getCurrentUser();
-    return `nova_addresses_${user?.id ?? 'guest'}`;
-  }
 
-  getAddresses(): SavedAddress[] {
-
-    if (typeof localStorage === 'undefined') {
-      return [];
+    if (!user) {
+      return null;
     }
 
-    const raw = localStorage.getItem(this.storageKey());
-
-    return raw ? JSON.parse(raw) : [];
+    return String(user.id);
   }
 
-  private persist(list: SavedAddress[]): void {
 
-    if (typeof localStorage === 'undefined') {
-      return;
+  // Get addresses belonging only to the logged-in user
+  getAddresses(): Observable<SavedAddress[]> {
+
+    const userId = this.getUserId();
+
+    if (!userId) {
+      return of([]);
     }
 
-    localStorage.setItem(this.storageKey(), JSON.stringify(list));
+    return this.http.get<SavedAddress[]>(
+      `${this.apiUrl}?userId=${encodeURIComponent(userId)}`
+    );
   }
 
-  addAddress(address: Omit<SavedAddress, 'id'>): SavedAddress {
 
-    const list = this.getAddresses();
+  // Add a new address
+  addAddress(
+    address: Omit<SavedAddress, 'id' | 'userId'>
+  ): Observable<SavedAddress> {
+
+    const userId = this.getUserId();
+
+    if (!userId) {
+      throw new Error('User is not logged in');
+    }
 
     const newAddress: SavedAddress = {
       ...address,
-      id: `addr_${Date.now()}_${Math.floor(Math.random() * 1000)}`
+      id: `addr_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+      userId
     };
 
-    if (list.length === 0) {
-      newAddress.isDefault = true;
-    }
+    return this.getAddresses().pipe(
 
-    if (newAddress.isDefault) {
-      list.forEach(a => a.isDefault = false);
-    }
+      switchMap(addresses => {
 
-    const updated = [...list, newAddress];
+        // First address automatically becomes default
+        if (addresses.length === 0) {
+          newAddress.isDefault = true;
+        }
 
-    this.persist(updated);
+        // If new address is default,
+        // make all existing addresses non-default
+        if (newAddress.isDefault) {
 
-    return newAddress;
+          const updateRequests = addresses.map(address =>
+            this.http.patch(
+              `${this.apiUrl}/${encodeURIComponent(address.id)}`,
+              {
+                isDefault: false
+              }
+            )
+          );
+
+          if (updateRequests.length === 0) {
+
+            return this.http.post<SavedAddress>(
+              this.apiUrl,
+              newAddress
+            );
+          }
+
+          return forkJoin(updateRequests).pipe(
+
+            switchMap(() =>
+              this.http.post<SavedAddress>(
+                this.apiUrl,
+                newAddress
+              )
+            )
+          );
+        }
+
+        return this.http.post<SavedAddress>(
+          this.apiUrl,
+          newAddress
+        );
+      })
+    );
   }
 
-  updateAddress(id: string, address: Omit<SavedAddress, 'id'>): void {
 
-    const list = this.getAddresses();
+  // Update an existing address
+  updateAddress(
+    id: string,
+    address: Omit<SavedAddress, 'id' | 'userId'>
+  ): Observable<SavedAddress> {
 
+    const userId = this.getUserId();
+
+    if (!userId) {
+      throw new Error('User is not logged in');
+    }
+
+    // If this address is being made default,
+    // remove default status from other addresses
     if (address.isDefault) {
-      list.forEach(a => a.isDefault = false);
+
+      return this.getAddresses().pipe(
+
+        switchMap(addresses => {
+
+          const updateRequests = addresses
+            .filter(address => address.id !== id)
+            .map(address =>
+              this.http.patch(
+                `${this.apiUrl}/${encodeURIComponent(address.id)}`,
+                {
+                  isDefault: false
+                }
+              )
+            );
+
+          if (updateRequests.length === 0) {
+
+            return this.http.put<SavedAddress>(
+              `${this.apiUrl}/${encodeURIComponent(id)}`,
+              {
+                ...address,
+                id,
+                userId
+              }
+            );
+          }
+
+          return forkJoin(updateRequests).pipe(
+
+            switchMap(() =>
+              this.http.put<SavedAddress>(
+                `${this.apiUrl}/${encodeURIComponent(id)}`,
+                {
+                  ...address,
+                  id,
+                  userId
+                }
+              )
+            )
+          );
+        })
+      );
     }
 
-    const updated = list.map(a => a.id === id ? { ...address, id } : a);
-
-    this.persist(updated);
+    return this.http.put<SavedAddress>(
+      `${this.apiUrl}/${encodeURIComponent(id)}`,
+      {
+        ...address,
+        id,
+        userId
+      }
+    );
   }
 
-  deleteAddress(id: string): void {
 
-    let list = this.getAddresses().filter(a => a.id !== id);
+  // Delete an address
+  deleteAddress(id: string): Observable<void> {
 
-    if (list.length > 0 && !list.some(a => a.isDefault)) {
-      list = list.map((a, index) => index === 0 ? { ...a, isDefault: true } : a);
-    }
-
-    this.persist(list);
+    return this.http.delete<void>(
+      `${this.apiUrl}/${encodeURIComponent(id)}`
+    );
   }
 
-  setDefault(id: string): void {
 
-    const list = this.getAddresses().map(a => ({
-      ...a,
-      isDefault: a.id === id
-    }));
+  // Make an address the default address
+  setDefault(id: string): Observable<SavedAddress> {
 
-    this.persist(list);
+    return this.getAddresses().pipe(
+
+      switchMap(addresses => {
+
+        const updateRequests = addresses.map(address =>
+          this.http.patch(
+            `${this.apiUrl}/${encodeURIComponent(address.id)}`,
+            {
+              isDefault: address.id === id
+            }
+          )
+        );
+
+        return forkJoin(updateRequests).pipe(
+
+          switchMap(() =>
+            this.http.get<SavedAddress>(
+              `${this.apiUrl}/${encodeURIComponent(id)}`
+            )
+          )
+        );
+      })
+    );
   }
+
 }

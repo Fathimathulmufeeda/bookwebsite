@@ -41,6 +41,13 @@
       "password": "Saji@123",
       "role": "user",
       "id": "96jSbVU"
+    },
+    {
+      "name": "anees",
+      "email": "anees@gmail.com",
+      "password": "a12345@AA",
+      "role": "user",
+      "id": "8Ulmt0Q"
     }
   ],
   "products": [
@@ -2551,11 +2558,242 @@
       "paymentMethod": "COD",
       "createdAt": "2026-09-28T06:09:14.162Z",
       "status": "Placed"
+    },
+    {
+      "id": 1790581577131,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 1,
+            "title": "Atomic Habits",
+            "author": "James Clear",
+            "price": 450,
+            "mrp": 599,
+            "discountPercent": 25,
+            "images": [
+              "/images/atomic-habit3.jpg",
+              "/images/atomic-habit4.jpg"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Habits",
+              "Productivity"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1250,
+            "publisher": "Avery",
+            "language": "English",
+            "pages": 320,
+            "createdAt": "2026-09-19",
+            "description": "A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.",
+            "stock": 45
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 3,
+            "title": "How to Win Friends and Influence People",
+            "author": "Dale Carnegie",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/howto-winfriends1.jpg",
+              "/images/howto-winfriends2.jpg"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Communication",
+              "Personal Development"
+            ],
+            "rating": 4.7,
+            "reviewCount": 1100,
+            "publisher": "Simon & Schuster",
+            "language": "English",
+            "pages": 288,
+            "createdAt": "2026-09-17",
+            "description": "A classic guide to improving relationships, communication, and social skills.",
+            "stock": 40
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 2,
+            "title": "The 7 Habits of Highly Effective People",
+            "author": "Stephen R. Covey",
+            "price": 499,
+            "mrp": 799,
+            "discountPercent": 38,
+            "images": [
+              "/images/habitsof-people1.png",
+              "/images/habitsof-people2.png"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Personal Development",
+              "Leadership"
+            ],
+            "rating": 4.7,
+            "reviewCount": 980,
+            "publisher": "Simon & Schuster",
+            "language": "English",
+            "pages": 464,
+            "createdAt": "2026-09-18",
+            "description": "A principle-centered approach to personal and professional effectiveness.",
+            "stock": 32
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 1248,
+      "shippingAddress": {
+        "name": "fathimathul",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-28T07:46:17.131Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790581658947,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 29,
+            "title": "Harry Potter and the Philosopher's Stone",
+            "author": "J.K. Rowling",
+            "price": 499,
+            "mrp": 799,
+            "discountPercent": 38,
+            "images": [
+              "/images/hp1.jpg",
+              "/images/hp2.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Magic"
+            ],
+            "rating": 4.9,
+            "reviewCount": 1800,
+            "publisher": "Bloomsbury",
+            "language": "English",
+            "pages": 223,
+            "createdAt": "2026-08-22",
+            "description": "A young boy discovers that he is a wizard and begins his magical education at Hogwarts.",
+            "stock": 50
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 499,
+      "shippingAddress": {
+        "name": "fathimathul",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-28T07:47:38.947Z",
+      "status": "Cancelled"
+    }
+  ],
+  "cart": [
+    {
+      "id": "YupD3mu_8",
+      "userId": "YupD3mu",
+      "productId": 8,
+      "quantity": 1
+    },
+    {
+      "id": "1_29",
+      "userId": "1",
+      "productId": 29,
+      "quantity": 1
+    },
+    {
+      "id": "8Ulmt0Q_36",
+      "userId": "8Ulmt0Q",
+      "productId": 36,
+      "quantity": 1
+    },
+    {
+      "id": "8Ulmt0Q_31",
+      "userId": "8Ulmt0Q",
+      "productId": 31,
+      "quantity": 1
+    },
+    {
+      "id": "8Ulmt0Q_32",
+      "userId": "8Ulmt0Q",
+      "productId": 32,
+      "quantity": 1
+    }
+  ],
+  "wishlist": [
+    {
+      "id": "YupD3mu_36",
+      "userId": "YupD3mu",
+      "productId": 36
+    },
+    {
+      "id": "1_36",
+      "userId": "1",
+      "productId": 36
+    },
+    {
+      "id": "8Ulmt0Q_36",
+      "userId": "8Ulmt0Q",
+      "productId": 36
+    }
+  ],
+  "addresses": [
+    {
+      "name": "fathima",
+      "phone": "9341567899",
+      "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+      "city": "uiyui",
+      "state": "kerala28y90u",
+      "pincode": "670308",
+      "isDefault": false,
+      "id": "addr_1790581751016_917",
+      "userId": "1"
+    },
+    {
+      "name": "saj",
+      "phone": "9341567899",
+      "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+      "city": "uiyui",
+      "state": "kerala",
+      "pincode": "670308",
+      "isDefault": true,
+      "id": "addr_1790583913563_282",
+      "userId": "YupD3mu"
+    },
+    {
+      "name": "sajith",
+      "phone": "9341567899",
+      "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+      "city": "uiyui",
+      "state": "kerala",
+      "pincode": "670308",
+      "isDefault": false,
+      "id": "addr_1790583933307_604",
+      "userId": "YupD3mu"
     }
   ]
-  ,
-  "cart": [],
-  "wishlist": [],
-  "addresses": []
-
 }

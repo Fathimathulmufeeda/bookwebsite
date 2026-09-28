@@ -114,15 +114,39 @@ export class CheckoutComponent implements OnInit {
   }
 
   private loadAddresses(): void {
-    this.addresses = this.addressService.getAddresses();
 
-    const defaultAddress = this.addresses.find(a => a.isDefault) ?? this.addresses[0];
-
-    this.selectedAddressId = defaultAddress?.id ?? null;
-
-    if (this.addresses.length === 0) {
-      this.showAddressForm = true;
-    }
+    this.addressService.getAddresses().subscribe({
+      next: addresses => {
+  
+        this.addresses = addresses;
+  
+        // Keep the currently selected address if it still exists
+        const selectedStillExists = this.addresses.some(
+          address => address.id === this.selectedAddressId
+        );
+  
+        if (!selectedStillExists) {
+          const defaultAddress =
+            this.addresses.find(a => a.isDefault) ??
+            this.addresses[0];
+  
+          this.selectedAddressId =
+            defaultAddress?.id ?? null;
+        }
+  
+        if (this.addresses.length === 0) {
+          this.showAddressForm = true;
+        }
+      },
+  
+      error: error => {
+        console.error('Failed to load addresses:', error);
+  
+        this.addresses = [];
+        this.selectedAddressId = null;
+        this.showAddressForm = true;
+      }
+    });
   }
 
   private prefillName(): void {
@@ -171,9 +195,9 @@ export class CheckoutComponent implements OnInit {
       this.addressForm.markAllAsTouched();
       return;
     }
-
+  
     const value = this.addressForm.value;
-
+  
     const payload = {
       name: value.name!.trim(),
       phone: value.phone!.trim(),
@@ -183,20 +207,59 @@ export class CheckoutComponent implements OnInit {
       pincode: value.pincode!.trim(),
       isDefault: this.addresses.length === 0
     };
-
+  
+  
+    // UPDATE ADDRESS
     if (this.editingAddressId) {
-      this.addressService.updateAddress(this.editingAddressId, payload);
-      this.toast.success('Address updated.');
-    } else {
-      const created = this.addressService.addAddress(payload);
-      this.selectedAddressId = created.id;
-      this.toast.success('Address added.');
+  
+      this.addressService
+        .updateAddress(this.editingAddressId, payload)
+        .subscribe({
+          next: () => {
+  
+            this.toast.success('Address updated.');
+  
+            this.showAddressForm = false;
+            this.editingAddressId = null;
+            this.addressForm.reset();
+  
+            this.loadAddresses();
+          },
+  
+          error: error => {
+            console.error('Failed to update address:', error);
+            this.toast.error('Failed to update address.');
+          }
+        });
+  
+      return;
     }
-
-    this.loadAddresses();
-    this.showAddressForm = false;
-    this.editingAddressId = null;
-    this.addressForm.reset();
+  
+  
+    // ADD ADDRESS
+    this.addressService
+      .addAddress(payload)
+      .subscribe({
+  
+        next: created => {
+  
+          this.selectedAddressId = created.id;
+  
+          this.toast.success('Address added.');
+  
+          this.showAddressForm = false;
+          this.editingAddressId = null;
+          this.addressForm.reset();
+  
+          this.loadAddresses();
+        },
+  
+        error: error => {
+          console.error('Failed to add address:', error);
+          this.toast.error('Failed to add address.');
+        }
+  
+      });
   }
 
   async deleteAddress(address: SavedAddress, event: Event): Promise<void> {
@@ -215,9 +278,17 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
-    this.addressService.deleteAddress(address.id);
-    this.toast.success('Address removed.');
-    this.loadAddresses();
+    this.addressService.deleteAddress(address.id).subscribe({
+      next: () => {
+        this.toast.success('Address removed.');
+        this.loadAddresses();
+      },
+    
+      error: error => {
+        console.error('Failed to delete address:', error);
+        this.toast.error('Failed to remove address.');
+      }
+    });
   }
 
   get selectedAddress(): SavedAddress | undefined {

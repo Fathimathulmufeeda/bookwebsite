@@ -1,7 +1,16 @@
 import { Injectable, inject } from '@angular/core';
+
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+
 import { Store } from '@ngrx/store';
-import { map, tap, withLatestFrom } from 'rxjs';
+
+import {
+  catchError,
+  EMPTY,
+  map,
+  switchMap,
+  withLatestFrom
+} from 'rxjs';
 
 import {
   addToCart,
@@ -23,10 +32,10 @@ export class CartEffect {
   private store = inject(Store);
   private cartService = inject(CartService);
 
-  // Save cart whenever cart changes
   saveCart$ = createEffect(
     () =>
       this.actions$.pipe(
+
         ofType(
           addToCart,
           increaseQuantity,
@@ -34,25 +43,54 @@ export class CartEffect {
           removeFromCart,
           clearCart
         ),
+
         withLatestFrom(
           this.store.select(selectCartItems)
         ),
-        tap(([, items]) => {
-          this.cartService.saveCart(items);
-        })
+
+        switchMap(([, items]) =>
+          this.cartService.saveCart(items).pipe(
+            catchError(error => {
+              console.error('Failed to save cart:', error);
+              return EMPTY;
+            })
+          )
+        )
+
       ),
+
     { dispatch: false }
   );
 
-  // Load cart from localStorage
+
   loadCart$ = createEffect(() =>
     this.actions$.pipe(
+
       ofType(loadCart),
-      map(() =>
-        loadCartSuccess({
-          items: this.cartService.getCart()
-        })
+
+      switchMap(() =>
+        this.cartService.getCart().pipe(
+
+          map(items =>
+            loadCartSuccess({
+              items
+            })
+          ),
+
+          catchError(error => {
+            console.error('Failed to load cart:', error);
+
+            return [
+              loadCartSuccess({
+                items: []
+              })
+            ];
+          })
+
+        )
       )
+
     )
   );
+
 }
