@@ -22,6 +22,7 @@ import { selectWishlistProducts } from '../../store/wishlist/wishlist.selectors'
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ToastService } from '../../shared/services/toast.service';
+import { AuthService } from '../../core/services/auth.service';
 
 
 function normalizeCategory(value: string | null | undefined): string {
@@ -44,6 +45,7 @@ export class BooksComponent implements OnInit {
   private router = inject(Router);
   private store = inject(Store);
   private toast = inject(ToastService);
+  
 
   // The full set of categories offered for browsing. Kept in one place so
   // the filter chips and the query-param handling always agree.
@@ -61,6 +63,7 @@ export class BooksComponent implements OnInit {
 
   private cartProductIds = new Set<number>();
   private wishlistProductIds = new Set<number>();
+  private authService = inject(AuthService);
 
   get filteredProducts(): Product[] {
 
@@ -102,7 +105,9 @@ export class BooksComponent implements OnInit {
 
     this.loadProducts();
 
-    this.store.dispatch(loadCart());
+    if (this.authService.isLoggedIn()) {
+      this.store.dispatch(loadCart());
+    }
 
     this.products$.subscribe(products => {
       this.products = products;
@@ -166,35 +171,75 @@ export class BooksComponent implements OnInit {
   addToCart(product: Product, event?: Event): void {
 
     event?.stopPropagation();
-
+  
+    if (!this.authService.isLoggedIn()) {
+      this.authService.savePendingAction({
+        type: 'cart',
+        productId: product.id,
+        quantity: 1
+      });
+  
+      this.router.navigate(['/login']);
+      return;
+    }
+  
     if (!this.hasValidPrice(product)) {
       this.toast.error('This item is temporarily unavailable for purchase.');
       return;
     }
-
+  
     if (product.stock <= 0) {
       this.toast.error(`${product.title} is currently out of stock.`);
       return;
     }
-
+  
     if (this.isInCart(product)) {
       this.toast.info(`${product.title} is already in your cart.`);
       return;
     }
-
-    this.store.dispatch(addToCart({ item: { product, quantity: 1 } }));
+  
+    this.store.dispatch(
+      addToCart({
+        item: {
+          product,
+          quantity: 1
+        }
+      })
+    );
+  
     this.toast.success(`${product.title} added to cart.`);
   }
 
   toggleWishlist(product: Product, event?: Event): void {
 
     event?.stopPropagation();
-
+  
+    if (!this.authService.isLoggedIn()) {
+      this.authService.savePendingAction({
+        type: 'wishlist',
+        productId: product.id,
+        quantity: 1
+      });
+  
+      this.router.navigate(['/login']);
+      return;
+    }
+  
     if (this.isWishlisted(product)) {
-      this.store.dispatch(removeFromWishlist({ productId: product.id }));
+      this.store.dispatch(
+        removeFromWishlist({
+          productId: product.id
+        })
+      );
+  
       this.toast.info(`${product.title} removed from wishlist.`);
     } else {
-      this.store.dispatch(addToWishlist({ product }));
+      this.store.dispatch(
+        addToWishlist({
+          product
+        })
+      );
+  
       this.toast.success(`${product.title} added to wishlist.`);
     }
   }
@@ -202,16 +247,34 @@ export class BooksComponent implements OnInit {
   buyNow(product: Product, event?: Event): void {
 
     event?.stopPropagation();
-
+  
+    if (!this.authService.isLoggedIn()) {
+      this.authService.savePendingAction({
+        type: 'buyNow',
+        productId: product.id,
+        quantity: 1
+      });
+  
+      this.router.navigate(['/login']);
+      return;
+    }
+  
     if (product.stock <= 0) {
       this.toast.error(`${product.title} is currently out of stock.`);
       return;
     }
-
+  
     if (!this.isInCart(product)) {
-      this.store.dispatch(addToCart({ item: { product, quantity: 1 } }));
+      this.store.dispatch(
+        addToCart({
+          item: {
+            product,
+            quantity: 1
+          }
+        })
+      );
     }
-
+  
     this.router.navigate(['/checkout']);
   }
 }
