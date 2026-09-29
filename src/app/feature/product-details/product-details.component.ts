@@ -38,11 +38,12 @@ export class ProductDetailsComponent implements OnInit {
   product: Product | null = null;
   loading = true;
   notFound = false;
+  similarProducts: Product[] = [];
 
   selectedImageIndex = 0;
   quantity = 1;
 
-  // Zoom lens state
+  
   isZooming = false;
   zoomBackgroundPosition = '0% 0%';
 
@@ -83,12 +84,32 @@ maxCartProducts = MAX_CART_PRODUCTS;
       next: (product) => {
         this.product = product;
         this.loading = false;
+      
+        this.loadSimilarProducts(product);
+      
         this.watchCartStatus(id);
         this.watchWishlistStatus(id);
       },
       error: () => {
         this.loading = false;
         this.notFound = true;
+      }
+    });
+  }
+
+  private loadSimilarProducts(product: Product): void {
+    this.productService.getProducts().subscribe({
+      next: (products) => {
+        this.similarProducts = products
+          .filter(
+            item =>
+              item.category === product.category &&
+              item.id !== product.id
+          )
+          .slice(0, 4);
+      },
+      error: () => {
+        this.similarProducts = [];
       }
     });
   }
@@ -309,5 +330,8 @@ maxCartProducts = MAX_CART_PRODUCTS;
   handleKeydown(event: KeyboardEvent): void {
     if (event.key === 'ArrowRight') this.nextImage();
     if (event.key === 'ArrowLeft') this.prevImage();
+  }
+  goToSimilarProduct(productId: number): void {
+    this.router.navigate(['/product', productId]);
   }
 }
