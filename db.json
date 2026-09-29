@@ -48,6 +48,20 @@
       "password": "a12345@AA",
       "role": "user",
       "id": "8Ulmt0Q"
+    },
+    {
+      "name": "ahsana",
+      "email": "ahsananaseefa@gmail.com",
+      "password": "Ahsana@12",
+      "role": "user",
+      "id": "-Xy4rfS"
+    },
+    {
+      "name": "Anees Rahman",
+      "email": "aneesrahman0101@gmail.com",
+      "password": "Anees@12",
+      "role": "user",
+      "id": "9uQXI6c"
     }
   ],
   "products": [
@@ -3014,6 +3028,268 @@
       "paymentMethod": "COD",
       "createdAt": "2026-09-28T13:47:44.601Z",
       "status": "Placed"
+    },
+    {
+      "id": 1790664613379,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 36,
+            "title": "1984",
+            "author": "George Orwell",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/1984.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Dystopian",
+              "Political Fiction"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1320,
+            "publisher": "Penguin Classics",
+            "language": "English",
+            "pages": 328,
+            "createdAt": "2026-08-15",
+            "description": "A dystopian classic about surveillance, control, truth, and individual freedom.",
+            "stock": 38
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 29,
+            "title": "Harry Potter and the Philosopher's Stone",
+            "author": "J.K. Rowling",
+            "price": 499,
+            "mrp": 799,
+            "discountPercent": 38,
+            "images": [
+              "/images/hp1.jpg",
+              "/images/hp2.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Magic"
+            ],
+            "rating": 4.9,
+            "reviewCount": 1800,
+            "publisher": "Bloomsbury",
+            "language": "English",
+            "pages": 223,
+            "createdAt": "2026-08-22",
+            "description": "A young boy discovers that he is a wizard and begins his magical education at Hogwarts.",
+            "stock": 50
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 798,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-29T06:50:13.379Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790664657834,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 5,
+            "title": "The Power of Now",
+            "author": "Eckhart Tolle",
+            "price": 399,
+            "mrp": 599,
+            "discountPercent": 33,
+            "images": [
+              "/images/thepowerofnow1.jpg",
+              "/images/thepowerofnow1.jpg"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Mindfulness",
+              "Spirituality"
+            ],
+            "rating": 4.6,
+            "reviewCount": 890,
+            "publisher": "New World Library",
+            "language": "English",
+            "pages": 236,
+            "createdAt": "2026-09-15",
+            "description": "A guide to living more consciously by focusing attention on the present moment.",
+            "stock": 35
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 399,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-29T06:50:57.834Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790664679458,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 3,
+            "title": "How to Win Friends and Influence People",
+            "author": "Dale Carnegie",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/howto-winfriends1.jpg",
+              "/images/howto-winfriends2.jpg"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Communication",
+              "Personal Development"
+            ],
+            "rating": 4.7,
+            "reviewCount": 1100,
+            "publisher": "Simon & Schuster",
+            "language": "English",
+            "pages": 288,
+            "createdAt": "2026-09-17",
+            "description": "A classic guide to improving relationships, communication, and social skills.",
+            "stock": 40
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 299,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "UPI",
+      "createdAt": "2026-09-29T06:51:19.458Z",
+      "status": "Cancelled"
+    },
+    {
+      "id": 1790669268520,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 36,
+            "title": "1984",
+            "author": "George Orwell",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/1984.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Dystopian",
+              "Political Fiction"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1320,
+            "publisher": "Penguin Classics",
+            "language": "English",
+            "pages": 328,
+            "createdAt": "2026-08-15",
+            "description": "A dystopian classic about surveillance, control, truth, and individual freedom.",
+            "stock": 38
+          },
+          "quantity": 5
+        }
+      ],
+      "total": 1495,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-29T08:07:48.520Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1790677241013,
+      "userId": "-Xy4rfS",
+      "items": [
+        {
+          "product": {
+            "id": 2,
+            "title": "The 7 Habits of Highly Effective People",
+            "author": "Stephen R. Covey",
+            "price": 499,
+            "mrp": 799,
+            "discountPercent": 38,
+            "images": [
+              "/images/habitsof-people1.png",
+              "/images/habitsof-people2.png"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Personal Development",
+              "Leadership"
+            ],
+            "rating": 4.7,
+            "reviewCount": 980,
+            "publisher": "Simon & Schuster",
+            "language": "English",
+            "pages": 464,
+            "createdAt": "2026-09-18",
+            "description": "A principle-centered approach to personal and professional effectiveness.",
+            "stock": 32
+          },
+          "quantity": 2
+        }
+      ],
+      "total": 998,
+      "shippingAddress": {
+        "name": "ahsana naseefs",
+        "phone": "8701452633",
+        "address": "ahsana villa",
+        "city": "pattambi",
+        "state": "kerala",
+        "pincode": "789098"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-29T10:20:41.013Z",
+      "status": "Placed"
     }
   ],
   "cart": [
@@ -3024,15 +3300,15 @@
       "quantity": 1
     },
     {
-      "id": "1_36",
+      "id": "1_4",
       "userId": "1",
-      "productId": 36,
+      "productId": 4,
       "quantity": 1
     },
     {
-      "id": "1_29",
-      "userId": "1",
-      "productId": 29,
+      "id": "9uQXI6c_37",
+      "userId": "9uQXI6c",
+      "productId": 37,
       "quantity": 1
     }
   ],
@@ -3046,6 +3322,16 @@
       "id": "8Ulmt0Q_36",
       "userId": "8Ulmt0Q",
       "productId": 36
+    },
+    {
+      "id": "-Xy4rfS_1",
+      "userId": "-Xy4rfS",
+      "productId": 1
+    },
+    {
+      "id": "-Xy4rfS_2",
+      "userId": "-Xy4rfS",
+      "productId": 2
     }
   ],
   "addresses": [
@@ -3056,7 +3342,7 @@
       "city": "uiyui",
       "state": "kerala28y90u",
       "pincode": "670308",
-      "isDefault": false,
+      "isDefault": true,
       "id": "addr_1790581751016_917",
       "userId": "1"
     },
@@ -3092,6 +3378,17 @@
       "isDefault": true,
       "id": "addr_1790592482998_139",
       "userId": "8Ulmt0Q"
+    },
+    {
+      "name": "ahsana naseefs",
+      "phone": "8701452633",
+      "address": "ahsana villa",
+      "city": "pattambi",
+      "state": "kerala",
+      "pincode": "789098",
+      "isDefault": false,
+      "id": "addr_1790677226868_654",
+      "userId": "-Xy4rfS"
     }
   ]
 }

@@ -1,25 +1,15 @@
 import { Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import {FormControl,FormGroup,FormsModule,ReactiveFormsModule,Validators} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../shared/services/toast.service';
-import {
-  NAME_PATTERN,
-  PASSWORD_PATTERN,
-  passwordsMatchValidator,
-  passwordRuleStatus
-} from '../../../shared/validators/custom-validators';
-
+import {NAME_PATTERN,PASSWORD_PATTERN,passwordsMatchValidator,passwordRuleStatus} from '../../../shared/validators/custom-validators';
+import emailjs from '@emailjs/browser';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink,FormsModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -33,6 +23,16 @@ export class RegisterComponent {
   submitting = false;
   showPassword = false;
   showConfirmPassword = false;
+
+
+  otpSent = false;
+  generatedOtp = '';
+  enteredOtp = '';
+
+  otpTimer = 0;
+  otpExpiresAt = 0;
+
+  private otpInterval?: ReturnType<typeof setInterval>;     
 
   registerForm = new FormGroup({
 
@@ -72,9 +72,12 @@ export class RegisterComponent {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
 
-  register(): void {
+  register(otpVerified = false): void {
 
     this.submitError = '';
+    if (!otpVerified) {
+      return;
+    }
 
     if (this.registerForm.invalid || this.submitting) {
       this.registerForm.markAllAsTouched();
@@ -107,5 +110,107 @@ export class RegisterComponent {
         }
       }
     });
+  }
+  sendOtp(): void {
+
+    this.submitError = '';
+  
+    // Validate the registration fields first
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
+    }
+  
+    const email = this.registerForm.controls.email.value!.trim().toLowerCase();
+    const name = this.registerForm.controls.name.value!.trim();
+  
+    // Generate a 6-digit OTP
+    this.generatedOtp = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+  
+    const templateParams = {
+      email: email,
+      name: name,
+      otp: this.generatedOtp
+    };
+  
+    emailjs.send(
+      'service_snnbzpm',
+      'template_jwjbdak',
+      templateParams,
+      {
+        publicKey: '-GreLdHC2wgW-xls9'
+      }
+    )
+    .then(() => {
+  
+      this.otpSent = true;
+  
+      // 2 minutes = 120 seconds
+      this.otpTimer = 120;
+  
+      // Actual expiry time
+      this.otpExpiresAt = Date.now() + 120000;
+  
+      this.startOtpTimer();
+  
+      this.toast.success('OTP sent to your email.');
+  
+    })
+    .catch(() => {
+  
+      this.submitError =
+        'Unable to send OTP. Please check your email and try again.';
+  
+    });
+  }
+
+
+   private startOtpTimer(): void {
+
+    if (this.otpInterval) {
+      clearInterval(this.otpInterval);
+    }
+  
+    this.otpInterval = setInterval(() => {
+  
+      const remaining = this.otpExpiresAt - Date.now();
+  
+      if (remaining <= 0) {
+  
+        this.otpTimer = 0;
+  
+        clearInterval(this.otpInterval);
+  
+        this.otpInterval = undefined;
+  
+        return;
+      }
+  
+      this.otpTimer = Math.ceil(remaining / 1000);
+  
+    }, 1000);
+  }
+
+  verifyOtp(): void {
+
+    this.submitError = '';
+  
+    // Check whether OTP has expired
+    if (Date.now() > this.otpExpiresAt) {
+      this.otpTimer = 0;
+      this.submitError = 'OTP has expired. Please resend a new OTP.';
+      return;
+    }
+  
+    // Check OTP
+    if (this.enteredOtp !== this.generatedOtp) {
+      this.submitError = 'Invalid OTP. Please enter the correct OTP.';
+      return;
+    }
+  
+    // OTP is correct
+    this.register(true);
   }
 }

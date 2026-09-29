@@ -22,7 +22,7 @@
       Join Nova and start your reading journey.
     </p>
 
-    <form [formGroup]="registerForm" (ngSubmit)="register()" class="mt-8 space-y-5" novalidate>
+    <form [formGroup]="registerForm" class="mt-8 space-y-5" novalidate>
 
       <!-- Name -->
       <div>
@@ -167,12 +167,67 @@
         {{ submitError }}
       </div>
       }
-
-      <button type="submit" [disabled]="registerForm.invalid || submitting"
+      
+      <!-- Send OTP -->
+      @if (!otpSent) {
+      
+      <button type="button" (click)="sendOtp()" [disabled]="registerForm.invalid"
         class="h-12 w-full rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-40">
-        {{ submitting ? 'Creating account...' : 'Sign Up' }}
+        Send OTP
       </button>
-
+      
+      }
+      
+      <!-- OTP Section -->
+      @if (otpSent) {
+      
+      <div class="space-y-4">
+      
+        <div>
+          <label for="otp" class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
+            Enter OTP
+          </label>
+      
+          <input id="otp" type="text" maxlength="6" inputmode="numeric" autocomplete="one-time-code" [(ngModel)]="enteredOtp" [ngModelOptions]="{ standalone: true }"
+            placeholder="Enter 6-digit OTP"
+            class="h-11 w-full rounded-sm border border-[#d8d0c2] bg-white px-3.5 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]" />
+        </div>
+      
+        <!-- Timer -->
+        @if (otpTimer > 0) {
+      
+        <p class="text-center text-xs text-[#777d76]">
+          OTP expires in
+          <span class="font-semibold text-[#193629]">
+            {{ otpTimer }} seconds
+          </span>
+        </p>
+      
+        } @else {
+      
+        <p class="text-center text-xs text-red-600">
+          OTP has expired.
+        </p>
+      
+        }
+      
+        <!-- Verify OTP -->
+        <button type="button" (click)="verifyOtp()" [disabled]="otpTimer === 0 || enteredOtp.length !== 6 || submitting"
+          class="h-12 w-full rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-40">
+          {{ submitting ? 'Creating account...' : 'Verify OTP' }}
+        </button>
+      
+        <!-- Resend -->
+        @if (otpTimer === 0) {
+      
+        <button type="button" (click)="sendOtp()"
+          class="w-full text-center text-xs font-semibold text-[#193629] hover:underline">
+          Resend OTP
+        </button>
+      
+        }
+      
+      </div>     }
     </form>
 
     <p class="mt-6 text-center text-sm text-[#777d76]">
