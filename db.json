@@ -3028,6 +3028,12 @@
       "userId": "1",
       "productId": 36,
       "quantity": 1
+    },
+    {
+      "id": "1_29",
+      "userId": "1",
+      "productId": 29,
+      "quantity": 1
     }
   ],
   "wishlist": [
@@ -3044,7 +3050,7 @@
   ],
   "addresses": [
     {
-      "name": "fathima",
+      "name": "fathimamufoeeda",
       "phone": "9341567899",
       "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
       "city": "uiyui",

@@ -17,7 +17,6 @@ export const cartReducer = createReducer(
 
   initialState,
 
-  // Add product to cart
   on(addToCart, (state, { item }) => {
 
     const existingItem = state.items.find(
@@ -64,7 +63,6 @@ export const cartReducer = createReducer(
     };
   }),
 
-  // Increase quantity
   on(increaseQuantity, (state, { productId }) => ({
 
     ...state,
@@ -81,7 +79,6 @@ export const cartReducer = createReducer(
     )
   })),
 
-  // Decrease quantity
   on(decreaseQuantity, (state, { productId }) => ({
 
     ...state,
@@ -98,7 +95,6 @@ export const cartReducer = createReducer(
       .filter(item => item.quantity > 0)
   })),
 
-  // Remove product completely
   on(removeFromCart, (state, { productId }) => ({
 
     ...state,
@@ -108,7 +104,7 @@ export const cartReducer = createReducer(
     )
   })),
 
-  // Clear entire cart
+  
   on(clearCart, () => ({
     items: []
   })),

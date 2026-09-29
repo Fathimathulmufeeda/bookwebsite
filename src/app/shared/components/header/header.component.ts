@@ -62,6 +62,10 @@ export class HeaderComponent implements OnInit {
   goToWishlist(): void {
     this.router.navigate(['/wishlist']);
   }
+  goToProfile(): void {
+    this.profileMenuOpen = false;
+    this.router.navigate(['/profile']);
+  }
 
   goToOrders(): void {
     this.profileMenuOpen = false;

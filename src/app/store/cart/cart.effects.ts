@@ -4,23 +4,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import { Store } from '@ngrx/store';
 
-import {
-  catchError,
-  EMPTY,
-  map,
-  switchMap,
-  withLatestFrom
-} from 'rxjs';
+import {  catchError,EMPTY,map,switchMap,withLatestFrom} from 'rxjs';
 
-import {
-  addToCart,
-  increaseQuantity,
-  decreaseQuantity,
-  removeFromCart,
-  clearCart,
-  loadCart,
-  loadCartSuccess
-} from './cart.action';
+import {addToCart,increaseQuantity,decreaseQuantity,removeFromCart,clearCart,loadCart,loadCartSuccess} from './cart.action';
 
 import { CartService } from '../../core/services/cart.service';
 import { selectCartItems } from './cart.selectors';

@@ -1,0 +1,465 @@
+<div class="min-h-screen bg-[#f8f5ef] px-4 py-10">
+
+    <div class="mx-auto max-w-4xl">
+
+        <h1 class="text-3xl font-semibold text-[#193629]">
+            My Profile
+        </h1>
+
+        @if (user) {
+
+        <!-- PROFILE + PERSONAL INFORMATION -->
+        <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
+
+            <!-- PROFILE CARD -->
+            <div class="rounded-lg bg-white p-6 text-center shadow-sm">
+
+                <!-- PROFILE PICTURE -->
+                <div class="mx-auto h-28 w-28 overflow-hidden rounded-full bg-[#e8e3d8]">
+
+                    @if (user.profilePicture) {
+
+                    <img [src]="user.profilePicture" [alt]="user.name" class="h-full w-full object-cover" />
+
+                    } @else {
+
+                    <div class="flex h-full w-full items-center justify-center text-3xl font-semibold text-[#193629]">
+                        {{ user.name.charAt(0).toUpperCase() }}
+                    </div>
+
+                    }
+
+                </div>
+
+
+                <h2 class="mt-4 text-xl font-semibold text-[#193629]">
+                    {{ user.name }}
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-500">
+                    {{ user.email }}
+                </p>
+
+            </div>
+
+
+            <!-- PROFILE INFORMATION -->
+            <div class="rounded-lg bg-white p-6 shadow-sm lg:col-span-2">
+
+                <h2 class="text-xl font-semibold text-[#193629]">
+                    Personal Information
+                </h2>
+
+                <div class="mt-6 space-y-5">
+
+                    <!-- NAME -->
+                    <div>
+
+                        <p class="text-sm text-gray-500">
+                            Name
+                        </p>
+
+                        <p class="mt-1 text-[#202a24]">
+                            {{ user.name }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+                    <div>
+
+                        <p class="text-sm text-gray-500">
+                            Email
+                        </p>
+
+                        <p class="mt-1 text-[#202a24]">
+                            {{ user.email }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SAVED ADDRESSES -->
+        <div class="mt-8 rounded-lg bg-white p-6 shadow-sm">
+
+            <!-- HEADER -->
+            <div class="flex items-center justify-between gap-4">
+
+                <h2 class="text-xl font-semibold text-[#193629]">
+                    Saved Addresses
+                </h2>
+
+                <button type="button" (click)="openAddAddress()"
+                    class="rounded-md bg-[#193629] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#244b3b]">
+                    + Add Address
+                </button>
+
+            </div>
+
+
+            <!-- ADDRESS FORM -->
+            @if (showAddressForm) {
+
+            <form [formGroup]="addressForm" (ngSubmit)="saveAddress()"
+                class="mt-6 rounded-md border border-[#e5e0d5] bg-[#faf8f3] p-5">
+
+                <h3 class="text-lg font-semibold text-[#193629]">
+
+                    {{ editingAddressId ? 'Edit Address' : 'Add New Address' }}
+
+                </h3>
+
+
+                <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                    <!-- NAME -->
+                    <div>
+
+                        <label class="text-sm text-gray-600">
+                            Name
+                        </label>
+
+                        <input type="text" formControlName="name"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#193629]"
+                            placeholder="Enter name" />
+
+                        @if (isInvalid('name')) {
+
+                        @if (addressForm.controls.name.hasError('required')) {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Name is required.
+                        </p>
+
+                        } @else if (
+                        addressForm.controls.name.hasError('minlength')
+                        ) {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Name must be at least 2 characters.
+                        </p>
+
+                        } @else if (
+                        addressForm.controls.name.hasError('maxlength')
+                        ) {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Name cannot exceed 50 characters.
+                        </p>
+
+                        } @else if (
+                        addressForm.controls.name.hasError('pattern')
+                        ) {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Name can contain only letters, spaces, apostrophes, and hyphens.
+                        </p>
+
+                        }
+
+                        }
+
+                    </div>
+
+
+                    <!-- PHONE -->
+                    <div>
+
+                        <label class="text-sm text-gray-600">
+                            Phone
+                        </label>
+
+                        <input type="tel" formControlName="phone" maxlength="10"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#193629]"
+                            placeholder="Enter phone number" />
+
+                        @if (isInvalid('phone')) {
+
+                        @if (addressForm.controls.phone.hasError('required')) {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Phone number is required.
+                        </p>
+
+                        } @else {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Enter a valid 10-digit Indian phone number.
+                        </p>
+
+                        }
+
+                        }
+
+                    </div>
+
+
+                    <!-- ADDRESS -->
+                    <div class="sm:col-span-2">
+
+                        <label class="text-sm text-gray-600">
+                            Address
+                        </label>
+
+                        <textarea formControlName="address" rows="3"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#193629]"
+                            placeholder="Enter your address"></textarea>
+
+                        @if (isInvalid('address')) {
+
+                        @if (
+                        addressForm.controls.address.hasError('required')
+                        ) {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Address is required.
+                        </p>
+
+                        } @else {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Address must contain between 5 and 200 characters.
+                        </p>
+
+                        }
+
+                        }
+
+                    </div>
+
+
+                    <!-- CITY -->
+                    <div>
+
+                        <label class="text-sm text-gray-600">
+                            City
+                        </label>
+
+                        <input type="text" formControlName="city"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#193629]"
+                            placeholder="Enter city" />
+
+                        @if (isInvalid('city')) {
+
+                        @if (addressForm.controls.city.hasError('required')) {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            City is required.
+                        </p>
+
+                        } @else {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Enter a valid city name.
+                        </p>
+
+                        }
+
+                        }
+
+                    </div>
+
+
+                    <!-- STATE -->
+                    <div>
+
+                        <label class="text-sm text-gray-600">
+                            State
+                        </label>
+
+                        <input type="text" formControlName="state"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#193629]"
+                            placeholder="Enter state" />
+
+                        @if (isInvalid('state')) {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            State name cannot exceed 50 characters.
+                        </p>
+
+                        }
+
+                    </div>
+
+
+                    <!-- PINCODE -->
+                    <div>
+
+                        <label class="text-sm text-gray-600">
+                            Pincode
+                        </label>
+
+                        <input type="text" formControlName="pincode" maxlength="6"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#193629]"
+                            placeholder="Enter 6-digit pincode" />
+
+                        @if (isInvalid('pincode')) {
+
+                        @if (
+                        addressForm.controls.pincode.hasError('required')
+                        ) {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Pincode is required.
+                        </p>
+
+                        } @else {
+
+                        <p class="mt-1 text-xs text-red-600">
+                            Enter a valid 6-digit pincode.
+                        </p>
+
+                        }
+
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- DEFAULT ADDRESS -->
+                <div class="mt-4 flex items-center gap-2">
+
+                    <input id="defaultAddress" type="checkbox" formControlName="isDefault" class="h-4 w-4" />
+
+                    <label for="defaultAddress" class="text-sm text-gray-600">
+                        Set as default address
+                    </label>
+
+                </div>
+
+
+                <!-- FORM BUTTONS -->
+                <div class="mt-6 flex justify-end gap-3">
+
+                    <button type="button" (click)="closeAddressForm()"
+                        class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
+                        Cancel
+                    </button>
+
+                    <button type="submit" [disabled]="addressForm.invalid"
+                        class="rounded-md bg-[#193629] px-4 py-2 text-sm font-medium text-white hover:bg-[#244b3b] disabled:cursor-not-allowed disabled:opacity-50">
+
+                        {{ editingAddressId ? 'Update Address' : 'Save Address' }}
+
+                    </button>
+
+                </div>
+
+            </form>
+
+            }
+
+
+            <!-- EXISTING ADDRESSES -->
+            @if (addresses.length > 0) {
+
+            <div class="mt-6 space-y-4">
+
+                @for (address of addresses; track address.id) {
+
+                <div class="rounded-md border border-[#e5e0d5] p-4">
+
+                    <!-- ADDRESS CONTENT -->
+                    <div class="min-w-0">
+
+                        <!-- NAME + DEFAULT -->
+                        <div class="flex flex-wrap items-center gap-2">
+
+                            <p class="font-medium text-[#193629]">
+                                {{ address.name }}
+                            </p>
+
+                            @if (address.isDefault) {
+
+                            <span class="rounded-full bg-[#193629] px-2.5 py-1 text-xs font-medium text-white">
+                                Default
+                            </span>
+
+                            }
+
+                        </div>
+
+
+                        <!-- ADDRESS -->
+                        <p class="mt-2 text-sm leading-6 text-gray-600">
+
+                            {{ address.address }}<br>
+
+                            {{ address.city }}
+
+                            @if (address.state) {
+                            , {{ address.state }}
+                            }
+
+                            - {{ address.pincode }}
+
+                        </p>
+
+
+                        <!-- PHONE -->
+                        <p class="mt-2 text-sm text-gray-600">
+                            Phone: {{ address.phone }}
+                        </p>
+
+
+                        <!-- ACTIONS -->
+                        <div class="mt-4 flex flex-wrap gap-2">
+
+                            <!-- EDIT -->
+                            <button type="button" (click)="openEditAddress(address)"
+                                class="rounded-md border border-[#193629] px-3 py-1.5 text-xs font-medium text-[#193629] hover:bg-[#193629] hover:text-white">
+                                Edit
+                            </button>
+
+
+                            <!-- DELETE -->
+                            <button type="button" (click)="deleteAddress(address.id)"
+                                class="rounded-md border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50">
+                                Delete
+                            </button>
+
+
+                            <!-- SET DEFAULT -->
+                            @if (!address.isDefault) {
+
+                            <button type="button" (click)="makeDefault(address.id)"
+                                class="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100">
+                                Set as Default
+                            </button>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                }
+
+            </div>
+
+            } @else if (!showAddressForm) {
+
+            <p class="mt-6 text-sm text-gray-500">
+                You don't have any saved addresses yet.
+            </p>
+
+            }
+
+        </div>
+
+        }
+
+    </div>
+
+</div>

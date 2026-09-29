@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { ProfileComponent } from './feature/profile/profile.component';
 
 
 export const routes: Routes = [
@@ -49,6 +50,11 @@ export const routes: Routes = [
       import('./feature/books/books.component')
         .then(m => m.BooksComponent),
     
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [authGuard]
   },
 
   //prvate
