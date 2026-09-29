@@ -598,7 +598,7 @@
 
   <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
-    @for (product of products.slice(0, 4); track product.id) {
+    @for (product of newArrivals.slice(0, 4); track product.id) {
 
     <article (click)="goToProduct(product)"
       class="group cursor-pointer overflow-hidden border border-[#ebe6dd] bg-[#fffdf9] transition duration-300 hover:-translate-y-1 hover:shadow-xl">

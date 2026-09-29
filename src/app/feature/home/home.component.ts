@@ -329,4 +329,13 @@ console.log('Max products:', this.maxCartProducts);
   
     this.router.navigate(['/checkout']);
   }
+  get newArrivals(): Product[] {
+    return [...this.products]
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() -
+          new Date(a.createdAt).getTime()
+      )
+      .slice(0, 8);
+  }
 }
