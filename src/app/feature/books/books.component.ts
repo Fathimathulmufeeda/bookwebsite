@@ -31,6 +31,8 @@ function normalizeCategory(value: string | null | undefined): string {
 
 type SortOption = 'relevance' | 'price-asc' | 'price-desc' | 'rating';
 
+const PAGE_SIZE = 12;
+
 
 @Component({
   selector: 'app-books',
@@ -56,6 +58,9 @@ export class BooksComponent implements OnInit {
   selectedCategory: string | null = null;
   searchTerm = '';
   sortBy: SortOption = 'relevance';
+
+  readonly pageSize = PAGE_SIZE;
+  currentPage = 1;
 
   products$ = this.store.select(selectProducts);
   loading$ = this.store.select(selectProductsLoading);
@@ -101,6 +106,76 @@ export class BooksComponent implements OnInit {
     return sorted;
   }
 
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredProducts.length / this.pageSize));
+  }
+
+  /** The slice of filteredProducts actually shown on the current page. */
+  get paginatedProducts(): Product[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredProducts.slice(start, start + this.pageSize);
+  }
+
+  /** A short, windowed list of page numbers to render as buttons, e.g.
+   *  [3, 4, 5, 6, 7] rather than every page when there are fifty of them. */
+  get pageNumbers(): number[] {
+
+    const total = this.totalPages;
+    const windowSize = 5;
+
+    let start = Math.max(1, this.currentPage - Math.floor(windowSize / 2));
+    let end = Math.min(total, start + windowSize - 1);
+
+    start = Math.max(1, end - windowSize + 1);
+
+    const pages: number[] = [];
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  }
+
+  goToPage(page: number): void {
+
+    if (page < 1 || page > this.totalPages || page === this.currentPage) {
+      return;
+    }
+
+    this.currentPage = page;
+    this.scrollToResultsTop();
+  }
+
+  nextPage(): void {
+    this.goToPage(this.currentPage + 1);
+  }
+
+  prevPage(): void {
+    this.goToPage(this.currentPage - 1);
+  }
+
+  private scrollToResultsTop(): void {
+    document.getElementById('books-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /** Any change to what's being filtered/sorted invalidates the current
+   *  page — e.g. page 4 of "all books" may not exist once filtered down
+   *  to 6 results, so every filter change snaps back to page 1. */
+  private resetToFirstPage(): void {
+    this.currentPage = 1;
+  }
+
+  onSearchTermChange(value: string): void {
+    this.searchTerm = value;
+    this.resetToFirstPage();
+  }
+
+  onSortChange(value: SortOption): void {
+    this.sortBy = value;
+    this.resetToFirstPage();
+  }
+
   ngOnInit(): void {
 
     this.loadProducts();
@@ -124,6 +199,7 @@ export class BooksComponent implements OnInit {
     this.route.queryParamMap.subscribe(params => {
       this.selectedCategory = params.get('category');
       this.searchTerm = params.get('q') ?? '';
+      this.resetToFirstPage();
     });
   }
 

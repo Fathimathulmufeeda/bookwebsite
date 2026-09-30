@@ -115,7 +115,7 @@ export class RegisterComponent {
 
     this.submitError = '';
   
-    // Validate the registration fields first
+  
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
@@ -124,7 +124,7 @@ export class RegisterComponent {
     const email = this.registerForm.controls.email.value!.trim().toLowerCase();
     const name = this.registerForm.controls.name.value!.trim();
   
-    // Generate a 6-digit OTP
+    
     this.generatedOtp = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
@@ -147,10 +147,9 @@ export class RegisterComponent {
   
       this.otpSent = true;
   
-      // 2 minutes = 120 seconds
+      
       this.otpTimer = 120;
   
-      // Actual expiry time
       this.otpExpiresAt = Date.now() + 120000;
   
       this.startOtpTimer();
@@ -197,20 +196,18 @@ export class RegisterComponent {
 
     this.submitError = '';
   
-    // Check whether OTP has expired
     if (Date.now() > this.otpExpiresAt) {
       this.otpTimer = 0;
       this.submitError = 'OTP has expired. Please resend a new OTP.';
       return;
     }
   
-    // Check OTP
     if (this.enteredOtp !== this.generatedOtp) {
       this.submitError = 'Invalid OTP. Please enter the correct OTP.';
       return;
     }
   
-    // OTP is correct
+    
     this.register(true);
   }
 }

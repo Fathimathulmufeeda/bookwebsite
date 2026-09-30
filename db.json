@@ -62,6 +62,13 @@
       "password": "Anees@12",
       "role": "user",
       "id": "9uQXI6c"
+    },
+    {
+      "name": "fathima",
+      "email": "cknavaneeth700@gmail.com",
+      "password": "Fathi@12",
+      "role": "user",
+      "id": "68Y9KwA"
     }
   ],
   "products": [
@@ -3290,6 +3297,53 @@
       "paymentMethod": "COD",
       "createdAt": "2026-09-29T10:20:41.013Z",
       "status": "Placed"
+    },
+    {
+      "id": 1790692611849,
+      "userId": "68Y9KwA",
+      "items": [
+        {
+          "product": {
+            "id": 3,
+            "title": "How to Win Friends and Influence People",
+            "author": "Dale Carnegie",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/howto-winfriends1.jpg",
+              "/images/howto-winfriends2.jpg"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Communication",
+              "Personal Development"
+            ],
+            "rating": 4.7,
+            "reviewCount": 1100,
+            "publisher": "Simon & Schuster",
+            "language": "English",
+            "pages": 288,
+            "createdAt": "2026-09-17",
+            "description": "A classic guide to improving relationships, communication, and social skills.",
+            "stock": 40
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 299,
+      "shippingAddress": {
+        "name": "fathima",
+        "phone": "9870214563",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "kannur",
+        "state": "fjufjyu",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-29T14:36:51.849Z",
+      "status": "Cancelled"
     }
   ],
   "cart": [
@@ -3309,6 +3363,60 @@
       "id": "9uQXI6c_37",
       "userId": "9uQXI6c",
       "productId": 37,
+      "quantity": 1
+    },
+    {
+      "id": "9uQXI6c_2",
+      "userId": "9uQXI6c",
+      "productId": 2,
+      "quantity": 1
+    },
+    {
+      "id": "9uQXI6c_3",
+      "userId": "9uQXI6c",
+      "productId": 3,
+      "quantity": 1
+    },
+    {
+      "id": "68Y9KwA_27",
+      "userId": "68Y9KwA",
+      "productId": 27,
+      "quantity": 1
+    },
+    {
+      "id": "68Y9KwA_28",
+      "userId": "68Y9KwA",
+      "productId": 28,
+      "quantity": 1
+    },
+    {
+      "id": "68Y9KwA_32",
+      "userId": "68Y9KwA",
+      "productId": 32,
+      "quantity": 1
+    },
+    {
+      "id": "68Y9KwA_31",
+      "userId": "68Y9KwA",
+      "productId": 31,
+      "quantity": 1
+    },
+    {
+      "id": "68Y9KwA_30",
+      "userId": "68Y9KwA",
+      "productId": 30,
+      "quantity": 1
+    },
+    {
+      "id": "68Y9KwA_13",
+      "userId": "68Y9KwA",
+      "productId": 13,
+      "quantity": 1
+    },
+    {
+      "id": "68Y9KwA_14",
+      "userId": "68Y9KwA",
+      "productId": 14,
       "quantity": 1
     }
   ],
@@ -3332,6 +3440,21 @@
       "id": "-Xy4rfS_2",
       "userId": "-Xy4rfS",
       "productId": 2
+    },
+    {
+      "id": "1_36",
+      "userId": "1",
+      "productId": 36
+    },
+    {
+      "id": "1_37",
+      "userId": "1",
+      "productId": 37
+    },
+    {
+      "id": "1_8",
+      "userId": "1",
+      "productId": 8
     }
   ],
   "addresses": [
@@ -3389,6 +3512,17 @@
       "isDefault": false,
       "id": "addr_1790677226868_654",
       "userId": "-Xy4rfS"
+    },
+    {
+      "name": "fathima",
+      "phone": "9870214563",
+      "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+      "city": "kannur",
+      "state": "fjufjyu",
+      "pincode": "670308",
+      "isDefault": true,
+      "id": "addr_1790692514461_361",
+      "userId": "68Y9KwA"
     }
   ]
 }

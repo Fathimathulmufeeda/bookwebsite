@@ -19,6 +19,7 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { AuthService } from '../../core/services/auth.service';
 
+
 @Component({
   selector: 'app-product-details',
   standalone: true,
@@ -54,6 +55,8 @@ export class ProductDetailsComponent implements OnInit {
   isWishlisted = false;
   cartProductCount = 0;
 maxCartProducts = MAX_CART_PRODUCTS;
+
+
 
   wishlistProducts$: Observable<Product[]> = this.store.select(selectWishlistProducts);
 
@@ -130,7 +133,9 @@ maxCartProducts = MAX_CART_PRODUCTS;
   private watchWishlistStatus(productId: number): void {
     this.wishlistProducts$.pipe(
       map(products => products.some(p => p.id === productId))
-    ).subscribe(isIn => this.isWishlisted = isIn);
+    ).subscribe(isWishlisted => {
+      this.isWishlisted = isWishlisted;
+    });
   }
 
   get images(): string[] {
@@ -286,7 +291,7 @@ maxCartProducts = MAX_CART_PRODUCTS;
   }
 
   toggleWishlist(): void {
-
+    
     if (!this.product) return;
   
     // Check authentication first
@@ -300,6 +305,7 @@ maxCartProducts = MAX_CART_PRODUCTS;
       this.router.navigate(['/login']);
       return;
     }
+    
   
     if (this.isWishlisted) {
       this.store.dispatch(
@@ -311,6 +317,8 @@ maxCartProducts = MAX_CART_PRODUCTS;
       this.toast.info(`${this.product.title} removed from wishlist.`);
   
     } else {
+      
+    
       this.store.dispatch(
         addToWishlist({
           product: this.product

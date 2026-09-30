@@ -21,7 +21,7 @@
 
             <div class="flex items-center gap-3">
                 <label class="text-[10px] font-bold uppercase tracking-wide text-[#5c645d]">Sort</label>
-                <select [(ngModel)]="sortBy"
+                <select [ngModel]="sortBy" (ngModelChange)="onSortChange($event)"
                     class="h-10 rounded-sm border border-[#d8d0c2] bg-white px-3 text-xs text-[#26332b] outline-none focus:border-[#193629]">
                     <option value="relevance">Relevance</option>
                     <option value="price-asc">Price: Low to High</option>
@@ -35,7 +35,8 @@
         <div class="mb-8 space-y-4">
 
             <div class="relative max-w-md">
-                <input type="text" [(ngModel)]="searchTerm" placeholder="Search by title or author..."
+                <input type="text" [ngModel]="searchTerm" (ngModelChange)="onSearchTermChange($event)"
+                    placeholder="Search by title or author..."
                     class="h-11 w-full rounded-sm border border-[#d8d0c2] bg-white pl-4 pr-4 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]" />
             </div>
 
@@ -85,13 +86,14 @@
 
         @if (filteredProducts.length > 0) {
 
-        <p class="mb-4 text-xs text-[#999]">
-            {{ filteredProducts.length }} {{ filteredProducts.length === 1 ? 'book' : 'books' }} found
+        <p id="books-results" class="mb-4 scroll-mt-24 text-xs text-[#999]">
+            Showing {{ paginatedProducts.length }} of {{ filteredProducts.length }} {{ filteredProducts.length === 1 ?
+            'book' : 'books' }}
         </p>
 
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
-            @for (product of filteredProducts; track product.id) {
+            @for (product of paginatedProducts; track product.id) {
 
             <article (click)="goToProduct(product)"
                 class="group cursor-pointer overflow-hidden rounded-md border border-[#ebe6dd] bg-[#fffdf9] transition duration-300 hover:-translate-y-1 hover:shadow-xl">
@@ -178,6 +180,54 @@
             }
 
         </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1) {
+
+        <nav class="mt-10 flex items-center justify-center gap-1.5" aria-label="Pagination">
+
+            <button type="button" (click)="prevPage()" [disabled]="currentPage === 1"
+                class="flex h-9 min-w-9 items-center justify-center rounded-sm border border-[#d8d0c2] px-2 text-xs font-bold text-[#3a3f3b] transition hover:bg-[#f2ece1] disabled:cursor-not-allowed disabled:opacity-40"
+                aria-label="Previous page">
+                ‹
+            </button>
+
+            @if (pageNumbers[0] > 1) {
+            <button type="button" (click)="goToPage(1)"
+                class="flex h-9 min-w-9 items-center justify-center rounded-sm border border-[#d8d0c2] px-3 text-xs font-bold text-[#3a3f3b] transition hover:bg-[#f2ece1]">
+                1
+            </button>
+            @if (pageNumbers[0] > 2) {
+            <span class="px-1 text-xs text-[#999]">…</span>
+            }
+            }
+
+            @for (page of pageNumbers; track page) {
+            <button type="button" (click)="goToPage(page)"
+                class="flex h-9 min-w-9 items-center justify-center rounded-sm border px-3 text-xs font-bold transition"
+                [ngClass]="page === currentPage ? 'border-[#193629] bg-[#193629] text-white' : 'border-[#d8d0c2] text-[#3a3f3b] hover:bg-[#f2ece1]'">
+                {{ page }}
+            </button>
+            }
+
+            @if (pageNumbers[pageNumbers.length - 1] < totalPages) { @if (pageNumbers[pageNumbers.length - 1] <
+                totalPages - 1) { <span class="px-1 text-xs text-[#999]">…</span>
+                }
+                <button type="button" (click)="goToPage(totalPages)"
+                    class="flex h-9 min-w-9 items-center justify-center rounded-sm border border-[#d8d0c2] px-3 text-xs font-bold text-[#3a3f3b] transition hover:bg-[#f2ece1]">
+                    {{ totalPages }}
+                </button>
+                }
+
+                <button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages"
+                    class="flex h-9 min-w-9 items-center justify-center rounded-sm border border-[#d8d0c2] px-2 text-xs font-bold text-[#3a3f3b] transition hover:bg-[#f2ece1] disabled:cursor-not-allowed disabled:opacity-40"
+                    aria-label="Next page">
+                    ›
+                </button>
+
+        </nav>
+
+        }
 
         } @else {
 
