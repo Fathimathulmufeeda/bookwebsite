@@ -64,11 +64,32 @@
       "id": "9uQXI6c"
     },
     {
-      "name": "fathima",
+      "name": "navaneeth",
       "email": "cknavaneeth700@gmail.com",
       "password": "Fathi@12",
       "role": "user",
       "id": "68Y9KwA"
+    },
+    {
+      "name": "FATHIMATHUL MUFEEDA",
+      "email": "eduride@gmail.com",
+      "password": "VcydkgAze6_MMsv",
+      "role": "user",
+      "id": "_eC74C2"
+    },
+    {
+      "name": "FATHIMATHUL MUFEEDA",
+      "email": "fathimathulmufeedaa@gmail.com",
+      "password": "Fathi@12",
+      "role": "user",
+      "id": "_GMSfhw"
+    },
+    {
+      "name": "shadin",
+      "email": "shadinahammed07@gmail.com",
+      "password": "Fathi@12",
+      "role": "user",
+      "id": "tJZpy2v"
     }
   ],
   "products": [

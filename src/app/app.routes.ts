@@ -14,14 +14,24 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () =>
       import('./feature/auth/auth/auth.component')
-        .then(m => m.AuthComponent)
+        .then(m => m.AuthComponent),
+        canActivate: [guestGuard]
   },
   {
     path: 'login',
     loadComponent: () =>
       import('./feature/auth/auth/auth.component')
-        .then(m => m.AuthComponent)
+        .then(m => m.AuthComponent),
+        canActivate: [guestGuard]
   },
+  {
+    path: 'verify-otp',
+    loadComponent: () =>
+      import('./feature/auth/auth/auth.component')
+        .then(m => m.AuthComponent),
+    canActivate: [guestGuard]
+  },
+
   // {
   //   path: 'forgot-password',
   //   loadComponent: () =>

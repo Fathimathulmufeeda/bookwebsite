@@ -2,372 +2,834 @@
 
     <div class="w-full max-w-md rounded-md border border-[#ebe6dd] bg-white p-8 shadow-sm sm:p-10">
 
-        <!-- Brand -->
+
+        <!-- ========================================================= -->
+        <!-- BRAND -->
+        <!-- ========================================================= -->
+
         <a href="javascript:void(0)" (click)="switchMode('login')"
             class="mb-8 flex items-center justify-center gap-2 text-[#26332b] no-underline">
+
             <svg class="h-8 w-6 text-[#867354]" viewBox="0 0 32 40" fill="none">
+
                 <path d="M4 6h9c4 0 7 2 7 5v25c-2-2-4-3-7-3H4V6Z" stroke="currentColor" stroke-width="1.3" />
+
                 <path d="M28 6h-9c-4 0-7 2-7 5v25c2-2 4-3 7-3h9V6Z" stroke="currentColor" stroke-width="1.3" />
+
                 <path d="M16 8v25" stroke="currentColor" stroke-width="1.3" />
+
             </svg>
+
+
             <div>
-                <h1 class="font-serif text-lg font-medium tracking-[0.18em]">NOVA</h1>
-                <p class="mt-0.5 text-[7px] tracking-[0.32em]">BOOKSHOP</p>
+
+                <h1 class="font-serif text-lg font-medium tracking-[0.18em]">
+                    NOVA
+                </h1>
+
+                <p class="mt-0.5 text-[7px] tracking-[0.32em]">
+                    BOOKSHOP
+                </p>
+
             </div>
+
         </a>
 
-        <!-- Toggle tabs
-        <div class="mb-8 flex rounded-sm border border-[#e5e0d5] p-1">
-            <button type="button" (click)="switchMode('login')"
-                class="h-10 flex-1 rounded-sm text-xs font-bold uppercase tracking-wide transition"
-                [ngClass]="mode === 'login' ? 'bg-[#193629] text-white' : 'text-[#5c645d] hover:bg-[#f2ece1]'">
-                Sign In
-            </button>
-            <button type="button" (click)="switchMode('register')"
-                class="h-10 flex-1 rounded-sm text-xs font-bold uppercase tracking-wide transition"
-                [ngClass]="mode === 'register' ? 'bg-[#193629] text-white' : 'text-[#5c645d] hover:bg-[#f2ece1]'">
-                Sign Up
-            </button>
-        </div> -->
 
 
-        <!-- ================= LOGIN ================= -->
+        <!-- ========================================================= -->
+        <!-- LOGIN -->
+        <!-- ========================================================= -->
+
         @if (mode === 'login') {
 
         <h2 class="text-center font-serif text-2xl font-medium text-[#202a24]">
             Welcome back
         </h2>
+
         <p class="mt-2 text-center text-sm text-[#777d76]">
             Sign in to continue to your account.
         </p>
 
+
         <form [formGroup]="loginForm" (ngSubmit)="login()" class="mt-8 space-y-5" novalidate>
 
-            <!-- Email -->
+
+            <!-- EMAIL -->
+
             <div>
+
                 <label for="login-email"
                     class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
                     Email Address
                 </label>
+
+
                 <input id="login-email" type="email" formControlName="email" placeholder="enter your email"
                     autocomplete="email"
                     class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]"
-                    [ngClass]="(loginForm.controls.email.touched && loginForm.controls.email.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+                    [ngClass]="
+                        (loginForm.controls.email.touched &&
+                        loginForm.controls.email.invalid)
+                        ? 'border-red-400'
+                        : 'border-[#d8d0c2]'
+                    " />
 
-                @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+
+                @if (
+                loginForm.controls.email.touched &&
+                loginForm.controls.email.invalid
+                ) {
+
                 <div class="mt-1.5 space-y-0.5">
-                    @if (loginForm.controls.email.hasError('required')) {
-                    <p class="text-xs text-red-600">Email is required.</p>
+
+                    @if (
+                    loginForm.controls.email.hasError('required')
+                    ) {
+
+                    <p class="text-xs text-red-600">
+                        Email is required.
+                    </p>
+
                     }
-                    @if (loginForm.controls.email.hasError('email')) {
-                    <p class="text-xs text-red-600">Enter a valid email address.</p>
+
+
+                    @if (
+                    loginForm.controls.email.hasError('email')
+                    ) {
+
+                    <p class="text-xs text-red-600">
+                        Enter a valid email address.
+                    </p>
+
                     }
+
                 </div>
+
                 }
+
             </div>
 
-            <!-- Password -->
+
+
+            <!-- PASSWORD -->
+
             <div>
-                <div class="mb-1.5 flex items-center justify-between">
-                    <label for="login-password"
-                        class="block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
-                        Password
-                    </label>
-                </div>
+
+                <label for="login-password"
+                    class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
+                    Password
+                </label>
+
 
                 <div class="relative">
+
                     <input id="login-password" [type]="showLoginPassword ? 'text' : 'password'"
                         formControlName="password" placeholder="Enter your password" autocomplete="current-password"
                         class="h-11 w-full rounded-sm border bg-white px-3.5 pr-11 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]"
-                        [ngClass]="(loginForm.controls.password.touched && loginForm.controls.password.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+                        [ngClass]="
+                            (loginForm.controls.password.touched &&
+                            loginForm.controls.password.invalid)
+                            ? 'border-red-400'
+                            : 'border-[#d8d0c2]'
+                        " />
+
 
                     <button type="button" (click)="toggleLoginPasswordVisibility()"
                         class="absolute right-0 top-0 flex h-11 w-11 items-center justify-center text-[#777d76] hover:text-[#193629]"
-                        [attr.aria-label]="showLoginPassword ? 'Hide password' : 'Show password'">
+                        [attr.aria-label]="
+                            showLoginPassword
+                            ? 'Hide password'
+                            : 'Show password'
+                        ">
+
                         @if (showLoginPassword) {
+
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+
                             <path d="M3 3l18 18" />
+
                             <path
                                 d="M10.6 5.1A10.7 10.7 0 0 1 12 5c6 0 9.5 6 9.9 7a17 17 0 0 1-3.2 4.1M6.2 6.2C3.6 7.9 2 10.6 2.1 12c.3.9 3 6 9.9 7 1.2 0 2.3-.2 3.3-.6" />
+
                             <path d="M9.9 10a3 3 0 0 0 4.2 4.2" />
+
                         </svg>
-                        } @else {
-                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                            <path d="M2.1 12S5.6 5 12 5s9.9 7 9.9 7-3.5 7-9.9 7-9.9-7-9.9-7Z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg>
+
                         }
+
+                        @else {
+
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+
+                            <path d="M2.1 12S5.6 5 12 5s9.9 7 9.9 7-3.5 7-9.9 7-9.9-7-9.9-7Z" />
+
+                            <circle cx="12" cy="12" r="3" />
+
+                        </svg>
+
+                        }
+
                     </button>
+
                 </div>
 
-                @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
-                @if (loginForm.controls.password.hasError('required')) {
-                <p class="mt-1.5 text-xs text-red-600">Password is required.</p>
+
+                @if (
+                loginForm.controls.password.touched &&
+                loginForm.controls.password.invalid
+                ) {
+
+                @if (
+                loginForm.controls.password.hasError('required')
+                ) {
+
+                <p class="mt-1.5 text-xs text-red-600">
+                    Password is required.
+                </p>
+
                 }
+
                 }
+
             </div>
 
-            <!-- Sign in error -->
+
+
+            <!-- LOGIN ERROR -->
+
             @if (error) {
+
             <div class="rounded-sm border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs leading-5 text-red-700">
                 {{ error }}
             </div>
+
             }
 
-            <button type="submit" [disabled]="loginForm.invalid || submitting"
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button type="submit" [disabled]="
+                    loginForm.invalid ||
+                    submitting
+                "
                 class="h-12 w-full rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-40">
-                {{ submitting ? 'Signing in...' : 'Sign In' }}
+
+                {{
+                submitting
+                ? 'Signing in...'
+                : 'Sign In'
+                }}
+
             </button>
 
         </form>
 
+
+
+        <!-- GO TO REGISTER -->
+
         <p class="mt-6 text-center text-sm text-[#777d76]">
+
             Don't have an account?
-            <button type="button" (click)="switchMode('register')"
-                class="font-semibold text-[#193629] hover:underline">Register</button>
+
+            <button type="button" (click)="switchMode('register')" class="font-semibold text-[#193629] hover:underline">
+                Register
+            </button>
+
         </p>
 
         }
 
 
-        <!-- ================= REGISTER ================= -->
+
+        <!-- ========================================================= -->
+        <!-- REGISTER -->
+        <!-- ========================================================= -->
+
         @if (mode === 'register') {
 
         <h2 class="text-center font-serif text-2xl font-medium text-[#202a24]">
             Create your account
         </h2>
+
         <p class="mt-2 text-center text-sm text-[#777d76]">
             Join Nova and start your reading journey.
         </p>
 
+
         <form [formGroup]="registerForm" class="mt-8 space-y-5" novalidate>
 
-            <!-- Name -->
+
+            <!-- NAME -->
+
             <div>
+
                 <label for="register-name"
                     class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
                     Full Name
                 </label>
+
+
                 <input id="register-name" type="text" formControlName="name" placeholder="enter your name"
                     autocomplete="name"
                     class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]"
-                    [ngClass]="(registerForm.controls.name.touched && registerForm.controls.name.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+                    [ngClass]="
+                        (registerForm.controls.name.touched &&
+                        registerForm.controls.name.invalid)
+                        ? 'border-red-400'
+                        : 'border-[#d8d0c2]'
+                    " />
 
-                @if (registerForm.controls.name.touched && registerForm.controls.name.invalid) {
+
+                @if (
+                registerForm.controls.name.touched &&
+                registerForm.controls.name.invalid
+                ) {
+
                 <div class="mt-1.5 space-y-0.5">
-                    @if (registerForm.controls.name.hasError('required')) {
-                    <p class="text-xs text-red-600">Name is required.</p>
+
+                    @if (
+                    registerForm.controls.name.hasError('required')
+                    ) {
+
+                    <p class="text-xs text-red-600">
+                        Name is required.
+                    </p>
+
                     }
-                    @if (registerForm.controls.name.hasError('minlength')) {
-                    <p class="text-xs text-red-600">Name must be at least 2 characters.</p>
+
+
+                    @if (
+                    registerForm.controls.name.hasError('minlength')
+                    ) {
+
+                    <p class="text-xs text-red-600">
+                        Name must be at least 2 characters.
+                    </p>
+
                     }
-                    @if (registerForm.controls.name.hasError('maxlength')) {
-                    <p class="text-xs text-red-600">Name cannot exceed 50 characters.</p>
+
+
+                    @if (
+                    registerForm.controls.name.hasError('maxlength')
+                    ) {
+
+                    <p class="text-xs text-red-600">
+                        Name cannot exceed 50 characters.
+                    </p>
+
                     }
-                    @if (registerForm.controls.name.hasError('pattern')) {
-                    <p class="text-xs text-red-600">Enter a valid name using letters only.</p>
+
+
+                    @if (
+                    registerForm.controls.name.hasError('pattern')
+                    ) {
+
+                    <p class="text-xs text-red-600">
+                        Enter a valid name using letters only.
+                    </p>
+
                     }
+
                 </div>
+
                 }
+
             </div>
 
-            <!-- Email -->
+
+
+            <!-- EMAIL -->
+
             <div>
+
                 <label for="register-email"
                     class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
                     Email Address
                 </label>
+
+
                 <input id="register-email" type="email" formControlName="email" placeholder="enter your email"
                     autocomplete="email"
                     class="h-11 w-full rounded-sm border bg-white px-3.5 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]"
-                    [ngClass]="(registerForm.controls.email.touched && registerForm.controls.email.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+                    [ngClass]="
+                        (registerForm.controls.email.touched &&
+                        registerForm.controls.email.invalid)
+                        ? 'border-red-400'
+                        : 'border-[#d8d0c2]'
+                    " />
 
-                @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) {
+
+                @if (
+                registerForm.controls.email.touched &&
+                registerForm.controls.email.invalid
+                ) {
+
                 <div class="mt-1.5 space-y-0.5">
-                    @if (registerForm.controls.email.hasError('required')) {
-                    <p class="text-xs text-red-600">Email is required.</p>
+
+                    @if (
+                    registerForm.controls.email.hasError('required')
+                    ) {
+
+                    <p class="text-xs text-red-600">
+                        Email is required.
+                    </p>
+
                     }
-                    @if (registerForm.controls.email.hasError('email')) {
-                    <p class="text-xs text-red-600">Enter a valid email address.</p>
+
+
+                    @if (
+                    registerForm.controls.email.hasError('email')
+                    ) {
+
+                    <p class="text-xs text-red-600">
+                        Enter a valid email address.
+                    </p>
+
                     }
+
                 </div>
+
                 }
+
             </div>
 
-            <!-- Password -->
+
+
+            <!-- PASSWORD -->
+
             <div>
+
                 <label for="register-password"
                     class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
                     Password
                 </label>
+
+
                 <div class="relative">
-                    <input id="register-password" [type]="showRegisterPassword ? 'text' : 'password'"
-                        formControlName="password" placeholder="Create a strong password" autocomplete="new-password"
+
+                    <input id="register-password" [type]="
+                            showRegisterPassword
+                            ? 'text'
+                            : 'password'
+                        " formControlName="password" placeholder="Create a strong password" autocomplete="new-password"
                         class="h-11 w-full rounded-sm border bg-white px-3.5 pr-11 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]"
-                        [ngClass]="(registerForm.controls.password.touched && registerForm.controls.password.invalid) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+                        [ngClass]="
+                            (registerForm.controls.password.touched &&
+                            registerForm.controls.password.invalid)
+                            ? 'border-red-400'
+                            : 'border-[#d8d0c2]'
+                        " />
+
 
                     <button type="button" (click)="toggleRegisterPasswordVisibility()"
-                        class="absolute right-0 top-0 flex h-11 w-11 items-center justify-center text-[#777d76] hover:text-[#193629]"
-                        [attr.aria-label]="showRegisterPassword ? 'Hide password' : 'Show password'">
+                        class="absolute right-0 top-0 flex h-11 w-11 items-center justify-center text-[#777d76] hover:text-[#193629]">
+
                         @if (showRegisterPassword) {
+
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+
                             <path d="M3 3l18 18" />
+
                             <path
                                 d="M10.6 5.1A10.7 10.7 0 0 1 12 5c6 0 9.5 6 9.9 7a17 17 0 0 1-3.2 4.1M6.2 6.2C3.6 7.9 2 10.6 2.1 12c.3.9 3 6 9.9 7 1.2 0 2.3-.2 3.3-.6" />
+
                             <path d="M9.9 10a3 3 0 0 0 4.2 4.2" />
+
                         </svg>
-                        } @else {
-                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                            <path d="M2.1 12S5.6 5 12 5s9.9 7 9.9 7-3.5 7-9.9 7-9.9-7-9.9-7Z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg>
+
                         }
+
+                        @else {
+
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+
+                            <path d="M2.1 12S5.6 5 12 5s9.9 7 9.9 7-3.5 7-9.9 7-9.9-7-9.9-7Z" />
+
+                            <circle cx="12" cy="12" r="3" />
+
+                        </svg>
+
+                        }
+
                     </button>
+
                 </div>
 
-                <!-- Live password checklist -->
-                @if (registerForm.controls.password.value) {
+
+
+                <!-- PASSWORD RULES -->
+
+                @if (
+                registerForm.controls.password.value
+                ) {
+
                 <ul class="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[11px]">
-                    <li [ngClass]="passwordRules.minLength ? 'text-[#193629]' : 'text-[#b3ada0]'">
-                        {{ passwordRules.minLength ? '✓' : '○' }} 8+ characters
+
+                    <li [ngClass]="
+                            passwordRules.minLength
+                            ? 'text-[#193629]'
+                            : 'text-[#b3ada0]'
+                        ">
+
+                        {{
+                        passwordRules.minLength
+                        ? '✓'
+                        : '○'
+                        }}
+
+                        8+ characters
+
                     </li>
-                    <li [ngClass]="passwordRules.uppercase ? 'text-[#193629]' : 'text-[#b3ada0]'">
-                        {{ passwordRules.uppercase ? '✓' : '○' }} Uppercase letter
+
+
+                    <li [ngClass]="
+                            passwordRules.uppercase
+                            ? 'text-[#193629]'
+                            : 'text-[#b3ada0]'
+                        ">
+
+                        {{
+                        passwordRules.uppercase
+                        ? '✓'
+                        : '○'
+                        }}
+
+                        Uppercase letter
+
                     </li>
-                    <li [ngClass]="passwordRules.lowercase ? 'text-[#193629]' : 'text-[#b3ada0]'">
-                        {{ passwordRules.lowercase ? '✓' : '○' }} Lowercase letter
+
+
+                    <li [ngClass]="
+                            passwordRules.lowercase
+                            ? 'text-[#193629]'
+                            : 'text-[#b3ada0]'
+                        ">
+
+                        {{
+                        passwordRules.lowercase
+                        ? '✓'
+                        : '○'
+                        }}
+
+                        Lowercase letter
+
                     </li>
-                    <li [ngClass]="passwordRules.digit ? 'text-[#193629]' : 'text-[#b3ada0]'">
-                        {{ passwordRules.digit ? '✓' : '○' }} Number
+
+
+                    <li [ngClass]="
+                            passwordRules.digit
+                            ? 'text-[#193629]'
+                            : 'text-[#b3ada0]'
+                        ">
+
+                        {{
+                        passwordRules.digit
+                        ? '✓'
+                        : '○'
+                        }}
+
+                        Number
+
                     </li>
-                    <li [ngClass]="passwordRules.special ? 'text-[#193629]' : 'text-[#b3ada0]'">
-                        {{ passwordRules.special ? '✓' : '○' }} Special character
+
+
+                    <li [ngClass]="
+                            passwordRules.special
+                            ? 'text-[#193629]'
+                            : 'text-[#b3ada0]'
+                        ">
+
+                        {{
+                        passwordRules.special
+                        ? '✓'
+                        : '○'
+                        }}
+
+                        Special character
+
                     </li>
+
                 </ul>
+
                 }
+
             </div>
 
-            <!-- Confirm Password -->
+
+
+            <!-- CONFIRM PASSWORD -->
+
             <div>
+
                 <label for="register-confirm-password"
                     class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
                     Confirm Password
                 </label>
+
+
                 <div class="relative">
-                    <input id="register-confirm-password" [type]="showConfirmPassword ? 'text' : 'password'"
-                        formControlName="confirmPassword" placeholder="Re-enter your password"
+
+                    <input id="register-confirm-password" [type]="
+                            showConfirmPassword
+                            ? 'text'
+                            : 'password'
+                        " formControlName="confirmPassword" placeholder="Re-enter your password"
                         autocomplete="new-password"
                         class="h-11 w-full rounded-sm border bg-white px-3.5 pr-11 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]"
-                        [ngClass]="(registerForm.controls.confirmPassword.touched && (registerForm.controls.confirmPassword.invalid || registerForm.hasError('passwordMismatch'))) ? 'border-red-400' : 'border-[#d8d0c2]'" />
+                        [ngClass]="
+                            (
+                                registerForm.controls.confirmPassword.touched &&
+                                (
+                                    registerForm.controls.confirmPassword.invalid ||
+                                    registerForm.hasError('passwordMismatch')
+                                )
+                            )
+                            ? 'border-red-400'
+                            : 'border-[#d8d0c2]'
+                        " />
+
 
                     <button type="button" (click)="toggleConfirmPasswordVisibility()"
-                        class="absolute right-0 top-0 flex h-11 w-11 items-center justify-center text-[#777d76] hover:text-[#193629]"
-                        [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'">
+                        class="absolute right-0 top-0 flex h-11 w-11 items-center justify-center text-[#777d76] hover:text-[#193629]">
+
                         @if (showConfirmPassword) {
+
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+
                             <path d="M3 3l18 18" />
+
                             <path
                                 d="M10.6 5.1A10.7 10.7 0 0 1 12 5c6 0 9.5 6 9.9 7a17 17 0 0 1-3.2 4.1M6.2 6.2C3.6 7.9 2 10.6 2.1 12c.3.9 3 6 9.9 7 1.2 0 2.3-.2 3.3-.6" />
+
                             <path d="M9.9 10a3 3 0 0 0 4.2 4.2" />
+
                         </svg>
-                        } @else {
-                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                            <path d="M2.1 12S5.6 5 12 5s9.9 7 9.9 7-3.5 7-9.9 7-9.9-7-9.9-7Z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg>
+
                         }
+
+                        @else {
+
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+
+                            <path d="M2.1 12S5.6 5 12 5s9.9 7 9.9 7-3.5 7-9.9 7-9.9-7-9.9-7Z" />
+
+                            <circle cx="12" cy="12" r="3" />
+
+                        </svg>
+
+                        }
+
                     </button>
+
                 </div>
 
-                @if (registerForm.controls.confirmPassword.touched) {
-                @if (registerForm.controls.confirmPassword.hasError('required')) {
-                <p class="mt-1.5 text-xs text-red-600">Please confirm your password.</p>
-                } @else if (registerForm.hasError('passwordMismatch')) {
-                <p class="mt-1.5 text-xs text-red-600">Passwords do not match.</p>
+
+                @if (
+                registerForm.controls.confirmPassword.touched
+                ) {
+
+                @if (
+                registerForm.controls.confirmPassword.hasError('required')
+                ) {
+
+                <p class="mt-1.5 text-xs text-red-600">
+                    Please confirm your password.
+                </p>
+
                 }
+
+                @else if (
+                registerForm.hasError('passwordMismatch')
+                ) {
+
+                <p class="mt-1.5 text-xs text-red-600">
+                    Passwords do not match.
+                </p>
+
                 }
+
+                }
+
             </div>
 
-            <!-- Submit error -->
+
+
+            <!-- REGISTER ERROR -->
+
             @if (submitError) {
+
             <div class="rounded-sm border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs text-red-700">
                 {{ submitError }}
             </div>
+
             }
 
-            <!-- Send OTP -->
-            @if (!otpSent) {
 
-            <button type="button" (click)="sendOtp()" [disabled]="registerForm.invalid"
+
+            <!-- REGISTER BUTTON -->
+
+            <button type="button" (click)="sendOtp()" [disabled]="registerForm.invalid || submitting"
                 class="h-12 w-full rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-40">
-                Send OTP
+
+                {{
+                submitting
+                ? 'Please wait...'
+                : 'Register'
+                }}
+
+            </button>
+
+        </form>
+
+
+
+        <!-- GO TO LOGIN -->
+
+        <p class="mt-6 text-center text-sm text-[#777d76]">
+
+            Already have an account?
+
+            <button type="button" (click)="switchMode('login')" class="font-semibold text-[#193629] hover:underline">
+                Sign in
+            </button>
+
+        </p>
+
+        }
+
+
+
+        <!-- ========================================================= -->
+        <!-- OTP VERIFICATION SCREEN -->
+        <!-- ========================================================= -->
+
+        @if (mode === 'otp') {
+
+        <h2 class="text-center font-serif text-2xl font-medium text-[#202a24]">
+            Verify your email
+        </h2>
+
+
+        <p class="mt-2 text-center text-sm leading-6 text-[#777d76]">
+            We sent a 6-digit verification code to
+            <span class="font-semibold text-[#193629]">
+                {{ registerForm.controls.email.value }}
+            </span>
+        </p>
+
+
+        <div class="mt-8 space-y-5">
+
+
+            <!-- OTP INPUT -->
+
+            <div>
+
+                <label for="otp" class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
+                    Enter OTP
+                </label>
+
+
+                <input id="otp" type="text" maxlength="6" inputmode="numeric" autocomplete="one-time-code"
+                    [(ngModel)]="enteredOtp" [ngModelOptions]="{
+                        standalone: true
+                    }" placeholder="Enter 6-digit OTP"
+                    class="h-11 w-full rounded-sm border border-[#d8d0c2] bg-white px-3.5 text-center text-lg tracking-[0.4em] text-[#26332b] outline-none placeholder:text-[#b3ada0] placeholder:tracking-normal focus:border-[#193629]" />
+
+            </div>
+
+
+
+            <!-- TIMER (single block: only one message can show) -->
+
+            @if (otpTimer > 0) {
+
+            <p class="text-center text-xs text-[#777d76]">
+
+                OTP expires in
+
+                <span class="font-semibold text-[#193629]">
+
+                    {{ otpTimer }} seconds
+
+                </span>
+
+            </p>
+
+            } @else if (otpExpiresAt > 0) {
+
+            <p class="text-center text-xs text-red-600">
+                OTP has expired.
+            </p>
+
+            }
+
+
+
+            <!-- OTP ERROR -->
+
+            @if (submitError) {
+
+            <div class="rounded-sm border border-red-200 bg-red-50 px-3.5 py-2.5 text-xs leading-5 text-red-700">
+
+                {{ submitError }}
+
+            </div>
+
+            }
+
+
+
+            <!-- VERIFY BUTTON -->
+
+            <button type="button" (click)="verifyOtp()" [disabled]="
+                    otpTimer === 0 ||
+                    enteredOtp.length !== 6 ||
+                    submitting
+                "
+                class="h-12 w-full rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-40">
+
+                {{
+                submitting
+                ? 'Creating account...'
+                : 'Verify OTP'
+                }}
+
+            </button>
+
+
+
+            <!-- RESEND OTP -->
+
+            @if (otpTimer === 0 && otpExpiresAt > 0) {
+
+            <button type="button" (click)="sendOtp()" [disabled]="submitting"
+                class="w-full text-center text-xs font-semibold text-[#193629] hover:underline disabled:opacity-40">
+
+                Resend OTP
+
             </button>
 
             }
 
-            <!-- OTP Section -->
-            @if (otpSent) {
 
-            <div class="space-y-4">
 
-                <div>
-                    <label for="otp" class="mb-1.5 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">
-                        Enter OTP
-                    </label>
+            <!-- BACK TO REGISTER -->
 
-                    <input id="otp" type="text" maxlength="6" inputmode="numeric" autocomplete="one-time-code"
-                        [(ngModel)]="enteredOtp" [ngModelOptions]="{ standalone: true }" placeholder="Enter 6-digit OTP"
-                        class="h-11 w-full rounded-sm border border-[#d8d0c2] bg-white px-3.5 text-sm text-[#26332b] outline-none placeholder:text-[#b3ada0] focus:border-[#193629]" />
-                </div>
+            <button type="button" (click)="backToRegister()"
+                class="w-full text-center text-xs font-semibold text-[#777d76] hover:text-[#193629] hover:underline">
 
-                <!-- Timer -->
-                @if (otpTimer > 0) {
+                ← Back to registration
 
-                <p class="text-center text-xs text-[#777d76]">
-                    OTP expires in
-                    <span class="font-semibold text-[#193629]">
-                        {{ otpTimer }} seconds
-                    </span>
-                </p>
+            </button>
 
-                } @else {
-
-                <p class="text-center text-xs text-red-600">
-                    OTP has expired.
-                </p>
-
-                }
-
-                <!-- Verify OTP -->
-                <button type="button" (click)="verifyOtp()"
-                    [disabled]="otpTimer === 0 || enteredOtp.length !== 6 || submitting"
-                    class="h-12 w-full rounded-sm bg-[#193629] text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#28503b] disabled:cursor-not-allowed disabled:opacity-40">
-                    {{ submitting ? 'Creating account...' : 'Verify OTP' }}
-                </button>
-
-                <!-- Resend -->
-                @if (otpTimer === 0) {
-
-                <button type="button" (click)="sendOtp()"
-                    class="w-full text-center text-xs font-semibold text-[#193629] hover:underline">
-                    Resend OTP
-                </button>
-
-                }
-
-            </div>
-
-            }
-        </form>
-
-        <p class="mt-6 text-center text-sm text-[#777d76]">
-            Already have an account?
-            <button type="button" (click)="switchMode('login')"
-                class="font-semibold text-[#193629] hover:underline">Sign in</button>
-        </p>
+        </div>
 
         }
 
     </div>
 
-    </div>
+</div>
