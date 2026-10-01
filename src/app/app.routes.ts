@@ -13,16 +13,14 @@ export const routes: Routes = [
   {
     path: 'register',
     loadComponent: () =>
-      import('./feature/auth/register/register.component')
-        .then(m => m.RegisterComponent),
-    canActivate: [guestGuard]
+      import('./feature/auth/auth/auth.component')
+        .then(m => m.AuthComponent)
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('./feature/auth/login/login.component')
-        .then(m => m.LoginComponent),
-    canActivate: [guestGuard]
+      import('./feature/auth/auth/auth.component')
+        .then(m => m.AuthComponent)
   },
   // {
   //   path: 'forgot-password',

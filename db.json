@@ -3344,6 +3344,224 @@
       "paymentMethod": "COD",
       "createdAt": "2026-09-29T14:36:51.849Z",
       "status": "Cancelled"
+    },
+    {
+      "id": 1790764217253,
+      "userId": "68Y9KwA",
+      "items": [
+        {
+          "product": {
+            "id": 27,
+            "title": "It Ends with Us",
+            "author": "Colleen Hoover",
+            "price": 349,
+            "mrp": 499,
+            "discountPercent": 30,
+            "images": [
+              "/images/itendswithus1.jpg",
+              "/images/lifeofpi2.jpg"
+            ],
+            "category": "romance",
+            "genre": [
+              "Romance",
+              "Contemporary",
+              "Drama"
+            ],
+            "rating": 4.5,
+            "reviewCount": 1130,
+            "publisher": "Atria Books",
+            "language": "English",
+            "pages": 384,
+            "createdAt": "2026-08-24",
+            "description": "A contemporary romance exploring love, difficult choices, and personal strength.",
+            "stock": 37
+          },
+          "quantity": 5
+        },
+        {
+          "product": {
+            "id": 28,
+            "title": "Beach Read",
+            "author": "Emily Henry",
+            "price": 399,
+            "mrp": 599,
+            "discountPercent": 33,
+            "images": [
+              "/images/beachread1.jpg"
+            ],
+            "category": "romance",
+            "genre": [
+              "Romance",
+              "Contemporary",
+              "Comedy"
+            ],
+            "rating": 4.5,
+            "reviewCount": 740,
+            "publisher": "Berkley",
+            "language": "English",
+            "pages": 384,
+            "createdAt": "2026-08-23",
+            "description": "A romantic story about two writers who challenge each other to write outside their usual genres.",
+            "stock": 28
+          },
+          "quantity": 5
+        },
+        {
+          "product": {
+            "id": 29,
+            "title": "Harry Potter and the Philosopher's Stone",
+            "author": "J.K. Rowling",
+            "price": 499,
+            "mrp": 799,
+            "discountPercent": 38,
+            "images": [
+              "/images/hp1.jpg",
+              "/images/hp2.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Magic"
+            ],
+            "rating": 4.9,
+            "reviewCount": 1800,
+            "publisher": "Bloomsbury",
+            "language": "English",
+            "pages": 223,
+            "createdAt": "2026-08-22",
+            "description": "A young boy discovers that he is a wizard and begins his magical education at Hogwarts.",
+            "stock": 50
+          },
+          "quantity": 5
+        },
+        {
+          "product": {
+            "id": 8,
+            "title": "The Kite Runner",
+            "author": "Khaled Hosseini",
+            "price": 399,
+            "mrp": 599,
+            "discountPercent": 33,
+            "images": [
+              "/images/kiterunner1.jpg"
+            ],
+            "category": "fiction",
+            "genre": [
+              "Fiction",
+              "Drama",
+              "Historical"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1350,
+            "publisher": "Riverhead Books",
+            "language": "English",
+            "pages": 371,
+            "createdAt": "2026-09-12",
+            "description": "A powerful story of friendship, family, betrayal, and redemption set against the history of Afghanistan.",
+            "stock": 25
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 36,
+            "title": "1984",
+            "author": "George Orwell",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/1984.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Dystopian",
+              "Political Fiction"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1320,
+            "publisher": "Penguin Classics",
+            "language": "English",
+            "pages": 328,
+            "createdAt": "2026-08-15",
+            "description": "A dystopian classic about surveillance, control, truth, and individual freedom.",
+            "stock": 38
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 37,
+            "title": "To Kill a Mockingbird",
+            "author": "Harper Lee",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/killamockin1.jpg",
+              "/images/killamockin2.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Drama",
+              "Historical"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1270,
+            "publisher": "Harper Perennial",
+            "language": "English",
+            "pages": 336,
+            "createdAt": "2026-08-14",
+            "description": "A classic novel exploring justice, morality, childhood, and social inequality in the American South.",
+            "stock": 32
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 32,
+            "title": "Charlie and the Chocolate Factory",
+            "author": "Roald Dahl",
+            "price": 249,
+            "mrp": 399,
+            "discountPercent": 38,
+            "images": [
+              "/images/charlichoco1.jpg",
+              "/images/charlichoco2.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Humor"
+            ],
+            "rating": 4.8,
+            "reviewCount": 970,
+            "publisher": "Puffin Books",
+            "language": "English",
+            "pages": 176,
+            "createdAt": "2026-08-19",
+            "description": "Charlie Bucket wins a golden ticket and discovers the magical world inside Willy Wonka's chocolate factory.",
+            "stock": 43
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 7481,
+      "shippingAddress": {
+        "name": "fathima",
+        "phone": "9870214563",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "kannur",
+        "state": "fjufjyu",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-09-30T10:30:17.253Z",
+      "status": "Placed"
     }
   ],
   "cart": [
@@ -3378,45 +3596,9 @@
       "quantity": 1
     },
     {
-      "id": "68Y9KwA_27",
+      "id": "68Y9KwA_36",
       "userId": "68Y9KwA",
-      "productId": 27,
-      "quantity": 1
-    },
-    {
-      "id": "68Y9KwA_28",
-      "userId": "68Y9KwA",
-      "productId": 28,
-      "quantity": 1
-    },
-    {
-      "id": "68Y9KwA_32",
-      "userId": "68Y9KwA",
-      "productId": 32,
-      "quantity": 1
-    },
-    {
-      "id": "68Y9KwA_31",
-      "userId": "68Y9KwA",
-      "productId": 31,
-      "quantity": 1
-    },
-    {
-      "id": "68Y9KwA_30",
-      "userId": "68Y9KwA",
-      "productId": 30,
-      "quantity": 1
-    },
-    {
-      "id": "68Y9KwA_13",
-      "userId": "68Y9KwA",
-      "productId": 13,
-      "quantity": 1
-    },
-    {
-      "id": "68Y9KwA_14",
-      "userId": "68Y9KwA",
-      "productId": 14,
+      "productId": 36,
       "quantity": 1
     }
   ],
@@ -3455,6 +3637,26 @@
       "id": "1_8",
       "userId": "1",
       "productId": 8
+    },
+    {
+      "id": "68Y9KwA_37",
+      "userId": "68Y9KwA",
+      "productId": 37
+    },
+    {
+      "id": "68Y9KwA_36",
+      "userId": "68Y9KwA",
+      "productId": 36
+    },
+    {
+      "id": "68Y9KwA_8",
+      "userId": "68Y9KwA",
+      "productId": 8
+    },
+    {
+      "id": "68Y9KwA_29",
+      "userId": "68Y9KwA",
+      "productId": 29
     }
   ],
   "addresses": [
