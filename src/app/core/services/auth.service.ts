@@ -35,29 +35,43 @@ export class AuthService {
       .get<User[]>(`${this.apiUrl}?email=${encodeURIComponent(email)}`)
       .pipe(
         switchMap(users => {
-
+  
           if (users.length === 0) {
             return throwError(() => new Error('NO_ACCOUNT'));
           }
-
+  
           const user = users[0];
-
+  
           if (user.password !== password) {
             return throwError(() => new Error('WRONG_PASSWORD'));
           }
-
+  
+          // Check whether the user is deactivated
+          if (user.isActive === false) {
+            return throwError(() => new Error('ACCOUNT_DEACTIVATED'));
+          }
+  
           return [user];
         }),
+  
         tap(user => {
           this.setSession(user);
         }),
+  
         catchError(error => {
-
-          if (!(error instanceof Error) || (error.message !== 'NO_ACCOUNT' && error.message !== 'WRONG_PASSWORD')) {
-            return throwError(() => new Error('NETWORK_ERROR'));
+  
+          if (
+            error instanceof Error &&
+            (
+              error.message === 'NO_ACCOUNT' ||
+              error.message === 'WRONG_PASSWORD' ||
+              error.message === 'ACCOUNT_DEACTIVATED'
+            )
+          ) {
+            return throwError(() => error);
           }
-
-          return throwError(() => error);
+  
+          return throwError(() => new Error('NETWORK_ERROR'));
         })
       );
   }
@@ -186,6 +200,16 @@ export class AuthService {
     }
   
     localStorage.removeItem(this.PENDING_ACTION_KEY);
+  }
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.apiUrl);
+  }
+  
+  setActive(userId: number, isActive: boolean): Observable<User> {
+    return this.http.patch<User>(
+      `${this.apiUrl}/${userId}`,
+      { isActive }
+    );
   }
 
 }

@@ -1,0 +1,695 @@
+<main class="min-h-screen bg-[#f8f5ef] px-4 py-8 sm:px-6 lg:px-10">
+
+    <div class="mx-auto max-w-7xl">
+
+        <!-- ================= HEADER ================= -->
+        <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+                <h1 class="font-serif text-3xl font-medium text-[#193629]">
+                    Products
+                </h1>
+
+                <p class="mt-1 text-sm text-gray-500">
+                    Manage books in Nova Bookshop.
+                </p>
+            </div>
+
+            @if (!showForm) {
+            <button type="button" (click)="openAddForm()"
+                class="rounded-lg bg-[#193629] px-5 py-3 text-sm font-medium text-white hover:opacity-90">
+                + Add Product
+            </button>
+            }
+
+        </div>
+
+
+        <!-- ================= PRODUCT FORM ================= -->
+
+        @if (showForm) {
+
+        <div class="mb-8 rounded-xl bg-white p-6 shadow-sm">
+
+            <div class="mb-6 flex items-center justify-between">
+
+                <div>
+                    <h2 class="text-2xl font-semibold text-[#193629]">
+                        @if (editingProduct) {
+                        Edit Product
+                        } @else {
+                        Add Product
+                        }
+                    </h2>
+
+                    <p class="mt-1 text-sm text-gray-500">
+                        Enter the book details below.
+                    </p>
+                </div>
+
+                <button type="button" (click)="closeForm()" class="text-sm text-gray-500 hover:text-gray-800">
+                    ✕ Close
+                </button>
+
+            </div>
+
+
+            <form [formGroup]="productForm" (ngSubmit)="saveProduct()" novalidate>
+
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+
+
+                    <!-- TITLE -->
+                    <div class="md:col-span-2">
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Book Title *
+                        </label>
+
+                        <input type="text" formControlName="title" placeholder="Enter book title"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.title.touched &&
+                        productForm.controls.title.errors
+                        ) {
+
+                        @if (productForm.controls.title.errors['required']) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Title is required.
+                        </p>
+                        }
+
+                        @if (productForm.controls.title.errors['minlength']) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Title must contain at least 2 characters.
+                        </p>
+                        }
+
+                        @if (productForm.controls.title.errors['maxlength']) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Title cannot exceed 100 characters.
+                        </p>
+                        }
+
+                        @if (productForm.controls.title.errors['pattern']) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Please enter a valid book title.
+                        </p>
+                        }
+
+                        }
+
+                    </div>
+
+
+                    <!-- AUTHOR -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Author *
+                        </label>
+
+                        <input type="text" formControlName="author" placeholder="Enter author name"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.author.touched &&
+                        productForm.controls.author.errors
+                        ) {
+
+                        @if (productForm.controls.author.errors['required']) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Author is required.
+                        </p>
+                        }
+
+                        @if (productForm.controls.author.errors['pattern']) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Please enter a valid author name.
+                        </p>
+                        }
+
+                        }
+
+                    </div>
+
+
+                    <!-- CATEGORY -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Category *
+                        </label>
+
+                        <select formControlName="category"
+                            class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-[#193629]">
+
+                            <option value="">Select category</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Non Fiction">Non Fiction</option>
+                            <option value="Self Help">Self Help</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Children">Children</option>
+                            <option value="Classics">Classics</option>
+
+                        </select>
+
+                        @if (
+                        productForm.controls.category.touched &&
+                        productForm.controls.category.invalid
+                        ) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Category is required.
+                        </p>
+                        }
+
+                    </div>
+
+
+                    <!-- PRICE -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Selling Price *
+                        </label>
+
+                        <input type="number" formControlName="price" placeholder="Enter selling price" min="1"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.price.touched &&
+                        productForm.controls.price.errors
+                        ) {
+
+                        @if (productForm.controls.price.errors['required']) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Selling price is required.
+                        </p>
+                        }
+
+                        @if (productForm.controls.price.errors['min']) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Price must be greater than 0.
+                        </p>
+                        }
+
+                        }
+
+                    </div>
+
+
+                    <!-- MRP -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            MRP *
+                        </label>
+
+                        <input type="number" formControlName="mrp" placeholder="Enter MRP" min="1"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.mrp.touched &&
+                        productForm.controls.mrp.errors
+                        ) {
+
+                        @if (productForm.controls.mrp.errors['required']) {
+                        <p class="mt-1 text-sm text-red-500">
+                            MRP is required.
+                        </p>
+                        }
+
+                        @if (productForm.controls.mrp.errors['min']) {
+                        <p class="mt-1 text-sm text-red-500">
+                            MRP must be greater than 0.
+                        </p>
+                        }
+
+                        }
+
+                    </div>
+
+
+                    <!-- PRICE / MRP ERROR -->
+                    @if (
+                    productForm.touched &&
+                    productForm.errors?.['priceGreaterThanMrp']
+                    ) {
+
+                    <div class="md:col-span-2">
+
+                        <p class="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                            Selling price cannot be greater than MRP.
+                        </p>
+
+                    </div>
+
+                    }
+
+
+                    <!-- PUBLISHER -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Publisher *
+                        </label>
+
+                        <input type="text" formControlName="publisher" placeholder="Enter publisher"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.publisher.touched &&
+                        productForm.controls.publisher.invalid
+                        ) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Please enter a valid publisher.
+                        </p>
+                        }
+
+                    </div>
+
+
+                    <!-- LANGUAGE -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Language *
+                        </label>
+
+                        <input type="text" formControlName="language" placeholder="Enter language"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.language.touched &&
+                        productForm.controls.language.invalid
+                        ) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Please enter a valid language.
+                        </p>
+                        }
+
+                    </div>
+
+
+                    <!-- PAGES -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Pages *
+                        </label>
+
+                        <input type="number" formControlName="pages" min="1" placeholder="Number of pages"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.pages.touched &&
+                        productForm.controls.pages.invalid
+                        ) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Pages must be at least 1.
+                        </p>
+                        }
+
+                    </div>
+
+
+                    <!-- STOCK -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Stock *
+                        </label>
+
+                        <input type="number" formControlName="stock" min="0" placeholder="Available stock"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.stock.touched &&
+                        productForm.controls.stock.invalid
+                        ) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Stock cannot be negative.
+                        </p>
+                        }
+
+                    </div>
+
+
+                    <!-- RATING -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Rating *
+                        </label>
+
+                        <input type="number" formControlName="rating" min="0" max="5" step="0.1" placeholder="0 - 5"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.rating.touched &&
+                        productForm.controls.rating.invalid
+                        ) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Rating must be between 0 and 5.
+                        </p>
+                        }
+
+                    </div>
+
+
+                    <!-- REVIEW COUNT -->
+                    <div>
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Review Count *
+                        </label>
+
+                        <input type="number" formControlName="reviewCount" min="0" placeholder="Number of reviews"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.reviewCount.touched &&
+                        productForm.controls.reviewCount.invalid
+                        ) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Review count cannot be negative.
+                        </p>
+                        }
+
+                    </div>
+
+
+                    <!-- GENRE -->
+                    <div class="md:col-span-2">
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Genre *
+                        </label>
+
+                        <input type="text" formControlName="genre" placeholder="Example: Mystery, Thriller"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                        @if (
+                        productForm.controls.genre.touched &&
+                        productForm.controls.genre.invalid
+                        ) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Genre is required.
+                        </p>
+                        }
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+                    <div class="md:col-span-2">
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Description *
+                        </label>
+
+                        <textarea formControlName="description" rows="5" placeholder="Enter book description"
+                            class="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]"></textarea>
+
+                        @if (
+                        productForm.controls.description.touched &&
+                        productForm.controls.description.invalid
+                        ) {
+                        <p class="mt-1 text-sm text-red-500">
+                            Description must contain 20-2000 characters.
+                        </p>
+                        }
+
+                    </div>
+
+
+                    <!-- ================= IMAGES ================= -->
+
+                    <div class="md:col-span-2">
+
+                        <label class="mb-2 block text-sm font-medium text-gray-700">
+                            Product Images *
+                        </label>
+
+                        <div class="flex gap-3">
+
+                            <input #imageInput type="text" placeholder="Enter image URL"
+                                class="flex-1 rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+
+                            <button type="button" (click)="addImage(imageInput)"
+                                class="rounded-lg bg-[#193629] px-5 py-3 text-sm font-medium text-white">
+                                + Add Image
+                            </button>
+
+                        </div>
+
+
+                        <!-- IMAGE LIST -->
+
+                        @if (productForm.controls.images.value?.length) {
+
+                        <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+
+                            @for (
+                            image of productForm.controls.images.value;
+                            track image;
+                            let i = $index
+                            ) {
+
+                            <div class="relative rounded-lg border bg-gray-50 p-2">
+
+                                <img [src]="image" [alt]="productForm.controls.title.value || 'Product image'"
+                                    class="h-40 w-full rounded-md object-cover">
+
+                                <button type="button" (click)="removeImage(i)"
+                                    class="absolute right-2 top-2 rounded-full bg-red-600 px-2 py-1 text-xs text-white">
+                                    ✕
+                                </button>
+
+                            </div>
+
+                            }
+
+                        </div>
+
+                        }
+
+                        @if (
+                        productForm.controls.images.touched &&
+                        productForm.controls.images.invalid
+                        ) {
+                        <p class="mt-2 text-sm text-red-500">
+                            At least one product image is required.
+                        </p>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- ERROR -->
+
+                @if (error) {
+
+                <p class="mt-6 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+                    {{ error }}
+                </p>
+
+                }
+
+
+                <!-- BUTTONS -->
+
+                <div class="mt-8 flex justify-end gap-3">
+
+                    <button type="button" (click)="closeForm()"
+                        class="rounded-lg border border-gray-300 px-5 py-3 text-sm text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </button>
+
+                    <button type="submit" [disabled]="submitting"
+                        class="rounded-lg bg-[#193629] px-6 py-3 text-sm font-medium text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50">
+
+                        @if (submitting) {
+                        Saving...
+                        } @else if (editingProduct) {
+                        Update Product
+                        } @else {
+                        Add Product
+                        }
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        }
+
+
+        <!-- ================= PRODUCT LIST ================= -->
+
+        @if (!showForm) {
+
+        @if (loading) {
+
+        <div class="rounded-xl bg-white p-10 text-center shadow-sm">
+            <p class="text-gray-500">
+                Loading products...
+            </p>
+        </div>
+
+        } @else if (error) {
+
+        <div class="rounded-xl bg-red-50 p-6 text-center">
+            <p class="text-red-600">
+                {{ error }}
+            </p>
+        </div>
+
+        } @else if (products.length === 0) {
+
+        <div class="rounded-xl bg-white p-10 text-center shadow-sm">
+            <p class="text-gray-500">
+                No products found.
+            </p>
+        </div>
+
+        } @else {
+
+        <div class="overflow-hidden rounded-xl bg-white shadow-sm">
+
+            <div class="overflow-x-auto">
+
+                <table class="min-w-full">
+
+                    <thead class="border-b bg-gray-50">
+
+                        <tr>
+
+                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-gray-500">
+                                Product
+                            </th>
+
+                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-gray-500">
+                                Category
+                            </th>
+
+                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-gray-500">
+                                Price
+                            </th>
+
+                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase text-gray-500">
+                                Stock
+                            </th>
+
+                            <th class="px-6 py-4 text-right text-xs font-semibold uppercase text-gray-500">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="divide-y">
+
+                        @for (product of products; track product.id) {
+
+                        <tr class="hover:bg-gray-50">
+
+                            <td class="px-6 py-4">
+
+                                <div class="flex items-center gap-4">
+
+                                    <img [src]="product.images[0]" [alt]="product.title"
+                                        class="h-16 w-12 rounded object-cover">
+
+                                    <div>
+
+                                        <p class="font-medium text-gray-900">
+                                            {{ product.title }}
+                                        </p>
+
+                                        <p class="text-sm text-gray-500">
+                                            {{ product.author }}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td class="px-6 py-4 text-sm text-gray-600">
+                                {{ product.category }}
+                            </td>
+
+                            <td class="px-6 py-4">
+
+                                <p class="font-medium text-gray-900">
+                                    ₹{{ product.price }}
+                                </p>
+
+                                @if (product.mrp > product.price) {
+                                <p class="text-sm text-gray-400 line-through">
+                                    ₹{{ product.mrp }}
+                                </p>
+                                }
+
+                            </td>
+
+                            <td class="px-6 py-4">
+
+                                @if (product.stock > 0) {
+
+                                <span class="rounded-full bg-green-100 px-3 py-1 text-xs text-green-700">
+                                    {{ product.stock }} in stock
+                                </span>
+
+                                } @else {
+
+                                <span class="rounded-full bg-red-100 px-3 py-1 text-xs text-red-700">
+                                    Out of stock
+                                </span>
+
+                                }
+
+                            </td>
+
+                            <td class="px-6 py-4 text-right">
+
+                                <button type="button" (click)="editProduct(product)"
+                                    class="rounded-lg border border-[#193629] px-4 py-2 text-sm font-medium text-[#193629] hover:bg-[#193629] hover:text-white">
+                                    Edit                   
+                                  </button>
+
+                                <button type="button" (click)="deleteProduct(product)"
+                                    class="rounded-lg border border-red-500 px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-500 hover:text-white">
+                                    Delete       
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        }
+
+        }
+
+    </div>
+
+    </main>

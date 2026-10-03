@@ -1,0 +1,573 @@
+<div class="min-h-screen bg-[#f8f5ef] p-4 sm:p-6 lg:p-8">
+
+    <!-- Page Header -->
+
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        ```
+        <div>
+            <h1 class="text-2xl font-semibold text-[#193629]">
+                Users
+            </h1>
+
+            <p class="mt-1 text-sm text-gray-500">
+                Manage registered users and view their activity.
+            </p>
+        </div>
+
+        <!-- Search -->
+        <div class="relative w-full sm:w-80">
+            <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                🔍
+            </span>
+
+            <input type="text" [(ngModel)]="searchTerm" placeholder="Search users..." class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm
+             text-gray-700 outline-none transition
+             focus:border-[#193629] focus:ring-1 focus:ring-[#193629]" />
+        </div>
+        ```
+
+    </div>
+
+    <!-- Error -->
+
+    @if (error) { <div class="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3
+            text-sm text-red-600">
+        {{ error }} </div>
+    }
+
+    <!-- Loading -->
+
+    @if (loading) {
+
+    ```
+    <div class="rounded-2xl border border-gray-100 bg-white p-10 text-center shadow-sm">
+
+        <div class="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-4
+             border-gray-200 border-t-[#193629]">
+        </div>
+
+        <p class="text-sm text-gray-500">
+            Loading users...
+        </p>
+
+    </div>
+    ```
+
+    } @else {
+
+    ```
+    <!-- Users Table -->
+    <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+
+        <!-- Table Header -->
+        <div class="border-b border-gray-100 px-5 py-4">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+                    <h2 class="font-semibold text-[#193629]">
+                        All Users
+                    </h2>
+
+                    <p class="mt-1 text-xs text-gray-500">
+                        {{ filteredUsers.length }}
+                        {{ filteredUsers.length === 1 ? 'user' : 'users' }}
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        @if (filteredUsers.length > 0) {
+
+        <!-- Desktop Table -->
+        <div class="hidden overflow-x-auto md:block">
+
+            <table class="w-full text-left">
+
+                <thead class="bg-[#f8f5ef]">
+                    <tr class="text-xs uppercase tracking-wide text-gray-500">
+
+                        <th class="px-5 py-4 font-medium">
+                            User
+                        </th>
+
+                        <th class="px-5 py-4 font-medium">
+                            Role
+                        </th>
+
+                        <th class="px-5 py-4 font-medium">
+                            Status
+                        </th>
+
+                        <th class="px-5 py-4 text-right font-medium">
+                            Actions
+                        </th>
+
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-100">
+
+                    @for (user of filteredUsers; track user.id) {
+
+                    <tr class="transition hover:bg-[#faf9f6]">
+
+                        <!-- User -->
+                        <td class="px-5 py-4">
+
+                            <div class="flex items-center gap-3">
+
+                                @if (user.profilePicture) {
+
+                                <img [src]="user.profilePicture" [alt]="user.name"
+                                    class="h-10 w-10 rounded-full object-cover" />
+
+                                } @else {
+
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center
+                               rounded-full bg-[#193629] text-sm font-semibold text-white">
+                                    {{ user.name.charAt(0).toUpperCase() }}
+                                </div>
+
+                                }
+
+                                <div class="min-w-0">
+
+                                    <p class="truncate font-medium text-gray-800">
+                                        {{ user.name }}
+                                    </p>
+
+                                    <p class="truncate text-sm text-gray-500">
+                                        {{ user.email }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- Role -->
+                        <td class="px-5 py-4">
+
+                            <span class="inline-flex rounded-full px-3 py-1 text-xs font-medium" [ngClass]="
+                      user.role === 'admin'
+                        ? 'bg-purple-100 text-purple-700'
+                        : 'bg-gray-100 text-gray-600'
+                    ">
+                                {{ user.role | titlecase }}
+                            </span>
+
+                        </td>
+
+
+
+
+                        <!-- Status -->
+                        <td class="px-5 py-4">
+
+                            @if (isActive(user)) {
+
+                            <span class="inline-flex items-center gap-1.5 rounded-full
+                             bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+
+                                <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+
+                                Active
+                            </span>
+
+                            } @else {
+
+                            <span class="inline-flex items-center gap-1.5 rounded-full
+                             bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
+
+                                <span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+
+                                Inactive
+                            </span>
+
+                            }
+
+                        </td>
+
+
+                        <!-- Actions -->
+                        <td class="px-5 py-4">
+
+                            <div class="flex items-center justify-end gap-2">
+
+                                <!-- View -->
+                                @if (user.role !== 'admin') {
+                                
+                                <div class="flex items-center justify-end gap-2">
+                                
+                                    <button type="button" (click)="viewUser(user)" class="rounded-lg border border-gray-200 px-3 py-1.5
+                                        text-xs font-medium text-gray-600 transition
+                                        hover:border-[#193629] hover:text-[#193629]">
+                                        View
+                                    </button>
+                                
+                                    <button type="button" (click)="toggleUserStatus(user)" [ngClass]="
+                                        isActive(user)
+                                        ? 'border-red-200 text-red-600 hover:bg-red-50'
+                                        : 'border-green-200 text-green-600 hover:bg-green-50'
+                                        " class="rounded-lg border px-3 py-1.5
+                                        text-xs font-medium transition">
+                                
+                                        {{ isActive(user) ? 'Deactivate' : 'Activate' }}
+                                
+                                    </button>
+                                
+                                </div>                                 }
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Mobile Cards -->
+        <div class="divide-y divide-gray-100 md:hidden">
+
+            @for (user of filteredUsers; track user.id) {
+
+            <div class="p-4">
+
+                <!-- User Info -->
+                <div class="flex items-start justify-between gap-3">
+
+                    <div class="flex min-w-0 items-center gap-3">
+
+                        @if (user.profilePicture) {
+
+                        <img [src]="user.profilePicture" [alt]="user.name"
+                            class="h-11 w-11 shrink-0 rounded-full object-cover" />
+
+                        } @else {
+
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center
+                           rounded-full bg-[#193629] text-sm font-semibold text-white">
+                            {{ user.name.charAt(0).toUpperCase() }}
+                        </div>
+
+                        }
+
+                        <div class="min-w-0">
+
+                            <p class="truncate font-medium text-gray-800">
+                                {{ user.name }}
+                            </p>
+
+                            <p class="truncate text-sm text-gray-500">
+                                {{ user.email }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    @if (isActive(user)) {
+
+                    <span class="shrink-0 rounded-full bg-green-100 px-2.5 py-1
+                         text-xs font-medium text-green-700">
+                        Active
+                    </span>
+
+                    } @else {
+
+                    <span class="shrink-0 rounded-full bg-red-100 px-2.5 py-1
+                         text-xs font-medium text-red-700">
+                        Inactive
+                    </span>
+
+                    }
+
+                </div>
+
+
+                <!-- Details -->
+                <div class="mt-4 grid grid-cols-2 gap-3 rounded-xl bg-[#f8f5ef] p-3">
+
+                    <div>
+                        <p class="text-xs text-gray-400">
+                            Role
+                        </p>
+
+                        <p class="mt-1 text-sm font-medium text-gray-700">
+                            {{ user.role | titlecase }}
+                        </p>
+                    </div>
+
+
+                </div>
+
+
+                <!-- Actions -->
+                @if (user.role !== 'admin') {
+                
+                <div class="mt-4 flex gap-2">
+                
+                    <button type="button" (click)="viewUser(user)" class="flex-1 rounded-lg border border-gray-200
+                                               px-3 py-2 text-xs font-medium text-gray-600
+                                               transition hover:border-[#193629] hover:text-[#193629]">
+                        View
+                    </button>
+                
+                    <button type="button" (click)="toggleUserStatus(user)" [ngClass]="
+                                          isActive(user)
+                                            ? 'border-red-200 text-red-600 hover:bg-red-50'
+                                            : 'border-green-200 text-green-600 hover:bg-green-50'
+                                        " class="flex-1 rounded-lg border px-3 py-2
+                                               text-xs font-medium transition">
+                
+                        {{ isActive(user) ? 'Deactivate' : 'Activate' }}
+                
+                    </button>
+                
+                </div>                 }
+
+            </div>
+
+            }
+
+        </div>
+
+        } @else {
+
+        <!-- Empty State -->
+        <div class="px-5 py-16 text-center">
+
+            <div class="mx-auto flex h-14 w-14 items-center justify-center
+                 rounded-full bg-[#f8f5ef] text-2xl">
+                👤
+            </div>
+
+            <h3 class="mt-4 font-medium text-gray-800">
+                No users found
+            </h3>
+
+            <p class="mt-1 text-sm text-gray-500">
+                Try changing your search.
+            </p>
+
+        </div>
+
+        }
+
+    </div>
+    ```
+
+    }
+
+</div>
+
+<!-- User Details Modal -->
+
+@if (selectedUser) {
+
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" (click)="closeView()">
+
+    ```
+    <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl
+           bg-white shadow-xl" (click)="$event.stopPropagation()">
+
+
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+
+            <div class="flex items-center gap-3">
+
+                @if (selectedUser.profilePicture) {
+
+                <img [src]="selectedUser.profilePicture" [alt]="selectedUser.name"
+                    class="h-12 w-12 rounded-full object-cover" />
+
+                } @else {
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-full
+                   bg-[#193629] font-semibold text-white">
+                    {{ selectedUser.name.charAt(0).toUpperCase() }}
+                </div>
+
+                }
+
+                <div>
+
+                    <h2 class="font-semibold text-[#193629]">
+                        {{ selectedUser.name }}
+                    </h2>
+
+                    <p class="text-sm text-gray-500">
+                        {{ selectedUser.email }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button type="button" (click)="closeView()" class="flex h-9 w-9 items-center justify-center rounded-full
+               text-xl text-gray-400 transition hover:bg-gray-100 hover:text-gray-700">
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- User Summary -->
+        <div class="grid grid-cols-2 gap-3 border-b border-gray-100 p-5 sm:grid-cols-3">
+
+            <div class="rounded-xl bg-[#f8f5ef] p-4">
+
+                <p class="text-xs text-gray-400">
+                    Role
+                </p>
+
+                <p class="mt-1 font-medium text-gray-700">
+                    {{ selectedUser.role | titlecase }}
+                </p>
+
+            </div>
+
+
+            <div class="rounded-xl bg-[#f8f5ef] p-4">
+
+                <p class="text-xs text-gray-400">
+                    Orders
+                </p>
+
+                <p class="mt-1 font-medium text-gray-700">
+                    {{ selectedUserOrders.length }}
+                </p>
+
+            </div>
+
+
+            <div class="col-span-2 rounded-xl bg-[#f8f5ef] p-4 sm:col-span-1">
+
+                <p class="text-xs text-gray-400">
+                    Total Spent
+                </p>
+
+                <p class="mt-1 font-medium text-[#193629]">
+                    ₹{{ totalSpent | number:'1.2-2' }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Orders -->
+        <div class="p-5">
+
+            <div class="mb-4">
+
+                <h3 class="font-semibold text-gray-800">
+                    Order History
+                </h3>
+
+                <p class="mt-1 text-xs text-gray-500">
+                    Orders placed by {{ selectedUser.name }}
+                </p>
+
+            </div>
+
+
+            @if (selectedUserOrders.length > 0) {
+
+            <div class="space-y-3">
+
+                @for (order of selectedUserOrders; track order.id) {
+
+                <div class="rounded-xl border border-gray-100 p-4
+                     transition hover:border-gray-200">
+
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+                        <div>
+
+                            <p class="font-medium text-gray-800">
+                                Order #{{ order.id }}
+                            </p>
+
+                            <p class="mt-1 text-xs text-gray-500">
+                                {{ order.createdAt | date:'dd MMM yyyy, hh:mm a' }}
+                            </p>
+
+                        </div>
+
+
+                        <div class="flex items-center justify-between gap-4 sm:justify-end">
+
+                            <span class="rounded-full px-3 py-1 text-xs font-medium"
+                                [ngClass]="getStatusClass(order.status)">
+                                {{ order.status }}
+                            </span>
+
+                            <span class="font-semibold text-[#193629]">
+                                ₹{{ order.total | number:'1.2-2' }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                }
+
+            </div>
+
+            } @else {
+
+            <div class="rounded-xl bg-[#f8f5ef] px-4 py-10 text-center">
+
+                <p class="text-sm font-medium text-gray-700">
+                    No orders yet
+                </p>
+
+                <p class="mt-1 text-xs text-gray-500">
+                    This user hasn't placed any orders.
+                </p>
+
+            </div>
+
+            }
+
+        </div>
+
+
+        <!-- Modal Footer -->
+        <div class="border-t border-gray-100 px-5 py-4 text-right">
+
+            <button type="button" (click)="closeView()" class="rounded-lg bg-[#193629] px-5 py-2.5
+               text-sm font-medium text-white transition
+               hover:bg-[#10261d]">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+    ```
+
+</div>
+
+}
+  

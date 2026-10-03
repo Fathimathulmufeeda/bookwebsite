@@ -274,8 +274,12 @@ export class AuthComponent implements OnDestroy {
 
           this.submitting = false;
 
+          
           this.toast.success(`Welcome back, ${user.name.split(' ')[0]}!`);
-
+          if (user.role === 'admin') {
+            this.router.navigate(['/admin']);
+            return;
+          }
           this.actions$
             .pipe(
               ofType(loadCartSuccess),
@@ -299,11 +303,17 @@ export class AuthComponent implements OnDestroy {
               this.error =
                 'No account found with this email. Please check your email or register a new account.';
               break;
-
+          
             case 'WRONG_PASSWORD':
-              this.error = 'Incorrect password. Please try again.';
+              this.error =
+                'Incorrect password. Please try again.';
               break;
-
+          
+            case 'ACCOUNT_DEACTIVATED':
+              this.error =
+                'Your account has been deactivated. Please contact the administrator.';
+              break;
+          
             default:
               this.error =
                 'We could not sign you in right now. Please check your connection and try again.';

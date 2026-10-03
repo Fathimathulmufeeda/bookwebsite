@@ -1,11 +1,19 @@
 {
   "users": [
     {
+      "id": "admin-1",
+      "name": "Admin",
+      "email": "admin@gmail.com",
+      "password": "admin@123",
+      "role": "admin"
+    },
+    {
       "name": "fathima",
       "email": "fathi@gmail.com",
       "password": "Fathi@12",
       "role": "user",
-      "id": "1"
+      "id": "1",
+      "isActive": true
     },
     {
       "name": "subi",
@@ -82,14 +90,16 @@
       "email": "fathimathulmufeedaa@gmail.com",
       "password": "Fathi@12",
       "role": "user",
-      "id": "_GMSfhw"
+      "id": "_GMSfhw",
+      "isActive": false
     },
     {
       "name": "shadin",
       "email": "shadinahammed07@gmail.com",
       "password": "Fathi@12",
       "role": "user",
-      "id": "tJZpy2v"
+      "id": "tJZpy2v",
+      "isActive": true
     }
   ],
   "products": [
@@ -115,7 +125,7 @@
       "publisher": "Avery",
       "language": "English",
       "pages": 320,
-      "createdAt": "2025-09-20",
+      "createdAt": "2026-09-20",
       "description": "A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.",
       "stock": 45
     },
@@ -1168,6 +1178,29 @@
       "createdAt": "2026-08-09",
       "description": "A gothic classic exploring beauty, morality, temptation, and the consequences of a life devoted to pleasure.",
       "stock": 26
+    },
+    {
+      "title": "Never Lie",
+      "author": "Frieda MC Fadden",
+      "price": 420,
+      "mrp": 500,
+      "category": "Fiction",
+      "genre": [
+        "thriller"
+      ],
+      "rating": 4.8,
+      "reviewCount": 970,
+      "publisher": "Sourcebook",
+      "language": "English",
+      "pages": 350,
+      "description": "Newlyweds Tricia and Ethan are searching for the house of their dreams.\n\nBut when they visit the remote manor that once belonged to Dr. Adrienne Hale, a renowned psychiatrist who vanished without a trace four years earlier, a violent winter storm traps them at the estate… with no chance of escape until the blizzard comes to an end.\n\nIn search of a book to keep her entertained until the snow abates, Tricia happens upon a secret room. One that contains audio transcripts from every single patient Dr. Hale has ever interviewed. As Tricia listens to the cassette tapes, she learns about the terrifying chain of events leading up to Dr. Hale’s mysterious disappearance.\n\nTricia plays the tapes one by one, late into the night. With each one, another shocking piece of the puzzle falls into place, and Dr. Adrienne Hale’s web of lies slowly unravels.\n\nAnd then Tricia reaches the final cassette.\n\nThe one that reveals the entire horrifying truth.",
+      "stock": 15,
+      "images": [
+        "/images/never lie1.webp",
+        "/images/never lie2.webp"
+      ],
+      "createdAt": "2026-10-02T06:49:52.133Z",
+      "id": 43
     }
   ],
   "orders": [

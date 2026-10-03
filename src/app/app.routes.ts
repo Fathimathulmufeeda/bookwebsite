@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 import { ProfileComponent } from './feature/profile/profile.component';
+import { adminGuard } from './core/guards/admin.guard';
 
 
 export const routes: Routes = [
@@ -101,7 +102,43 @@ export const routes: Routes = [
         .then(m => m.WishlistComponent),
     canActivate: [authGuard]
   },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./feature/admin/admin-layout/admin-layout.component')
+        .then(m => m.AdminLayoutComponent),
+    canActivate: [adminGuard],
   
+    children: [
+  
+      {
+        path: '',
+        loadComponent: () =>
+          import('./feature/admin/admin/admin.component')
+            .then(m => m.AdminComponent)
+      },
+  
+      {
+        path: 'products',
+        loadComponent: () =>
+          import('./feature/admin/product/product.component')
+            .then(m => m.AdminProductsComponent)
+      },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./feature/admin/users/users.component')
+            .then(m => m.UsersComponent)
+      },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./feature/admin/orders/orders.component')
+            .then(m => m.OrdersComponent)
+      }
+  
+    ]
+  },
   {
     path: '**',
     redirectTo: 'home'

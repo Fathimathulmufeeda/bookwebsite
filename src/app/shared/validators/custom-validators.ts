@@ -46,3 +46,36 @@ export function passwordRuleStatus(value: string | null | undefined) {
     special: /[@$!%*?&#^()_+\-=[\]{};':"\\|,.<>/]/.test(v)
   };
 }
+export const PRODUCT_TEXT_PATTERN = /^(?=.*[A-Za-z])[A-Za-z0-9][A-Za-z0-9 '&.,:;()\-]{1,99}$/;
+export const IMAGE_URL_PATTERN =/^(https?:\/\/).+\.(jpg|jpeg|png|webp)(\?.*)?$/i;
+export function priceLessThanMrpValidator(
+  priceKey: string,
+  mrpKey: string
+): ValidatorFn {
+
+  return (group: AbstractControl): ValidationErrors | null => {
+
+    const price = group.get(priceKey)?.value;
+    const mrp = group.get(mrpKey)?.value;
+
+    if (price == null || mrp == null || price === '' || mrp === '') {
+      return null;
+    }
+
+    return Number(price) <= Number(mrp)
+      ? null
+      : { priceGreaterThanMrp: true };
+  };
+}
+export function atLeastOneImageValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+
+  const images = control.value;
+
+  if (!Array.isArray(images) || images.length === 0) {
+    return { imageRequired: true };
+  }
+
+  return null;
+}
