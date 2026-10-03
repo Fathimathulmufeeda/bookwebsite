@@ -1,0 +1,544 @@
+<div class="min-h-screen bg-[#f8f5ef] p-4 sm:p-6 lg:p-8">
+
+    <!-- Page Header -->
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+            <h1 class="text-2xl font-semibold text-[#193629]">
+                Orders
+            </h1>
+
+            <p class="mt-1 text-sm text-gray-500">
+                Manage customer orders and update their status.
+            </p>
+        </div>
+
+        <!-- Search -->
+        <div class="relative w-full sm:w-80">
+
+            <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                🔍
+            </span>
+
+            <input type="text" [(ngModel)]="searchTerm" placeholder="Search order or user ID..." class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm
+                       text-gray-700 outline-none transition
+                       focus:border-[#193629] focus:ring-1 focus:ring-[#193629]" />
+
+        </div>
+
+    </div>
+
+
+    <!-- Error -->
+    @if (error) {
+
+    <div class="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3
+                    text-sm text-red-600">
+        {{ error }}
+    </div>
+
+    }
+
+
+    <!-- Loading -->
+    @if (loading) {
+
+    <div class="rounded-2xl border border-gray-100 bg-white p-10 text-center shadow-sm">
+
+        <div class="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-4
+                       border-gray-200 border-t-[#193629]">
+        </div>
+
+        <p class="text-sm text-gray-500">
+            Loading orders...
+        </p>
+
+    </div>
+
+    } @else {
+
+    <div class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+
+        <!-- Header -->
+        <div class="border-b border-gray-100 px-5 py-4">
+
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+                <div>
+                    <h2 class="font-semibold text-[#193629]">
+                        All Orders
+                    </h2>
+
+                    <p class="mt-1 text-xs text-gray-500">
+                        {{ filteredOrders.length }}
+                        {{ filteredOrders.length === 1 ? 'order' : 'orders' }}
+                    </p>
+                </div>
+
+
+                <!-- Status Filter -->
+                <select [(ngModel)]="selectedStatus" class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm
+                               text-gray-600 outline-none
+                               focus:border-[#193629]">
+
+                    <option value="All">
+                        All Statuses
+                    </option>
+
+                    @for (status of statuses; track status) {
+                    <option [value]="status">
+                        {{ status }}
+                    </option>
+                    }
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        @if (filteredOrders.length > 0) {
+
+        <!-- Desktop Table -->
+        <div class="hidden overflow-x-auto md:block">
+
+            <table class="w-full text-left">
+
+                <thead class="bg-[#f8f5ef]">
+
+                    <tr class="text-xs uppercase tracking-wide text-gray-500">
+
+                        <th class="px-5 py-4 font-medium">
+                            Order
+                        </th>
+
+                        <th class="px-5 py-4 font-medium">
+                            User
+                        </th>
+
+                        <th class="px-5 py-4 font-medium">
+                            Date
+                        </th>
+
+                        <th class="px-5 py-4 font-medium">
+                            Total
+                        </th>
+
+                        <th class="px-5 py-4 font-medium">
+                            Status
+                        </th>
+
+                        <th class="px-5 py-4 text-right font-medium">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-gray-100">
+
+                    @for (order of filteredOrders; track order.id) {
+
+                    <tr class="transition hover:bg-[#faf9f6]">
+
+                        <!-- Order -->
+                        <td class="px-5 py-4">
+
+                            <p class="font-medium text-gray-800">
+                                #{{ order.id }}
+                            </p>
+
+                        </td>
+
+
+                        <!-- User -->
+                        <td class="px-5 py-4">
+                        
+                            <p class="text-sm font-medium text-gray-700">
+                                {{ getUserName(order.userId) }}
+                            </p>                  
+                         </td>
+
+
+                        <!-- Date -->
+                        <td class="px-5 py-4">
+
+                            <p class="text-sm text-gray-600">
+                                {{ order.createdAt | date:'dd MMM yyyy' }}
+                            </p>
+
+                            <p class="mt-1 text-xs text-gray-400">
+                                {{ order.createdAt | date:'hh:mm a' }}
+                            </p>
+
+                        </td>
+
+
+                        <!-- Total -->
+                        <td class="px-5 py-4">
+
+                            <span class="font-semibold text-[#193629]">
+                                ₹{{ order.total | number:'1.2-2' }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- Status -->
+                        <td class="px-5 py-4">
+
+                            <span class="inline-flex rounded-full px-3 py-1 text-xs font-medium"
+                                [ngClass]="getStatusClass(order.status)">
+
+                                {{ order.status }}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- Actions -->
+                        <td class="px-5 py-4">
+
+                            <div class="flex items-center justify-end gap-2">
+
+                                <button type="button" (click)="viewOrder(order)" class="rounded-lg border border-gray-200 px-3 py-1.5
+                                                       text-xs font-medium text-gray-600 transition
+                                                       hover:border-[#193629] hover:text-[#193629]">
+
+                                    View
+
+                                </button>
+
+
+                                <select [ngModel]="order.status" (ngModelChange)="updateStatus(order, $event)" class="rounded-lg border border-gray-200 bg-white
+                                                       px-2 py-1.5 text-xs text-gray-600 outline-none
+                                                       focus:border-[#193629]">
+
+                                    @for (status of statuses; track status) {
+
+                                    <option [value]="status">
+                                        {{ status }}
+                                    </option>
+
+                                    }
+
+                                </select>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Mobile Cards -->
+        <div class="divide-y divide-gray-100 md:hidden">
+
+            @for (order of filteredOrders; track order.id) {
+
+            <div class="p-4">
+
+                <!-- Top -->
+                <div class="flex items-start justify-between gap-3">
+
+                    <div>
+
+                        <p class="font-medium text-gray-800">
+                            Order #{{ order.id }}
+                        </p>
+
+                        <p class="mt-1 text-xs text-gray-500">
+                            {{ getUserName(order.userId) }}                
+                        </p>
+
+                    </div>
+
+
+                    <span class="shrink-0 rounded-full px-2.5 py-1 text-xs font-medium"
+                        [ngClass]="getStatusClass(order.status)">
+
+                        {{ order.status }}
+
+                    </span>
+
+                </div>
+
+
+                <!-- Details -->
+                <div class="mt-4 grid grid-cols-2 gap-3 rounded-xl bg-[#f8f5ef] p-3">
+
+                    <div>
+
+                        <p class="text-xs text-gray-400">
+                            Total
+                        </p>
+
+                        <p class="mt-1 text-sm font-semibold text-[#193629]">
+                            ₹{{ order.total | number:'1.2-2' }}
+                        </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <p class="text-xs text-gray-400">
+                            Date
+                        </p>
+
+                        <p class="mt-1 text-sm text-gray-700">
+                            {{ order.createdAt | date:'dd MMM yyyy' }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Actions -->
+                <div class="mt-4 flex gap-2">
+
+                    <button type="button" (click)="viewOrder(order)" class="flex-1 rounded-lg border border-gray-200
+                                           px-3 py-2 text-xs font-medium text-gray-600
+                                           transition hover:border-[#193629]
+                                           hover:text-[#193629]">
+
+                        View
+
+                    </button>
+
+
+                    <select [ngModel]="order.status" (ngModelChange)="updateStatus(order, $event)" class="flex-1 rounded-lg border border-gray-200 bg-white
+                                           px-3 py-2 text-xs text-gray-600 outline-none
+                                           focus:border-[#193629]">
+
+                        @for (status of statuses; track status) {
+
+                        <option [value]="status">
+                            {{ status }}
+                        </option>
+
+                        }
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            }
+
+        </div>
+
+
+        } @else {
+
+        <!-- Empty State -->
+        <div class="px-5 py-16 text-center">
+
+            <div class="mx-auto flex h-14 w-14 items-center justify-center
+                               rounded-full bg-[#f8f5ef] text-2xl">
+                📦
+            </div>
+
+            <h3 class="mt-4 font-medium text-gray-800">
+                No orders found
+            </h3>
+
+            <p class="mt-1 text-sm text-gray-500">
+                Try changing your search or status filter.
+            </p>
+
+        </div>
+
+        }
+
+    </div>
+
+    }
+
+</div>
+
+
+<!-- Order Details Modal -->
+
+@if (selectedOrder) {
+
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" (click)="closeView()">
+
+    <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl
+                   bg-white shadow-xl" (click)="$event.stopPropagation()">
+
+
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+
+            <div>
+
+                <h2 class="font-semibold text-[#193629]">
+                    Order #{{ selectedOrder.id }}
+                </h2>
+
+                <p class="mt-1 text-xs text-gray-500">
+                    {{ selectedOrder.createdAt | date:'dd MMM yyyy, hh:mm a' }}
+                </p>
+
+            </div>
+
+
+            <button type="button" (click)="closeView()" class="flex h-9 w-9 items-center justify-center rounded-full
+                           text-xl text-gray-400 transition
+                           hover:bg-gray-100 hover:text-gray-700">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <!-- Order Summary -->
+        <div class="grid grid-cols-2 gap-3 border-b border-gray-100 p-5 sm:grid-cols-3">
+
+            <div class="rounded-xl bg-[#f8f5ef] p-4">
+
+                <p class="text-xs text-gray-400">
+                    User
+                </p>
+
+                <p class="mt-1 font-medium text-gray-700">
+                    #{{ selectedOrder.userId }}
+                </p>
+
+            </div>
+
+
+            <div class="rounded-xl bg-[#f8f5ef] p-4">
+
+                <p class="text-xs text-gray-400">
+                    Payment
+                </p>
+
+                <p class="mt-1 font-medium text-gray-700">
+                    {{ selectedOrder.paymentMethod || 'N/A' }}
+                </p>
+
+            </div>
+
+
+            <div class="col-span-2 rounded-xl bg-[#f8f5ef] p-4 sm:col-span-1">
+
+                <p class="text-xs text-gray-400">
+                    Total
+                </p>
+
+                <p class="mt-1 font-semibold text-[#193629]">
+                    ₹{{ selectedOrder.total | number:'1.2-2' }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Shipping Address -->
+        <div class="border-b border-gray-100 p-5">
+
+            <h3 class="font-semibold text-gray-800">
+                Shipping Address
+            </h3>
+
+            <div class="mt-3 rounded-xl bg-[#f8f5ef] p-4">
+
+                <p class="font-medium text-gray-700">
+                    {{ selectedOrder.shippingAddress.name }}
+                </p>
+
+                <p class="mt-1 text-sm text-gray-500">
+                    {{ selectedOrder.shippingAddress.address }}
+                </p>
+
+                <p class="text-sm text-gray-500">
+                    {{ selectedOrder.shippingAddress.city }}
+                    @if (selectedOrder.shippingAddress.state) {
+                    , {{ selectedOrder.shippingAddress.state }}
+                    }
+                    - {{ selectedOrder.shippingAddress.pincode }}
+                </p>
+
+                <p class="mt-1 text-sm text-gray-500">
+                    Phone: {{ selectedOrder.shippingAddress.phone }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Items -->
+        <div class="p-5">
+        
+            <h3 class="mb-4 font-semibold text-gray-800">
+                Order Items
+            </h3>
+        
+            <div class="space-y-3">
+        
+                @for (item of selectedOrder.items; track item.product.id) {
+        
+                <div class="flex items-center justify-between gap-4 rounded-xl
+                                           border border-gray-100 p-3">
+        
+                    <div class="min-w-0">
+        
+                        <p class="truncate font-medium text-gray-700">
+                            {{ item.product.title }}
+                        </p>
+        
+                        <p class="mt-1 text-xs text-gray-500">
+                            Qty: {{ item.quantity }}
+                        </p>
+        
+                    </div>
+        
+                    <p class="shrink-0 font-semibold text-[#193629]">
+                        ₹{{ item.product.price * item.quantity | number:'1.2-2' }}
+                    </p>
+        
+                </div>
+        
+                }
+        
+            </div>  </div>
+
+
+        <!-- Footer -->
+        <div class="border-t border-gray-100 px-5 py-4 text-right">
+
+            <button type="button" (click)="closeView()" class="rounded-lg bg-[#193629] px-5 py-2.5
+                           text-sm font-medium text-white transition
+                           hover:bg-[#10261d]">
+
+                Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+}

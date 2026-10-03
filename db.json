@@ -3615,7 +3615,54 @@
       },
       "paymentMethod": "COD",
       "createdAt": "2026-09-30T10:30:17.253Z",
-      "status": "Placed"
+      "status": "Processing"
+    },
+    {
+      "id": 1791042860371,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 4,
+            "title": "Think and Grow Rich",
+            "author": "Napoleon Hill",
+            "price": 199,
+            "mrp": 299,
+            "discountPercent": 33,
+            "images": [
+              "/images/thinkandrich1.png",
+              "/images/thinkandrich1.png"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Success",
+              "Motivation"
+            ],
+            "rating": 4.5,
+            "reviewCount": 760,
+            "publisher": "Fingerprint Publishing",
+            "language": "English",
+            "pages": 320,
+            "createdAt": "2026-09-16",
+            "description": "A classic personal success book focused on mindset, ambition, and achievement.",
+            "stock": 28
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 199,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-03T15:54:20.371Z",
+      "status": "Delivered"
     }
   ],
   "cart": [
@@ -3623,12 +3670,6 @@
       "id": "YupD3mu_8",
       "userId": "YupD3mu",
       "productId": 8,
-      "quantity": 1
-    },
-    {
-      "id": "1_4",
-      "userId": "1",
-      "productId": 4,
       "quantity": 1
     },
     {
