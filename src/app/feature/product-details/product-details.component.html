@@ -79,7 +79,16 @@
               <span class="flex h-full w-10 items-center justify-center text-sm font-semibold"> {{ quantity }} </span>
               <button type="button" (click)="increaseQty()" [disabled]="quantity >= effectiveMax"
                 class="flex h-full w-10 items-center justify-center text-[#26332b] disabled:opacity-30"> + </button>
-            </div> <span class="text-xs text-[#999]"> Max {{ effectiveMax }} per order </span>
+            </div> 
+            @if (product.stock < 5) { <span class="text-xs text-[#a17b19]">
+              Only {{ product.stock }} available
+              </span>
+              } @else {
+              <span class="text-xs text-[#999]">
+                Max {{ effectiveMax }} per order
+              </span> 
+            }
+
           </div> } @if (alreadyInCart) { <p class="text-xs text-[#193629]"> ✓ Already in your cart ({{
             currentCartQuantity }} {{ currentCartQuantity === 1 ? 'copy' : 'copies' }}). <a routerLink="/cart"
               class="font-semibold underline"> View cart </a> to change quantity. </p> }

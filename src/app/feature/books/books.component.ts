@@ -23,11 +23,8 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ToastService } from '../../shared/services/toast.service';
 import { AuthService } from '../../core/services/auth.service';
+import { normalizeCategory } from '../../shared/utils/category.util';
 
-
-function normalizeCategory(value: string | null | undefined): string {
-  return (value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
-}
 
 type SortOption = 'relevance' | 'price-asc' | 'price-desc' | 'rating';
 

@@ -18,6 +18,7 @@ import { selectWishlistProducts } from '../../store/wishlist/wishlist.selectors'
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { AuthService } from '../../core/services/auth.service';
+import { normalizeCategory } from '../../shared/utils/category.util';
 
 
 @Component({
@@ -101,12 +102,15 @@ maxCartProducts = MAX_CART_PRODUCTS;
   }
 
   private loadSimilarProducts(product: Product): void {
+
+    const targetCategory = normalizeCategory(product.category);
+  
     this.productService.getProducts().subscribe({
       next: (products) => {
         this.similarProducts = products
           .filter(
             item =>
-              item.category === product.category &&
+              normalizeCategory(item.category) === targetCategory &&
               item.id !== product.id
           )
           .slice(0, 4);
@@ -116,7 +120,6 @@ maxCartProducts = MAX_CART_PRODUCTS;
       }
     });
   }
-
   private watchCartStatus(productId: number): void {
     this.store.select(selectCartItems).pipe(
       map(items => ({

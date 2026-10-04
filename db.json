@@ -127,7 +127,7 @@
       "pages": 320,
       "createdAt": "2026-09-20",
       "description": "A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.",
-      "stock": 45
+      "stock": 43
     },
     {
       "id": 2,
@@ -1194,7 +1194,7 @@
       "language": "English",
       "pages": 350,
       "description": "Newlyweds Tricia and Ethan are searching for the house of their dreams.\n\nBut when they visit the remote manor that once belonged to Dr. Adrienne Hale, a renowned psychiatrist who vanished without a trace four years earlier, a violent winter storm traps them at the estate… with no chance of escape until the blizzard comes to an end.\n\nIn search of a book to keep her entertained until the snow abates, Tricia happens upon a secret room. One that contains audio transcripts from every single patient Dr. Hale has ever interviewed. As Tricia listens to the cassette tapes, she learns about the terrifying chain of events leading up to Dr. Hale’s mysterious disappearance.\n\nTricia plays the tapes one by one, late into the night. With each one, another shocking piece of the puzzle falls into place, and Dr. Adrienne Hale’s web of lies slowly unravels.\n\nAnd then Tricia reaches the final cassette.\n\nThe one that reveals the entire horrifying truth.",
-      "stock": 15,
+      "stock": 0,
       "images": [
         "/images/never lie1.webp",
         "/images/never lie2.webp"
@@ -3662,6 +3662,144 @@
       },
       "paymentMethod": "COD",
       "createdAt": "2026-10-03T15:54:20.371Z",
+      "status": "Delivered"
+    },
+    {
+      "id": 1791044749679,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 1,
+            "title": "Atomic Habits",
+            "author": "James Clear",
+            "price": 450,
+            "mrp": 599,
+            "discountPercent": 25,
+            "images": [
+              "/images/atomic-habit3.jpg",
+              "/images/atomic-habit4.jpg"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Habits",
+              "Productivity"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1250,
+            "publisher": "Avery",
+            "language": "English",
+            "pages": 320,
+            "createdAt": "2026-09-20",
+            "description": "A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.",
+            "stock": 45
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 450,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-03T16:25:49.679Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1791044819390,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 1,
+            "title": "Atomic Habits",
+            "author": "James Clear",
+            "price": 450,
+            "mrp": 599,
+            "discountPercent": 25,
+            "images": [
+              "/images/atomic-habit3.jpg",
+              "/images/atomic-habit4.jpg"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Habits",
+              "Productivity"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1250,
+            "publisher": "Avery",
+            "language": "English",
+            "pages": 320,
+            "createdAt": "2026-09-20",
+            "description": "A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.",
+            "stock": 44
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 450,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-03T16:26:59.390Z",
+      "status": "Placed"
+    },
+    {
+      "id": 1791094904589,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "title": "Never Lie",
+            "author": "Frieda MC Fadden",
+            "price": 420,
+            "mrp": 500,
+            "category": "Fiction",
+            "genre": [
+              "thriller"
+            ],
+            "rating": 4.8,
+            "reviewCount": 970,
+            "publisher": "Sourcebook",
+            "language": "English",
+            "pages": 350,
+            "description": "Newlyweds Tricia and Ethan are searching for the house of their dreams.\n\nBut when they visit the remote manor that once belonged to Dr. Adrienne Hale, a renowned psychiatrist who vanished without a trace four years earlier, a violent winter storm traps them at the estate… with no chance of escape until the blizzard comes to an end.\n\nIn search of a book to keep her entertained until the snow abates, Tricia happens upon a secret room. One that contains audio transcripts from every single patient Dr. Hale has ever interviewed. As Tricia listens to the cassette tapes, she learns about the terrifying chain of events leading up to Dr. Hale’s mysterious disappearance.\n\nTricia plays the tapes one by one, late into the night. With each one, another shocking piece of the puzzle falls into place, and Dr. Adrienne Hale’s web of lies slowly unravels.\n\nAnd then Tricia reaches the final cassette.\n\nThe one that reveals the entire horrifying truth.",
+            "stock": 3,
+            "images": [
+              "/images/never lie1.webp",
+              "/images/never lie2.webp"
+            ],
+            "createdAt": "2026-10-02T06:49:52.133Z",
+            "id": 43
+          },
+          "quantity": 3
+        }
+      ],
+      "total": 1260,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-04T06:21:44.589Z",
       "status": "Delivered"
     }
   ],

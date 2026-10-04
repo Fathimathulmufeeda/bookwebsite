@@ -203,9 +203,7 @@ export class HomeComponent implements OnInit {
       );
       return;
     }
-    console.log('Cart products:', this.cartProductIds.size);
-console.log('Cart IDs:', [...this.cartProductIds]);
-console.log('Max products:', this.maxCartProducts);
+   
     if (this.cartProductIds.size >= this.maxCartProducts) {
       this.toast.warning(
         `You can add a maximum of ${this.maxCartProducts} different books to your cart.`

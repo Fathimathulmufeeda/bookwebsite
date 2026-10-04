@@ -1,9 +1,20 @@
 import { createAction, props } from '@ngrx/store';
+
 import { Order, OrderStatus } from '../../core/Models/order.model';
 
 export const addOrder = createAction(
   '[Orders] Add Order',
   props<{ order: Order }>()
+);
+
+export const addOrderSuccess = createAction(
+  '[Orders] Add Order Success',
+  props<{ order: Order }>()
+);
+
+export const addOrderFailure = createAction(
+  '[Orders] Add Order Failure',
+  props<{ error: string }>()
 );
 
 export const loadOrders = createAction(
