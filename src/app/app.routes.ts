@@ -114,8 +114,8 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () =>
-          import('./feature/admin/admin/admin.component')
-            .then(m => m.AdminComponent)
+          import('./feature/admin/dashboard/dashboard.component')
+            .then(m => m.DashboardComponent)
       },
   
       {
