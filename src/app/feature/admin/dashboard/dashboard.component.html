@@ -1,1279 +1,218 @@
+<div class="min-h-screen bg-[#f8f5ef] p-4 sm:p-6 lg:p-8">
 
-<div class="min-h-screen bg-[#f8f5ef]">
-
-    <!-- ========================================================= -->
-    <!-- HEADER -->
-    <!-- ========================================================= -->
-
-    <div class="border-b border-[#e5dfd4] bg-white">
-
-        <div class="px-4 py-6 sm:px-6 lg:px-8">
-
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                <div>
-
-                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-[#867354]">
-                        Nova Bookshop
-                    </p>
-
-                    <h1 class="mt-1 font-serif text-3xl font-medium text-[#193629]">
-                        Dashboard
-                    </h1>
-
-                    <p class="mt-1 text-sm text-[#777d76]">
-                        Welcome back, Admin. Here's what's happening with your store.
-                    </p>
-
-                </div>
-
-                <div class="flex items-center gap-2">
-
-                    <div class="flex items-center gap-2 rounded-sm border border-[#d8d0c2] bg-[#f8f5ef] px-4 py-2.5">
-
-                        <span class="h-2 w-2 rounded-full bg-[#193629]"></span>
-
-                        <span class="text-xs font-semibold text-[#3a3f3b]">
-                            Store Overview
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
+    <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-[#193629]">Dashboard</h1>
+        <p class="mt-1 text-sm text-gray-500">An overview of your store's performance.</p>
     </div>
 
-
-    <!-- ========================================================= -->
-    <!-- LOADING -->
-    <!-- ========================================================= -->
-
-    @if (loading) {
-
-    <div class="flex min-h-[60vh] items-center justify-center">
-
-        <div class="text-center">
-
-            <div class="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[#d8d0c2] border-t-[#193629]">
-            </div>
-
-            <p class="mt-3 text-sm text-[#777d76]">
-                Loading dashboard...
-            </p>
-
-        </div>
-
+    <!-- Error -->
+    @if (error) {
+    <div class="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+        {{ error }}
     </div>
-
     }
 
+    <!-- Loading -->
+    @if (loading) {
+    <div class="rounded-2xl border border-gray-100 bg-white p-10 text-center shadow-sm">
+        <div class="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-[#193629]"></div>
+        <p class="text-sm text-gray-500">Loading dashboard...</p>
+    </div>
+    }
 
-    @if (!loading) {
+    <!-- Notifications strip -->
+    @if (!loading && notifications.length > 0) {
+    <div class="mb-6 flex flex-wrap gap-2">
+        @for (note of notifications; track note) {
+        <span class="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-medium text-gray-600">
+            🔔 {{ note }}
+        </span>
+        }
+    </div>
+    }
 
-    <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+    <!-- Stat cards -->
+    @if (!loading && stats) {
 
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
-        <!-- ===================================================== -->
-        <!-- SUMMARY CARDS -->
-        <!-- ===================================================== -->
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-medium uppercase tracking-wide text-gray-400">Total Revenue</p>
+            <p class="mt-2 text-2xl font-semibold text-[#193629]">₹{{ stats.totalRevenue | number:'1.2-2' }}</p>
+            <p class="mt-1 text-xs text-gray-400">Excludes cancelled orders</p>
+        </div>
 
-        <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-6">
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-medium uppercase tracking-wide text-gray-400">Total Orders</p>
+            <p class="mt-2 text-2xl font-semibold text-gray-800">{{ stats.totalOrders }}</p>
+            @if (stats.pendingOrdersCount > 0) {
+            <p class="mt-1 text-xs font-medium text-amber-600">{{ stats.pendingOrdersCount }} need attention</p>
+            } @else {
+            <a routerLink="/admin/orders" class="mt-1 block text-xs font-medium text-[#193629] hover:underline">View all
+                →</a>
+            }
+        </div>
 
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-medium uppercase tracking-wide text-gray-400">Products</p>
+            <p class="mt-2 text-2xl font-semibold text-gray-800">{{ stats.totalProducts }}</p>
+            @if (stats.lowStockCount > 0 || stats.outOfStockCount > 0) {
+            <p class="mt-1 text-xs font-medium text-amber-600">{{ stats.lowStockCount + stats.outOfStockCount }} need
+                restocking</p>
+            } @else {
+            <a routerLink="/admin/products" class="mt-1 block text-xs font-medium text-[#193629] hover:underline">Manage
+                →</a>
+            }
+        </div>
 
-            <!-- USERS -->
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <p class="text-xs font-medium uppercase tracking-wide text-gray-400">Users</p>
+            <p class="mt-2 text-2xl font-semibold text-gray-800">{{ stats.totalUsers }}</p>
+            <p class="mt-1 text-xs text-gray-400">{{ stats.activeUsers }} active</p>
+        </div>
 
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
+    </div>
 
-                <div class="flex items-start justify-between">
+    <!-- Quick Actions -->
+    <div class="mt-6 flex flex-wrap gap-2">
+        <a routerLink="/admin/products"
+            class="rounded-lg bg-[#193629] px-4 py-2 text-xs font-medium text-white transition hover:bg-[#10261d]">
+            + Add Product
+        </a>
+        <a routerLink="/admin/orders"
+            class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-medium text-gray-600 transition hover:border-[#193629] hover:text-[#193629]">
+            View Orders
+        </a>
+        <a routerLink="/admin/users"
+            class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-medium text-gray-600 transition hover:border-[#193629] hover:text-[#193629]">
+            Manage Users
+        </a>
+    </div>
 
-                    <div class="flex h-10 w-10 items-center justify-center rounded-sm bg-[#edf3ef] text-[#193629]">
+    <!-- Revenue + Order Status charts -->
+    <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-5">
 
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"
-                                d="M17 20h5v-2a4 4 0 0 0-4-4h-1M9 20H4v-2a4 4 0 0 1 4-4h1m0-5a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm6 0a3 3 0 1 0 0-6" />
-
-                        </svg>
-
-                    </div>
-
-                    <span class="text-xs text-[#999]">
-                        Customers
-                    </span>
-
-                </div>
-
-                <p class="mt-5 text-2xl font-semibold text-[#193629]">
-                    {{ totalUsers }}
-                </p>
-
-                <p class="mt-1 text-xs text-[#777d76]">
-                    Registered users
-                </p>
-
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-3">
+            <h2 class="font-semibold text-[#193629]">Revenue — Last 7 Days</h2>
+            <div class="relative mt-4 h-64">
+                <canvas #revenueChart></canvas>
             </div>
+        </div>
 
-
-            <!-- ORDERS -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <div class="flex items-start justify-between">
-
-                    <div class="flex h-10 w-10 items-center justify-center rounded-sm bg-[#f1eee8] text-[#193629]">
-
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7"
-                                d="M3 4h18l-2 15H5L3 4Zm0 0h18M8 9v6m4-6v6m4-6v6" />
-
-                        </svg>
-
-                    </div>
-
-                    <span class="text-xs text-[#999]">
-                        Orders
-                    </span>
-
-                </div>
-
-                <p class="mt-5 text-2xl font-semibold text-[#193629]">
-                    {{ totalOrders }}
-                </p>
-
-                <p class="mt-1 text-xs text-[#777d76]">
-                    Total orders
-                </p>
-
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-2">
+            <h2 class="font-semibold text-[#193629]">Order Status</h2>
+            <div class="relative mt-4 h-64">
+                <canvas #statusChart></canvas>
             </div>
-
-
-            <!-- PRODUCTS -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <div class="flex items-start justify-between">
-
-                    <div class="flex h-10 w-10 items-center justify-center rounded-sm bg-[#f5efe4] text-[#867354]">
-
-                        <span class="text-lg">
-                            📚
-                        </span>
-
-                    </div>
-
-                    <span class="text-xs text-[#999]">
-                        Inventory
-                    </span>
-
-                </div>
-
-                <p class="mt-5 text-2xl font-semibold text-[#193629]">
-                    {{ totalProducts }}
-                </p>
-
-                <p class="mt-1 text-xs text-[#777d76]">
-                    Total books
-                </p>
-
-            </div>
-
-
-            <!-- REVENUE -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <div class="flex items-start justify-between">
-
-                    <div class="flex h-10 w-10 items-center justify-center rounded-sm bg-[#edf3ef] text-[#193629]">
-
-                        <span class="text-lg">
-                            ₹
-                        </span>
-
-                    </div>
-
-                    <span class="text-xs text-[#999]">
-                        Revenue
-                    </span>
-
-                </div>
-
-                <p class="mt-5 text-2xl font-semibold text-[#193629]">
-                    ₹{{ totalRevenue | number:'1.0-0' }}
-                </p>
-
-                <p class="mt-1 text-xs text-[#777d76]">
-                    From completed orders
-                </p>
-
-            </div>
-
-
-            <!-- PENDING -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <div class="flex items-start justify-between">
-
-                    <div class="flex h-10 w-10 items-center justify-center rounded-sm bg-[#fbf5e6] text-[#a17b19]">
-
-                        <span class="text-lg">
-                            ⏳
-                        </span>
-
-                    </div>
-
-                    <span class="text-xs text-[#999]">
-                        Pending
-                    </span>
-
-                </div>
-
-                <p class="mt-5 text-2xl font-semibold text-[#193629]">
-                    {{ pendingOrders }}
-                </p>
-
-                <p class="mt-1 text-xs text-[#777d76]">
-                    Orders to process
-                </p>
-
-            </div>
-
-
-            <!-- LOW STOCK -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <div class="flex items-start justify-between">
-
-                    <div class="flex h-10 w-10 items-center justify-center rounded-sm bg-[#fff4ed] text-[#c56a2f]">
-
-                        <span class="text-lg">
-                            ⚠
-                        </span>
-
-                    </div>
-
-                    <span class="text-xs text-[#999]">
-                        Alert
-                    </span>
-
-                </div>
-
-                <p class="mt-5 text-2xl font-semibold text-[#193629]">
-                    {{ lowStockProducts }}
-                </p>
-
-                <p class="mt-1 text-xs text-[#777d76]">
-                    Low stock books
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- ===================================================== -->
-        <!-- REVENUE + ORDER STATUS -->
-        <!-- ===================================================== -->
-
-        <section class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[2fr_1fr]">
-
-
-            <!-- REVENUE GRAPH -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                    <div>
-
-                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#867354]">
-                            Sales Analytics
-                        </p>
-
-                        <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                            Revenue Overview
-                        </h2>
-
-                    </div>
-
-                    <select [value]="revenueFilter" (change)="changeRevenueFilter($any($event.target).value)"
-                        class="rounded-sm border border-[#d8d0c2] bg-[#f8f5ef] px-3 py-2 text-xs font-semibold text-[#3a3f3b] outline-none">
-
-                        <option value="Today">
-                            Today
-                        </option>
-
-                        <option value="Last 7 Days">
-                            Last 7 Days
-                        </option>
-
-                        <option value="Last 30 Days">
-                            Last 30 Days
-                        </option>
-
-                        <option value="Last 6 Months">
-                            Last 6 Months
-                        </option>
-
-                        <option value="This Year">
-                            This Year
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="mt-6">
-
-                    <div class="mb-2 flex items-end justify-between">
-
-                        <div>
-
-                            <p class="text-2xl font-semibold text-[#193629]">
-                                ₹{{ totalRevenue | number:'1.0-0' }}
-                            </p>
-
-                            <p class="mt-1 text-xs text-[#999]">
-                                Total store revenue
-                            </p>
-
-                        </div>
-
-                        <p class="text-[11px] text-[#999]">
-                            {{ revenueFilter }}
-                        </p>
-
-                    </div>
-
-
-                    <!-- SVG CHART -->
-
-                    <div class="relative h-64 w-full overflow-hidden">
-
-                        <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="h-full w-full">
-
-                            <!-- horizontal grid -->
-
-                            <line x1="0" y1="90" x2="100" y2="90" stroke="#eee8dd" stroke-width="0.5" />
-
-                            <line x1="0" y1="70" x2="100" y2="70" stroke="#eee8dd" stroke-width="0.5" />
-
-                            <line x1="0" y1="50" x2="100" y2="50" stroke="#eee8dd" stroke-width="0.5" />
-
-                            <line x1="0" y1="30" x2="100" y2="30" stroke="#eee8dd" stroke-width="0.5" />
-
-                            <line x1="0" y1="10" x2="100" y2="10" stroke="#eee8dd" stroke-width="0.5" />
-
-
-                            <!-- revenue line -->
-
-                            @if (revenueChartPoints) {
-
-                            <polyline [attr.points]="revenueChartPoints" fill="none" stroke="#193629" stroke-width="1.5"
-                                vector-effect="non-scaling-stroke" />
-
-                            }
-
-                        </svg>
-
-
-                        @if (revenuePoints.length === 0) {
-
-                        <div class="absolute inset-0 flex items-center justify-center">
-
-                            <p class="text-sm text-[#999]">
-                                No revenue data available
-                            </p>
-
-                        </div>
-
-                        }
-
-                    </div>
-
-
-                    <!-- GRAPH LABELS -->
-
-                    <div class="flex justify-between text-[10px] text-[#999]">
-
-                        @for (point of revenuePoints; track $index) {
-
-                        @if (point.label) {
-
-                        <span>
-                            {{ point.label }}
-                        </span>
-
-                        }
-
-                        }
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ORDER STATUS -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <div>
-
-                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#867354]">
-                        Order Management
+        </div>
+
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="mt-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+
+        <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+            <h2 class="font-semibold text-[#193629]">Recent Orders</h2>
+            <a routerLink="/admin/orders" class="text-xs font-medium text-[#193629] hover:underline">View all</a>
+        </div>
+
+        @if (recentOrders.length > 0) {
+        <div class="divide-y divide-gray-100">
+            @for (order of recentOrders; track order.id) {
+            <div class="flex items-center justify-between gap-3 px-5 py-4">
+                <div class="min-w-0">
+                    <p class="font-medium text-gray-800">Order #{{ order.id }}</p>
+                    <p class="mt-0.5 truncate text-xs text-gray-500">
+                        {{ getUserName(order.userId) }} · {{ order.createdAt | date:'dd MMM yyyy' }}
                     </p>
-
-                    <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                        Order Status
-                    </h2>
-
                 </div>
-
-
-                <div class="mt-7 space-y-5">
-
-                    @for (status of orderStatuses; track status) {
-
-                    <div>
-
-                        <div class="mb-2 flex items-center justify-between">
-
-                            <span class="text-xs font-semibold text-[#3a3f3b]">
-                                {{ status }}
-                            </span>
-
-                            <span class="text-xs font-bold text-[#193629]">
-                                {{ orderStatusCounts[status] }}
-                            </span>
-
-                        </div>
-
-                        <div class="h-2 overflow-hidden rounded-full bg-[#f0ece4]">
-
-                            <div class="h-full rounded-full bg-[#193629] transition-all duration-500"
-                                [style.width.%]="getStatusWidth(orderStatusCounts[status])">
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    }
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ===================================================== -->
-        <!-- RECENT ORDERS -->
-        <!-- ===================================================== -->
-
-        <section class="mt-6 rounded-md border border-[#e5dfd4] bg-white shadow-sm">
-
-            <div
-                class="flex flex-col gap-3 border-b border-[#ebe6dd] p-5 sm:flex-row sm:items-center sm:justify-between">
-
-                <div>
-
-                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#867354]">
-                        Store Activity
-                    </p>
-
-                    <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                        Recent Orders
-                    </h2>
-
-                </div>
-
-                <a routerLink="/admin/orders"
-                    class="text-xs font-bold uppercase tracking-wide text-[#193629] underline underline-offset-4">
-
-                    View All Orders →
-
-                </a>
-
-            </div>
-
-
-            <div class="overflow-x-auto">
-
-                <table class="w-full min-w-[700px] text-left">
-
-                    <thead class="bg-[#faf8f3]">
-
-                        <tr class="text-[10px] uppercase tracking-wider text-[#999]">
-
-                            <th class="px-5 py-3 font-bold">
-                                Order
-                            </th>
-
-                            <th class="px-5 py-3 font-bold">
-                                Customer
-                            </th>
-
-                            <th class="px-5 py-3 font-bold">
-                                Amount
-                            </th>
-
-                            <th class="px-5 py-3 font-bold">
-                                Status
-                            </th>
-
-                            <th class="px-5 py-3 font-bold">
-                                Date
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        @for (order of recentOrders; track order.id) {
-
-                        <tr class="border-t border-[#f0ece4]">
-
-                            <td class="px-5 py-4">
-
-                                <span class="font-semibold text-[#193629]">
-                                    #{{ order.id }}
-                                </span>
-
-                            </td>
-
-                            <td class="px-5 py-4 text-sm text-[#3a3f3b]">
-                                {{ getUserName(order.userId) }}
-                            </td>
-
-                            <td class="px-5 py-4 text-sm font-semibold text-[#193629]">
-                                ₹{{ getOrderTotal(order) | number:'1.0-0' }}
-                            </td>
-
-                            <td class="px-5 py-4">
-
-                                <span class="rounded-full px-2.5 py-1 text-[10px] font-bold"
-                                    [ngClass]="getStatusClass(getOrderStatus(order))">
-
-                                    {{ getOrderStatus(order) }}
-
-                                </span>
-
-                            </td>
-
-                            <td class="px-5 py-4 text-xs text-[#777d76]">
-
-                                {{ getOrderDate(order) | date:'dd MMM yyyy' }}
-
-                            </td>
-
-                        </tr>
-
-                        }
-
-
-                        @if (recentOrders.length === 0) {
-
-                        <tr>
-
-                            <td colspan="5" class="px-5 py-10 text-center text-sm text-[#999]">
-
-                                No orders yet.
-
-                            </td>
-
-                        </tr>
-
-                        }
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-
-        <!-- ===================================================== -->
-        <!-- TOP SELLING + LOW STOCK -->
-        <!-- ===================================================== -->
-
-        <section class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-
-
-            <!-- TOP SELLING -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <div class="flex items-center justify-between">
-
-                    <div>
-
-                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#867354]">
-                            Best Performers
-                        </p>
-
-                        <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                            Top Selling Books
-                        </h2>
-
-                    </div>
-
-                    <span class="text-xl">
-                        📚
+                <div class="flex shrink-0 items-center gap-3">
+                    <span class="rounded-full px-2.5 py-1 text-xs font-medium" [ngClass]="getStatusClass(order.status)">
+                        {{ order.status }}
                     </span>
-
+                    <span class="text-sm font-semibold text-[#193629]">₹{{ order.total | number:'1.2-2' }}</span>
                 </div>
-
-
-                <div class="mt-6 space-y-5">
-
-                    @for (book of topSellingBooks; track book.title) {
-
-                    <div>
-
-                        <div class="mb-2 flex items-center justify-between gap-3">
-
-                            <p class="truncate text-sm font-semibold text-[#3a3f3b]">
-                                {{ book.title }}
-                            </p>
-
-                            <span class="shrink-0 text-xs font-bold text-[#193629]">
-                                {{ book.quantity }} sold
-                            </span>
-
-                        </div>
-
-                        <div class="h-2 overflow-hidden rounded-full bg-[#f0ece4]">
-
-                            <div class="h-full rounded-full bg-[#193629] transition-all duration-500"
-                                [style.width.%]="getBookWidth(book.quantity)">
-                            </div>
-
-                        </div>
-
-                        <p class="mt-1 text-[10px] text-[#999]">
-                            ₹{{ book.revenue | number:'1.0-0' }} revenue
-                        </p>
-
-                    </div>
-
-                    }
-
-
-                    @if (topSellingBooks.length === 0) {
-
-                    <div class="py-10 text-center">
-
-                        <p class="text-sm text-[#999]">
-                            No sales data yet.
-                        </p>
-
-                    </div>
-
-                    }
-
-                </div>
-
             </div>
+            }
+        </div>
+        } @else {
+        <p class="px-5 py-12 text-center text-sm text-gray-500">No orders yet.</p>
+        }
 
+    </div>
 
-            <!-- LOW STOCK -->
+    <!-- Top Selling Books + Stock Alerts -->
+    <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
 
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <h2 class="font-semibold text-[#193629]">Top Selling Books</h2>
 
-                <div class="flex items-center justify-between">
-
-                    <div>
-
-                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#a17b19]">
-                            Inventory Alert
-                        </p>
-
-                        <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                            Low Stock
-                        </h2>
-
-                    </div>
-
-                    <a routerLink="/admin/products"
-                        class="text-xs font-bold text-[#193629] underline underline-offset-4">
-
-                        View Products
-
-                    </a>
-
+            @if (topSellingBooks.length > 0) {
+            <div class="mt-4 space-y-3">
+                @for (book of topSellingBooks; track book.title) {
+                <div class="flex items-center justify-between gap-3">
+                    <p class="truncate text-sm text-gray-700">{{ book.title }}</p>
+                    <span class="shrink-0 rounded-full bg-[#f8f5ef] px-2.5 py-1 text-xs font-semibold text-[#193629]">
+                        {{ book.sold }} sold
+                    </span>
                 </div>
-
-
-                <div class="mt-6 space-y-3">
-
-                    @for (product of lowStockItems; track product.id) {
-
-                    <div class="flex items-center justify-between rounded-sm border border-[#eee8dd] bg-[#faf8f3] p-3">
-
-                        <div class="min-w-0">
-
-                            <p class="truncate text-sm font-semibold text-[#3a3f3b]">
-                                {{ product.title }}
-                            </p>
-
-                            <p class="mt-1 text-[10px] text-[#999]">
-                                {{ product.category }}
-                            </p>
-
-                        </div>
-
-                        <span class="ml-4 shrink-0 rounded-full px-3 py-1 text-[10px] font-bold" [ngClass]="
-                    product.stock <= 0
-                      ? 'bg-red-50 text-red-700'
-                      : 'bg-[#fbf5e6] text-[#a17b19]'
-                  ">
-
-                            @if (product.stock <= 0) { Out of stock } @else { {{ product.stock }} left } </span>
-
-                    </div>
-
-                    }
-
-
-                    @if (lowStockItems.length === 0) {
-
-                    <div class="rounded-sm bg-[#edf3ef] p-5 text-center">
-
-                        <p class="text-sm font-semibold text-[#193629]">
-                            Inventory looks healthy
-                        </p>
-
-                        <p class="mt-1 text-xs text-[#777d76]">
-                            No products are currently low on stock.
-                        </p>
-
-                    </div>
-
-                    }
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ===================================================== -->
-        <!-- SALES BY CATEGORY -->
-        <!-- ===================================================== -->
-
-        <section class="mt-6 rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-            <div>
-
-                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#867354]">
-                    Category Performance
-                </p>
-
-                <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                    Sales by Category
-                </h2>
-
-            </div>
-
-
-            <div class="mt-7 grid grid-cols-1 gap-5 md:grid-cols-2">
-
-                @for (item of categorySales; track item.category) {
-
-                <div>
-
-                    <div class="mb-2 flex items-center justify-between">
-
-                        <div>
-
-                            <span class="text-sm font-semibold text-[#3a3f3b]">
-                                {{ item.category }}
-                            </span>
-
-                            <span class="ml-2 text-[10px] text-[#999]">
-                                {{ item.quantity }} books
-                            </span>
-
-                        </div>
-
-                        <span class="text-xs font-bold text-[#193629]">
-                            ₹{{ item.revenue | number:'1.0-0' }}
-                        </span>
-
-                    </div>
-
-                    <div class="h-3 overflow-hidden rounded-full bg-[#f0ece4]">
-
-                        <div class="h-full rounded-full bg-[#193629] transition-all duration-500"
-                            [style.width.%]="getCategoryWidth(item.percentage)">
-                        </div>
-
-                    </div>
-
-                </div>
-
                 }
+            </div>
+            } @else {
+            <p class="mt-4 text-sm text-gray-500">No sales recorded yet.</p>
+            }
+        </div>
 
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+                <h2 class="font-semibold text-[#193629]">Stock Alerts</h2>
+                <a routerLink="/admin/products" class="text-xs font-medium text-[#193629] hover:underline">View
+                    Products</a>
             </div>
 
-        </section>
-
-
-        <!-- ===================================================== -->
-        <!-- CUSTOMERS + PAYMENT METHODS -->
-        <!-- ===================================================== -->
-
-        <section class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-
-
-            <!-- CUSTOMERS -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <div class="flex items-center justify-between">
-
-                    <div>
-
-                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#867354]">
-                            Customer Overview
-                        </p>
-
-                        <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                            Recent Customers
-                        </h2>
-
-                    </div>
-
-                    <a routerLink="/admin/users" class="text-xs font-bold text-[#193629] underline underline-offset-4">
-
-                        View All
-
-                    </a>
-
+            @if (lowStockProducts.length > 0) {
+            <div class="mt-4 space-y-3">
+                @for (product of lowStockProducts; track product.id) {
+                <div class="flex items-center justify-between gap-3">
+                    <p class="truncate text-sm text-gray-700">{{ product.title }}</p>
+                    @if (product.stock <= 0) { <span
+                        class="shrink-0 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700">
+                        Out of stock
+                        </span>
+                        } @else {
+                        <span
+                            class="shrink-0 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                            {{ product.stock }} left
+                        </span>
+                        }
                 </div>
-
-
-                <div class="mt-5 grid grid-cols-2 gap-3">
-
-                    <div class="rounded-sm bg-[#faf8f3] p-4">
-
-                        <p class="text-[10px] uppercase tracking-wide text-[#999]">
-                            Active
-                        </p>
-
-                        <p class="mt-1 text-xl font-semibold text-[#193629]">
-                            {{ activeUsers }}
-                        </p>
-
-                    </div>
-
-                    <div class="rounded-sm bg-[#faf8f3] p-4">
-
-                        <p class="text-[10px] uppercase tracking-wide text-[#999]">
-                            Inactive
-                        </p>
-
-                        <p class="mt-1 text-xl font-semibold text-[#193629]">
-                            {{ inactiveUsers }}
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="mt-5 divide-y divide-[#f0ece4]">
-
-                    @for (user of recentCustomers; track user.id) {
-
-                    <div class="flex items-center gap-3 py-3">
-
-                        <div
-                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#edf3ef] text-sm font-bold text-[#193629]">
-
-                            {{ user.name.charAt(0).toUpperCase() }}
-
-                        </div>
-
-                        <div class="min-w-0">
-
-                            <p class="truncate text-sm font-semibold text-[#3a3f3b]">
-                                {{ user.name }}
-                            </p>
-
-                            <p class="truncate text-[11px] text-[#999]">
-                                {{ user.email }}
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    }
-
-                </div>
-
+                }
             </div>
+            } @else {
+            <p class="mt-4 text-sm text-gray-500">All books are well stocked.</p>
+            }
+        </div>
 
+    </div>
 
-            <!-- PAYMENT METHODS -->
+    <!-- Sales by Category + Payment Methods -->
+    <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-5">
 
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <div>
-
-                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#867354]">
-                        Payment Analytics
-                    </p>
-
-                    <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                        Payment Methods
-                    </h2>
-
-                </div>
-
-
-                <div class="mt-7 space-y-6">
-
-                    @for (payment of paymentMethods; track payment.method) {
-
-                    <div>
-
-                        <div class="mb-2 flex items-center justify-between">
-
-                            <div class="flex items-center gap-3">
-
-                                <div
-                                    class="flex h-9 w-9 items-center justify-center rounded-sm bg-[#f5efe4] text-xs font-bold text-[#193629]">
-
-                                    @if (payment.method === 'COD') {
-                                    ₹
-                                    }
-
-                                    @if (payment.method === 'UPI') {
-                                    U
-                                    }
-
-                                    @if (payment.method === 'Card') {
-                                    C
-                                    }
-
-                                </div>
-
-                                <span class="text-sm font-semibold text-[#3a3f3b]">
-                                    {{ payment.method }}
-                                </span>
-
-                            </div>
-
-                            <div class="text-right">
-
-                                <span class="text-sm font-bold text-[#193629]">
-                                    {{ payment.percentage | number:'1.0-0' }}%
-                                </span>
-
-                                <p class="text-[10px] text-[#999]">
-                                    {{ payment.count }} orders
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="h-2 overflow-hidden rounded-full bg-[#f0ece4]">
-
-                            <div class="h-full rounded-full bg-[#193629] transition-all duration-500"
-                                [style.width.%]="getPaymentWidth(payment.percentage)">
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    }
-
-                </div>
-
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-3">
+            <h2 class="font-semibold text-[#193629]">Sales by Category</h2>
+            <div class="relative mt-4 h-56">
+                <canvas #categoryChart></canvas>
             </div>
+        </div>
 
-        </section>
-
-
-        <!-- ===================================================== -->
-        <!-- INVENTORY + QUICK ACTIONS + ALERTS -->
-        <!-- ===================================================== -->
-
-        <section class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-
-
-            <!-- INVENTORY -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#867354]">
-                    Inventory
-                </p>
-
-                <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                    Inventory Summary
-                </h2>
-
-
-                <div class="mt-6 grid grid-cols-2 gap-3">
-
-                    <div class="rounded-sm bg-[#faf8f3] p-4">
-
-                        <p class="text-[10px] uppercase text-[#999]">
-                            Total
-                        </p>
-
-                        <p class="mt-1 text-xl font-semibold text-[#193629]">
-                            {{ totalProducts }}
-                        </p>
-
-                    </div>
-
-                    <div class="rounded-sm bg-[#edf3ef] p-4">
-
-                        <p class="text-[10px] uppercase text-[#999]">
-                            In Stock
-                        </p>
-
-                        <p class="mt-1 text-xl font-semibold text-[#193629]">
-                            {{ inStockProducts }}
-                        </p>
-
-                    </div>
-
-                    <div class="rounded-sm bg-[#fbf5e6] p-4">
-
-                        <p class="text-[10px] uppercase text-[#999]">
-                            Low Stock
-                        </p>
-
-                        <p class="mt-1 text-xl font-semibold text-[#a17b19]">
-                            {{ lowStockProducts }}
-                        </p>
-
-                    </div>
-
-                    <div class="rounded-sm bg-red-50 p-4">
-
-                        <p class="text-[10px] uppercase text-[#999]">
-                            Out
-                        </p>
-
-                        <p class="mt-1 text-xl font-semibold text-red-700">
-                            {{ outOfStockProducts }}
-                        </p>
-
-                    </div>
-
-                </div>
-
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-2">
+            <h2 class="font-semibold text-[#193629]">Payment Methods</h2>
+            <div class="relative mt-4 h-56">
+                <canvas #paymentChart></canvas>
             </div>
+        </div>
 
-
-            <!-- QUICK ACTIONS -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#867354]">
-                    Shortcuts
-                </p>
-
-                <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                    Quick Actions
-                </h2>
-
-
-                <div class="mt-6 grid grid-cols-2 gap-3">
-
-                    <button type="button" (click)="goToAddProduct()"
-                        class="rounded-sm border border-[#d8d0c2] bg-[#faf8f3] p-4 text-left transition hover:border-[#193629] hover:bg-[#edf3ef]">
-
-                        <span class="text-lg">
-                            +
-                        </span>
-
-                        <p class="mt-2 text-xs font-bold text-[#193629]">
-                            Add Product
-                        </p>
-
-                    </button>
-
-
-                    <a routerLink="/admin/orders"
-                        class="rounded-sm border border-[#d8d0c2] bg-[#faf8f3] p-4 no-underline transition hover:border-[#193629] hover:bg-[#edf3ef]">
-
-                        <span class="text-lg">
-                            📦
-                        </span>
-
-                        <p class="mt-2 text-xs font-bold text-[#193629]">
-                            View Orders
-                        </p>
-
-                    </a>
-
-
-                    <a routerLink="/admin/users"
-                        class="rounded-sm border border-[#d8d0c2] bg-[#faf8f3] p-4 no-underline transition hover:border-[#193629] hover:bg-[#edf3ef]">
-
-                        <span class="text-lg">
-                            👥
-                        </span>
-
-                        <p class="mt-2 text-xs font-bold text-[#193629]">
-                            Manage Users
-                        </p>
-
-                    </a>
-
-
-                    <a routerLink="/admin/products"
-                        class="rounded-sm border border-[#d8d0c2] bg-[#faf8f3] p-4 no-underline transition hover:border-[#193629] hover:bg-[#edf3ef]">
-
-                        <span class="text-lg">
-                            📚
-                        </span>
-
-                        <p class="mt-2 text-xs font-bold text-[#193629]">
-                            View Products
-                        </p>
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- ALERTS -->
-
-            <div class="rounded-md border border-[#e5dfd4] bg-white p-5 shadow-sm">
-
-                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#867354]">
-                    Notifications
-                </p>
-
-                <h2 class="mt-1 font-serif text-xl text-[#193629]">
-                    Store Alerts
-                </h2>
-
-
-                <div class="mt-5 space-y-3">
-
-
-                    <div class="flex gap-3 rounded-sm bg-[#edf3ef] p-3">
-
-                        <span>
-                            🔔
-                        </span>
-
-                        <div>
-
-                            <p class="text-xs font-semibold text-[#193629]">
-                                {{ totalOrders }} total orders
-                            </p>
-
-                            <p class="mt-1 text-[10px] text-[#777d76]">
-                                Keep monitoring your order activity.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="flex gap-3 rounded-sm bg-[#fbf5e6] p-3">
-
-                        <span>
-                            ⚠️
-                        </span>
-
-                        <div>
-
-                            <p class="text-xs font-semibold text-[#a17b19]">
-                                {{ lowStockProducts }} low-stock books
-                            </p>
-
-                            <p class="mt-1 text-[10px] text-[#777d76]">
-                                Check inventory and restock when needed.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="flex gap-3 rounded-sm bg-[#f5efe4] p-3">
-
-                        <span>
-                            📦
-                        </span>
-
-                        <div>
-
-                            <p class="text-xs font-semibold text-[#193629]">
-                                {{ pendingOrders }} pending orders
-                            </p>
-
-                            <p class="mt-1 text-[10px] text-[#777d76]">
-                                Orders waiting to be completed.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="flex gap-3 rounded-sm bg-[#faf8f3] p-3">
-
-                        <span>
-                            👤
-                        </span>
-
-                        <div>
-
-                            <p class="text-xs font-semibold text-[#193629]">
-                                {{ activeUsers }} active customers
-                            </p>
-
-                            <p class="mt-1 text-[10px] text-[#777d76]">
-                                Customers currently active.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-    </main>
+    </div>
 
     }
 

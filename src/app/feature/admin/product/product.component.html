@@ -597,7 +597,7 @@
 
                     <tbody class="divide-y">
 
-                        @for (product of products; track product.id) {
+                        @for (product of pagedProducts; track product.id) {
 
                         <tr class="hover:bg-gray-50">
 
@@ -664,12 +664,12 @@
 
                                 <button type="button" (click)="editProduct(product)"
                                     class="rounded-lg border border-[#193629] px-4 py-2 text-sm font-medium text-[#193629] hover:bg-[#193629] hover:text-white">
-                                    Edit                   
-                                  </button>
+                                    Edit
+                                </button>
 
                                 <button type="button" (click)="deleteProduct(product)"
                                     class="rounded-lg border border-red-500 px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-500 hover:text-white">
-                                    Delete       
+                                    Delete
                                 </button>
 
                             </td>
@@ -684,6 +684,10 @@
 
             </div>
 
+            <!-- ================= PAGINATION ================= -->
+            <app-pagination [currentPage]="page" [totalItems]="products.length" [pageSize]="pageSize"
+                (pageChange)="page = $event" />
+
         </div>
 
         }
@@ -692,4 +696,4 @@
 
     </div>
 
-    </main>
+</main>

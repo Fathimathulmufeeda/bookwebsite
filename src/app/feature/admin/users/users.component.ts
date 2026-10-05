@@ -9,13 +9,15 @@ import { User } from '../../../core/Models/user.model';
 import { Order } from '../../../core/Models/order.model';
 
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
+import { PaginationComponent, paginate } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-users',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    PaginationComponent
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
@@ -34,6 +36,10 @@ export class UsersComponent implements OnInit {
 
   searchTerm = '';
 
+  // Pagination
+  page = 1;
+  pageSize = 10;
+
   selectedUser: User | null = null;
 
   ngOnInit(): void {
@@ -48,6 +54,7 @@ export class UsersComponent implements OnInit {
     this.authService.getUsers().subscribe({
       next: (users) => {
         this.users = users;
+        this.clampPage();
         this.loadOrders();
       },
 
@@ -90,6 +97,21 @@ export class UsersComponent implements OnInit {
       user.email.toLowerCase().includes(search) ||
       user.role.toLowerCase().includes(search)
     );
+  }
+
+  // Only the users for the current page (after search)
+  get pagedUsers(): User[] {
+    return paginate(this.filteredUsers, this.page, this.pageSize).items;
+  }
+
+  // If the list shrinks and the current page no longer exists,
+  // move back to the last available page.
+  private clampPage(): void {
+    const totalPages = Math.max(1, Math.ceil(this.filteredUsers.length / this.pageSize));
+
+    if (this.page > totalPages) {
+      this.page = totalPages;
+    }
   }
 
   // Check user status

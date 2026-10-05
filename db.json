@@ -231,7 +231,7 @@
       "pages": 236,
       "createdAt": "2026-09-15",
       "description": "A guide to living more consciously by focusing attention on the present moment.",
-      "stock": 35
+      "stock": 4
     },
     {
       "id": 6,
@@ -1177,7 +1177,7 @@
       "pages": 304,
       "createdAt": "2026-08-09",
       "description": "A gothic classic exploring beauty, morality, temptation, and the consequences of a life devoted to pleasure.",
-      "stock": 26
+      "stock": 5
     },
     {
       "title": "Never Lie",
@@ -3210,7 +3210,7 @@
       },
       "paymentMethod": "COD",
       "createdAt": "2026-09-29T06:50:57.834Z",
-      "status": "Placed"
+      "status": "Delivered"
     },
     {
       "id": 1790664679458,
@@ -3397,7 +3397,7 @@
       },
       "paymentMethod": "COD",
       "createdAt": "2026-09-29T14:36:51.849Z",
-      "status": "Cancelled"
+      "status": "Delivered"
     },
     {
       "id": 1790764217253,
@@ -3615,7 +3615,7 @@
       },
       "paymentMethod": "COD",
       "createdAt": "2026-09-30T10:30:17.253Z",
-      "status": "Processing"
+      "status": "Delivered"
     },
     {
       "id": 1791042860371,
@@ -3756,7 +3756,7 @@
       },
       "paymentMethod": "COD",
       "createdAt": "2026-10-03T16:26:59.390Z",
-      "status": "Placed"
+      "status": "Delivered"
     },
     {
       "id": 1791094904589,

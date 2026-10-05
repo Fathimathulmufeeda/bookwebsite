@@ -6,13 +6,15 @@ import { OrderService } from '../../../core/services/order.service';
 import { Order, OrderStatus } from '../../../core/Models/order.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/Models/user.model';
+import { PaginationComponent, paginate } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-admin-orders',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    PaginationComponent
   ],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.css'
@@ -30,6 +32,10 @@ export class OrdersComponent implements OnInit {
 
   searchTerm = '';
   selectedStatus = 'All';
+
+  // Pagination
+  page = 1;
+  pageSize = 10;
 
   selectedOrder: Order | null = null;
 
@@ -77,6 +83,7 @@ export class OrdersComponent implements OnInit {
 
       next: (orders) => {
         this.orders = orders;
+        this.clampPage();
         this.loading = false;
       },
 
@@ -108,6 +115,21 @@ export class OrdersComponent implements OnInit {
 
       return matchesSearch && matchesStatus;
     });
+  }
+
+  // Only the orders for the current page (after search + status filter)
+  get pagedOrders(): Order[] {
+    return paginate(this.filteredOrders, this.page, this.pageSize).items;
+  }
+
+  // If the list shrinks (filter, status change) and the current page
+  // no longer exists, move back to the last available page.
+  private clampPage(): void {
+    const totalPages = Math.max(1, Math.ceil(this.filteredOrders.length / this.pageSize));
+
+    if (this.page > totalPages) {
+      this.page = totalPages;
+    }
   }
 
   getStatusClass(status: OrderStatus): string {
@@ -150,6 +172,7 @@ export class OrdersComponent implements OnInit {
   
         next: (updatedOrder) => {
           order.status = updatedOrder.status;
+          this.clampPage();
         },
   
         error: () => {

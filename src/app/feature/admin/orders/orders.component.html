@@ -20,7 +20,8 @@
                 🔍
             </span>
 
-            <input type="text" [(ngModel)]="searchTerm" placeholder="Search order or user ID..." class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm
+            <input type="text" [ngModel]="searchTerm" (ngModelChange)="searchTerm = $event; page = 1"
+                placeholder="Search order or user ID..." class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm
                        text-gray-700 outline-none transition
                        focus:border-[#193629] focus:ring-1 focus:ring-[#193629]" />
 
@@ -77,7 +78,7 @@
 
 
                 <!-- Status Filter -->
-                <select [(ngModel)]="selectedStatus" class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm
+                <select [ngModel]="selectedStatus" (ngModelChange)="selectedStatus = $event; page = 1" class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm
                                text-gray-600 outline-none
                                focus:border-[#193629]">
 
@@ -140,7 +141,7 @@
 
                 <tbody class="divide-y divide-gray-100">
 
-                    @for (order of filteredOrders; track order.id) {
+                    @for (order of pagedOrders; track order.id) {
 
                     <tr class="transition hover:bg-[#faf9f6]">
 
@@ -156,11 +157,11 @@
 
                         <!-- User -->
                         <td class="px-5 py-4">
-                        
+
                             <p class="text-sm font-medium text-gray-700">
                                 {{ getUserName(order.userId) }}
-                            </p>                  
-                         </td>
+                            </p>
+                        </td>
 
 
                         <!-- Date -->
@@ -246,7 +247,7 @@
         <!-- Mobile Cards -->
         <div class="divide-y divide-gray-100 md:hidden">
 
-            @for (order of filteredOrders; track order.id) {
+            @for (order of pagedOrders; track order.id) {
 
             <div class="p-4">
 
@@ -260,7 +261,7 @@
                         </p>
 
                         <p class="mt-1 text-xs text-gray-500">
-                            {{ getUserName(order.userId) }}                
+                            {{ getUserName(order.userId) }}
                         </p>
 
                     </div>
@@ -341,6 +342,11 @@
             }
 
         </div>
+
+
+        <!-- Pagination -->
+        <app-pagination [currentPage]="page" [totalItems]="filteredOrders.length" [pageSize]="pageSize"
+            (pageChange)="page = $event" />
 
 
         } @else {
@@ -489,39 +495,40 @@
 
         <!-- Items -->
         <div class="p-5">
-        
+
             <h3 class="mb-4 font-semibold text-gray-800">
                 Order Items
             </h3>
-        
+
             <div class="space-y-3">
-        
+
                 @for (item of selectedOrder.items; track item.product.id) {
-        
+
                 <div class="flex items-center justify-between gap-4 rounded-xl
                                            border border-gray-100 p-3">
-        
+
                     <div class="min-w-0">
-        
+
                         <p class="truncate font-medium text-gray-700">
                             {{ item.product.title }}
                         </p>
-        
+
                         <p class="mt-1 text-xs text-gray-500">
                             Qty: {{ item.quantity }}
                         </p>
-        
+
                     </div>
-        
+
                     <p class="shrink-0 font-semibold text-[#193629]">
                         ₹{{ item.product.price * item.quantity | number:'1.2-2' }}
                     </p>
-        
+
                 </div>
-        
+
                 }
-        
-            </div>  </div>
+
+            </div>
+        </div>
 
 
         <!-- Footer -->

@@ -11,6 +11,7 @@ import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/Models/Product.model';
 import { priceLessThanMrpValidator, PRODUCT_TEXT_PATTERN } from '../../../shared/validators/custom-validators';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
+import { PaginationComponent, paginate } from '../../../shared/components/pagination/pagination.component';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
@@ -20,7 +21,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PaginationComponent
   ],
   templateUrl: './product.component.html'
 })
@@ -32,6 +34,10 @@ export class AdminProductsComponent implements OnInit {
   private router = inject(Router);
 
   products: Product[] = [];
+
+  // Pagination
+  page = 1;
+  pageSize = 10;
 
   loading = false;
   submitting = false;
@@ -124,6 +130,11 @@ export class AdminProductsComponent implements OnInit {
     }
   );
 
+  // Only the products for the current page
+  get pagedProducts(): Product[] {
+    return paginate(this.products, this.page, this.pageSize).items;
+  }
+
   editProduct(product: Product): void {
     this.editingProduct = product;
     this.showForm = true;
@@ -188,6 +199,15 @@ export class AdminProductsComponent implements OnInit {
             new Date(b.createdAt).getTime() -
             new Date(a.createdAt).getTime()
         );
+
+        // If items were deleted and the current page no longer exists,
+        // move back to the last available page.
+        const totalPages = Math.max(1, Math.ceil(this.products.length / this.pageSize));
+
+        if (this.page > totalPages) {
+          this.page = totalPages;
+        }
+
         const deleteId = Number(
           this.route.snapshot.queryParams['delete']
         );
@@ -361,6 +381,9 @@ export class AdminProductsComponent implements OnInit {
 
             this.submitting = false;
             this.closeForm();
+
+            // New products appear first (newest first), so go to page 1.
+            this.page = 1;
             this.loadProducts();
 
           },

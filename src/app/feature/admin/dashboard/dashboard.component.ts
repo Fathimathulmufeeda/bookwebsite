@@ -1,1022 +1,460 @@
-
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import Chart from 'chart.js/auto';
 
-import { Product } from '../../../core/Models/Product.model';
+import { ProductService } from '../../../core/services/product.service';
+import { OrderService } from '../../../core/services/order.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { normalizeCategory } from '../../../shared/utils/category.util';
+
+import { Order, OrderStatus, PaymentMethod } from '../../../core/Models/order.model';
 import { User } from '../../../core/Models/user.model';
-import { Order } from '../../../core/Models/order.model';
+import { Product } from '../../../core/Models/Product.model';
 
-type RevenueFilter =
-  | 'Today'
-  | 'Last 7 Days'
-  | 'Last 30 Days'
-  | 'Last 6 Months'
-  | 'This Year';
-
-interface SalesBook {
-  title: string;
-  quantity: number;
-  revenue: number;
-}
-
-interface CategorySale {
-  category: string;
-  quantity: number;
-  revenue: number;
-  percentage: number;
-}
-
-interface PaymentSummary {
-  method: string;
-  count: number;
-  percentage: number;
-}
-
-interface RevenuePoint {
-  label: string;
-  value: number;
+interface DashboardStats {
+  totalRevenue: number;
+  totalOrders: number;
+  totalProducts: number;
+  totalUsers: number;
+  activeUsers: number;
+  pendingOrdersCount: number;
+  lowStockCount: number;
+  outOfStockCount: number;
 }
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink
-  ],
-  templateUrl: './dashboard.component.html'
+  imports: [CommonModule, RouterLink],
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
-  private http = inject(HttpClient);
-  private router = inject(Router);
+  private productService = inject(ProductService);
+  private orderService = inject(OrderService);
+  private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
-  private usersUrl = 'http://localhost:3000/users';
-  private productsUrl = 'http://localhost:3000/products';
-  private ordersUrl = 'http://localhost:3000/orders';
+  // The canvases live inside an @if (!loading && stats) block in the template,
+  // so these refs only exist after Angular has rendered that block.
+  // We call cdr.detectChanges() before drawing to guarantee they are resolved.
+  @ViewChild('revenueChart') revenueChartRef?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('statusChart') statusChartRef?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('categoryChart') categoryChartRef?: ElementRef<HTMLCanvasElement>;
+  @ViewChild('paymentChart') paymentChartRef?: ElementRef<HTMLCanvasElement>;
 
-  users: User[] = [];
-  products: Product[] = [];
-  orders: Order[] = [];
+  private revenueChartInstance?: Chart;
+  private statusChartInstance?: Chart;
+  private categoryChartInstance?: Chart;
+  private paymentChartInstance?: Chart;
+
+  // A book with stock from 1 up to this number counts as "low stock".
+  private readonly LOW_STOCK_THRESHOLD = 5;
 
   loading = true;
+  error = '';
 
-  // --------------------------------------------------
-  // SUMMARY
-  // --------------------------------------------------
-
-  totalUsers = 0;
-  totalOrders = 0;
-  totalProducts = 0;
-  totalRevenue = 0;
-  pendingOrders = 0;
-  lowStockProducts = 0;
-
-  activeUsers = 0;
-  inactiveUsers = 0;
-
-  inStockProducts = 0;
-  outOfStockProducts = 0;
-
-  // --------------------------------------------------
-  // REVENUE GRAPH
-  // --------------------------------------------------
-
-  revenueFilter: RevenueFilter = 'Last 7 Days';
-
-  revenuePoints: RevenuePoint[] = [];
-
-  revenueChartPoints = '';
-  revenueMax = 0;
-
-
-  orderStatuses = [
-    'Placed',
-    'Processing',
-    'Shipped',
-    'Delivered',
-    'Cancelled'
-  ];
-
-  orderStatusCounts: Record<string, number> = {
-    Placed: 0,
-    Processing: 0,
-    Shipped: 0,
-    Delivered: 0,
-    Cancelled: 0
-  };
-
-  orderStatusMax = 1;
-
-  
+  stats: DashboardStats | null = null;
   recentOrders: Order[] = [];
 
-  
-  topSellingBooks: SalesBook[] = [];
+  private allOrders: Order[] = [];
+  private allProducts: Product[] = [];
+  private usersById = new Map<number, User>();
 
-  lowStockItems: Product[] = [];
-
-  
-  categories = [
-    'Fiction',
-    'Non Fiction',
-    'Self Help',
-    'Romance',
-    'Children',
-    'Classics'
-  ];
-
-  categorySales: CategorySale[] = [];
-
-  
-  paymentMethods: PaymentSummary[] = [];
-
- 
-  recentCustomers: User[] = [];
-
-  
   ngOnInit(): void {
-    this.loadDashboardData();
+    this.loadDashboard();
   }
 
-  
-  private loadDashboardData(): void {
+  ngOnDestroy(): void {
+    this.revenueChartInstance?.destroy();
+    this.statusChartInstance?.destroy();
+    this.categoryChartInstance?.destroy();
+    this.paymentChartInstance?.destroy();
+  }
+
+  loadDashboard(): void {
 
     this.loading = true;
+    this.error = '';
 
-    this.http.get<User[]>(this.usersUrl).subscribe({
-      next: users => {
+    forkJoin({
+      products: this.productService.getProducts(),
+      orders: this.orderService.getOrders(),
+      users: this.authService.getUsers()
+    }).subscribe({
 
-        this.users = users;
+      next: ({ products, orders, users }) => {
 
-        this.http.get<Product[]>(this.productsUrl).subscribe({
-          next: products => {
+        this.allOrders = orders;
+        this.allProducts = products;
+        this.usersById = new Map(users.map(u => [u.id, u]));
 
-            this.products = products;
+        const revenue = orders
+          .filter(o => o.status !== 'Cancelled')
+          .reduce((sum, o) => sum + Number(o.total || 0), 0);
 
-            this.http.get<Order[]>(this.ordersUrl).subscribe({
-              next: orders => {
+        this.stats = {
+          totalRevenue: revenue,
+          totalOrders: orders.length,
+          totalProducts: products.length,
+          totalUsers: users.length,
+          activeUsers: users.filter(u => u.isActive !== false).length,
+          pendingOrdersCount: orders.filter(o => o.status === 'Placed' || o.status === 'Processing').length,
+          lowStockCount: products.filter(p => p.stock > 0 && p.stock <= this.LOW_STOCK_THRESHOLD).length,
+          outOfStockCount: products.filter(p => p.stock <= 0).length
+        };
 
-                this.orders = orders;
+        this.recentOrders = [...orders]
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 5);
 
-                this.calculateDashboard();
+        this.loading = false;
 
-                this.loading = false;
-              },
-
-              error: error => {
-                console.error('Failed to load orders:', error);
-                this.loading = false;
-              }
-            });
-          },
-
-          error: error => {
-            console.error('Failed to load products:', error);
-            this.loading = false;
-          }
-        });
+        // Render the @if block now so the <canvas> elements exist
+        // and the @ViewChild refs are resolved, then draw the charts.
+        this.cdr.detectChanges();
+        this.renderAllCharts();
       },
 
-      error: error => {
-        console.error('Failed to load users:', error);
+      error: () => {
+        this.error = 'Unable to load dashboard data.';
         this.loading = false;
       }
-    });
-  }
-
-  // --------------------------------------------------
-  // MAIN CALCULATIONS
-  // --------------------------------------------------
-
-  private calculateDashboard(): void {
-
-    this.totalUsers = this.users.length;
-
-    this.totalProducts = this.products.length;
-
-    this.totalOrders = this.orders.length;
-
-    this.totalRevenue = this.orders
-      .filter(order => this.getOrderStatus(order) !== 'Cancelled')
-      .reduce(
-        (total, order) => total + this.getOrderTotal(order),
-        0
-      );
-
-    this.pendingOrders = this.orders.filter(order => {
-
-      const status = this.getOrderStatus(order);
-
-      return (
-        status !== 'Delivered' &&
-        status !== 'Cancelled'
-      );
-
-    }).length;
-
-    this.lowStockProducts =
-      this.products.filter(product =>
-        Number(product.stock) > 0 &&
-        Number(product.stock) <= 5
-      ).length;
-
-    this.activeUsers =
-      this.users.filter(user => user.isActive !== false).length;
-
-    this.inactiveUsers =
-      this.users.filter(user => user.isActive === false).length;
-
-    this.inStockProducts =
-      this.products.filter(product =>
-        Number(product.stock) > 5
-      ).length;
-
-    this.outOfStockProducts =
-      this.products.filter(product =>
-        Number(product.stock) <= 0
-      ).length;
-
-    this.calculateOrderStatuses();
-
-    this.calculateRecentOrders();
-
-    this.calculateLowStock();
-
-    this.calculateTopSellingBooks();
-
-    this.calculateCategorySales();
-
-    this.calculatePaymentMethods();
-
-    this.calculateRecentCustomers();
-
-    this.calculateRevenueChart();
-  }
-
-  // --------------------------------------------------
-  // ORDER TOTAL
-  // --------------------------------------------------
-
-  getOrderTotal(order: Order): number {
-
-    const rawOrder = order as any;
-
-    const total =
-      rawOrder.total ??
-      rawOrder.totalAmount ??
-      0;
-
-    return Number(total) || 0;
-  }
-
-  // --------------------------------------------------
-  // ORDER STATUS
-  // --------------------------------------------------
-
-  getOrderStatus(order: Order): string {
-
-    const rawOrder = order as any;
-
-    return rawOrder.status || 'Placed';
-  }
-
-  // --------------------------------------------------
-  // CUSTOMER NAME
-  // --------------------------------------------------
-
-  getUserName(userId?: number): string {
-
-    if (userId === undefined || userId === null) {
-      return 'Guest';
-    }
-
-    const user = this.users.find(
-      item => String(item.id) === String(userId)
-    );
-
-    return user?.name || 'Unknown User';
-  }
-
-  // --------------------------------------------------
-  // ORDER STATUSES
-  // --------------------------------------------------
-
-  private calculateOrderStatuses(): void {
-
-    this.orderStatuses.forEach(status => {
-
-      this.orderStatusCounts[status] =
-        this.orders.filter(
-          order => this.getOrderStatus(order) === status
-        ).length;
 
     });
-
-    this.orderStatusMax = Math.max(
-      ...Object.values(this.orderStatusCounts),
-      1
-    );
   }
 
-  // --------------------------------------------------
-  // RECENT ORDERS
-  // --------------------------------------------------
+  // ===========================================================
+  // Derived lists (plain getters — cheap, no chart involved)
+  // ===========================================================
 
-  private calculateRecentOrders(): void {
+  get topSellingBooks(): { title: string; sold: number }[] {
 
-    this.recentOrders = [...this.orders]
-      .sort((a, b) => {
+    const totals = new Map<number, { title: string; sold: number }>();
 
-        const dateA = this.getOrderDate(a).getTime();
-        const dateB = this.getOrderDate(b).getTime();
+    this.allOrders
+      .filter(o => o.status !== 'Cancelled')
+      .forEach(order => {
+        order.items.forEach(item => {
 
-        return dateB - dateA;
-      })
+          const existing = totals.get(item.product.id);
+
+          if (existing) {
+            existing.sold += item.quantity;
+          } else {
+            totals.set(item.product.id, { title: item.product.title, sold: item.quantity });
+          }
+        });
+      });
+
+    return [...totals.values()]
+      .sort((a, b) => b.sold - a.sold)
       .slice(0, 5);
   }
 
-  // --------------------------------------------------
-  // LOW STOCK
-  // --------------------------------------------------
-
-  private calculateLowStock(): void {
-
-    this.lowStockItems = [...this.products]
-      .filter(product =>
-        Number(product.stock) <= 5
-      )
-      .sort((a, b) =>
-        Number(a.stock) - Number(b.stock)
-      )
-      .slice(0, 6);
+  get lowStockProducts(): Product[] {
+    return this.allProducts
+      .filter(p => p.stock <= this.LOW_STOCK_THRESHOLD)
+      .sort((a, b) => a.stock - b.stock)
+      .slice(0, 5);
   }
 
-  // --------------------------------------------------
-  // TOP SELLING BOOKS
-  // --------------------------------------------------
+  get notifications(): string[] {
 
-  private calculateTopSellingBooks(): void {
-
-    const salesMap = new Map<
-      number | string,
-      SalesBook
-    >();
-
-    this.orders
-      .filter(order =>
-        this.getOrderStatus(order) !== 'Cancelled'
-      )
-      .forEach(order => {
-
-        const items = (order as any).items || [];
-
-        items.forEach((item: any) => {
-
-          const product = item.product;
-
-          if (!product) {
-            return;
-          }
-
-          const productId = product.id;
-
-          const quantity =
-            Number(item.quantity) || 0;
-
-          const revenue =
-            (Number(product.price) || 0) * quantity;
-
-          const existing =
-            salesMap.get(productId);
-
-          if (existing) {
-
-            existing.quantity += quantity;
-            existing.revenue += revenue;
-
-          } else {
-
-            salesMap.set(productId, {
-              title: product.title,
-              quantity,
-              revenue
-            });
-
-          }
-
-        });
-
-      });
-
-    this.topSellingBooks =
-      Array.from(salesMap.values())
-        .sort((a, b) =>
-          b.quantity - a.quantity
-        )
-        .slice(0, 5);
-  }
-
-  // --------------------------------------------------
-  // CATEGORY SALES
-  // --------------------------------------------------
-
-  private calculateCategorySales(): void {
-
-    const categoryMap = new Map<
-      string,
-      {
-        quantity: number;
-        revenue: number;
-      }
-    >();
-
-    this.categories.forEach(category => {
-
-      categoryMap.set(category, {
-        quantity: 0,
-        revenue: 0
-      });
-
-    });
-
-    this.orders
-      .filter(order =>
-        this.getOrderStatus(order) !== 'Cancelled'
-      )
-      .forEach(order => {
-
-        const items = (order as any).items || [];
-
-        items.forEach((item: any) => {
-
-          const product = item.product;
-
-          if (!product) {
-            return;
-          }
-
-          const category =
-            product.category;
-
-          if (!categoryMap.has(category)) {
-            return;
-          }
-
-          const quantity =
-            Number(item.quantity) || 0;
-
-          const revenue =
-            (Number(product.price) || 0) * quantity;
-
-          const existing =
-            categoryMap.get(category)!;
-
-          existing.quantity += quantity;
-          existing.revenue += revenue;
-
-        });
-
-      });
-
-    const maxRevenue = Math.max(
-      ...Array.from(categoryMap.values())
-        .map(item => item.revenue),
-      1
-    );
-
-    this.categorySales =
-      Array.from(categoryMap.entries())
-        .map(([category, value]) => ({
-          category,
-          quantity: value.quantity,
-          revenue: value.revenue,
-          percentage:
-            (value.revenue / maxRevenue) * 100
-        }))
-        .sort((a, b) =>
-          b.revenue - a.revenue
-        );
-  }
-
-  // --------------------------------------------------
-  // PAYMENT METHODS
-  // --------------------------------------------------
-
-  private calculatePaymentMethods(): void {
-
-    const methods = [
-      'COD',
-      'Card',
-      'UPI'
-    ];
-
-    const totalOrdersWithPayment =
-      this.orders.length;
-
-    this.paymentMethods =
-      methods.map(method => {
-
-        const count =
-          this.orders.filter(order => {
-
-            const rawOrder = order as any;
-
-            return rawOrder.paymentMethod === method;
-
-          }).length;
-
-        return {
-          method,
-          count,
-          percentage:
-            totalOrdersWithPayment > 0
-              ? (count / totalOrdersWithPayment) * 100
-              : 0
-        };
-
-      });
-  }
-
-  // --------------------------------------------------
-  // RECENT CUSTOMERS
-  // --------------------------------------------------
-
-  private calculateRecentCustomers(): void {
-
-    /*
-      Your current User model does not contain createdAt.
-
-      Therefore we use the highest user IDs as the
-      newest users. This works with the current
-      JSON-server data structure.
-    */
-
-    this.recentCustomers =
-      [...this.users]
-        .filter(user => user.role !== 'admin')
-        .sort((a, b) =>
-          Number(b.id) - Number(a.id)
-        )
-        .slice(0, 5);
-  }
-
-  // --------------------------------------------------
-  // REVENUE FILTER
-  // --------------------------------------------------
-
-  changeRevenueFilter(
-    filter: RevenueFilter
-  ): void {
-
-    this.revenueFilter = filter;
-
-    this.calculateRevenueChart();
-  }
-
-  // --------------------------------------------------
-  // REVENUE CHART
-  // --------------------------------------------------
-
-  private calculateRevenueChart(): void {
-
-    const now = new Date();
-
-    const points: RevenuePoint[] = [];
-
-    if (this.revenueFilter === 'Today') {
-
-      for (let hour = 0; hour < 24; hour++) {
-
-        const start =
-          new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate(),
-            hour
-          );
-
-        const end =
-          new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate(),
-            hour + 1
-          );
-
-        const value =
-          this.getRevenueBetween(start, end);
-
-        points.push({
-          label:
-            hour % 4 === 0
-              ? `${hour}:00`
-              : '',
-          value
-        });
-      }
-
-    } else if (
-      this.revenueFilter === 'Last 7 Days'
-    ) {
-
-      for (let i = 6; i >= 0; i--) {
-
-        const date = new Date(now);
-
-        date.setDate(
-          now.getDate() - i
-        );
-
-        const start =
-          this.startOfDay(date);
-
-        const end =
-          this.endOfDay(date);
-
-        points.push({
-          label:
-            date.toLocaleDateString(
-              'en-IN',
-              {
-                day: 'numeric',
-                month: 'short'
-              }
-            ),
-          value:
-            this.getRevenueBetween(
-              start,
-              end
-            )
-        });
-      }
-
-    } else if (
-      this.revenueFilter === 'Last 30 Days'
-    ) {
-
-      for (let i = 29; i >= 0; i--) {
-
-        const date = new Date(now);
-
-        date.setDate(
-          now.getDate() - i
-        );
-
-        const start =
-          this.startOfDay(date);
-
-        const end =
-          this.endOfDay(date);
-
-        points.push({
-          label:
-            i % 5 === 0
-              ? date.toLocaleDateString(
-                  'en-IN',
-                  {
-                    day: 'numeric',
-                    month: 'short'
-                  }
-                )
-              : '',
-          value:
-            this.getRevenueBetween(
-              start,
-              end
-            )
-        });
-      }
-
-    } else if (
-      this.revenueFilter === 'Last 6 Months'
-    ) {
-
-      for (let i = 5; i >= 0; i--) {
-
-        const date =
-          new Date(
-            now.getFullYear(),
-            now.getMonth() - i,
-            1
-          );
-
-        const start =
-          new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            1
-          );
-
-        const end =
-          new Date(
-            date.getFullYear(),
-            date.getMonth() + 1,
-            0,
-            23,
-            59,
-            59,
-            999
-          );
-
-        points.push({
-          label:
-            date.toLocaleDateString(
-              'en-IN',
-              {
-                month: 'short'
-              }
-            ),
-          value:
-            this.getRevenueBetween(
-              start,
-              end
-            )
-        });
-      }
-
-    } else {
-
-      // This Year
-
-      for (let month = 0; month <= now.getMonth(); month++) {
-
-        const start =
-          new Date(
-            now.getFullYear(),
-            month,
-            1
-          );
-
-        const end =
-          new Date(
-            now.getFullYear(),
-            month + 1,
-            0,
-            23,
-            59,
-            59,
-            999
-          );
-
-        points.push({
-          label:
-            start.toLocaleDateString(
-              'en-IN',
-              {
-                month: 'short'
-              }
-            ),
-          value:
-            this.getRevenueBetween(
-              start,
-              end
-            )
-        });
-      }
+    if (!this.stats) {
+      return [];
     }
 
-    this.revenuePoints = points;
+    const today = new Date().toDateString();
+    const ordersToday = this.allOrders.filter(o => new Date(o.createdAt).toDateString() === today).length;
 
-    this.revenueMax =
-      Math.max(
-        ...points.map(point => point.value),
-        1
-      );
+    const messages: string[] = [];
 
-    this.createRevenueChartPoints();
+    if (ordersToday > 0) {
+      messages.push(`${ordersToday} new ${ordersToday === 1 ? 'order' : 'orders'} today`);
+    }
+
+    if (this.stats.pendingOrdersCount > 0) {
+      messages.push(`${this.stats.pendingOrdersCount} ${this.stats.pendingOrdersCount === 1 ? 'order needs' : 'orders need'} processing`);
+    }
+
+    if (this.stats.lowStockCount > 0) {
+      messages.push(`${this.stats.lowStockCount} ${this.stats.lowStockCount === 1 ? 'book is' : 'books are'} low in stock`);
+    }
+
+    if (this.stats.outOfStockCount > 0) {
+      messages.push(`${this.stats.outOfStockCount} ${this.stats.outOfStockCount === 1 ? 'book is' : 'books are'} out of stock`);
+    }
+
+    return messages;
   }
 
-  // --------------------------------------------------
-  // REVENUE CALCULATION
-  // --------------------------------------------------
+  // ===========================================================
+  // Charts
+  // ===========================================================
 
-  private getRevenueBetween(
-    start: Date,
-    end: Date
-  ): number {
-
-    return this.orders
-      .filter(order =>
-        this.getOrderStatus(order) !== 'Cancelled'
-      )
-      .filter(order => {
-
-        const date =
-          this.getOrderDate(order);
-
-        return (
-          date >= start &&
-          date <= end
-        );
-      })
-      .reduce(
-        (total, order) =>
-          total + this.getOrderTotal(order),
-        0
-      );
+  private renderAllCharts(): void {
+    this.renderRevenueChart();
+    this.renderStatusChart();
+    this.renderCategoryChart();
+    this.renderPaymentChart();
   }
 
-  // --------------------------------------------------
-  // CREATE SVG LINE
-  // --------------------------------------------------
+  private computeRevenueByDay(): { labels: string[]; data: number[] } {
 
-  private createRevenueChartPoints(): void {
+    const days: { dateKey: string; label: string }[] = [];
 
-    if (this.revenuePoints.length === 0) {
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      days.push({
+        dateKey: d.toDateString(),
+        label: d.toLocaleDateString('en-US', { weekday: 'short' })
+      });
+    }
 
-      this.revenueChartPoints = '';
+    const data = days.map(({ dateKey }) =>
+      this.allOrders
+        .filter(o => o.status !== 'Cancelled' && new Date(o.createdAt).toDateString() === dateKey)
+        .reduce((sum, o) => sum + Number(o.total || 0), 0)
+    );
 
+    return { labels: days.map(d => d.label), data };
+  }
+
+  private renderRevenueChart(): void {
+
+    if (!this.revenueChartRef) {
       return;
     }
 
-    const width = 100;
-    const height = 100;
+    const { labels, data } = this.computeRevenueByDay();
 
-    const count =
-      this.revenuePoints.length;
+    this.revenueChartInstance?.destroy();
 
-    this.revenueChartPoints =
-      this.revenuePoints
-        .map((point, index) => {
-
-          const x =
-            count === 1
-              ? 50
-              : (index / (count - 1)) * width;
-
-          const y =
-            height -
-            (
-              point.value /
-              this.revenueMax
-            ) * 80 -
-            10;
-
-          return `${x},${y}`;
-
-        })
-        .join(' ');
+    this.revenueChartInstance = new Chart(this.revenueChartRef.nativeElement, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Revenue',
+          data,
+          borderColor: '#193629',
+          backgroundColor: 'rgba(25, 54, 41, 0.08)',
+          fill: true,
+          tension: 0.35,
+          pointRadius: 3,
+          pointBackgroundColor: '#193629'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: (ctx) => `₹${ctx.parsed.y ?? 0}` } }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { callback: (value) => `₹${value}` }
+          }
+        }
+      }
+    });
   }
 
-  // --------------------------------------------------
-  // DATE HELPERS
-  // --------------------------------------------------
+  private computeStatusCounts(): { labels: OrderStatus[]; data: number[] } {
 
-   getOrderDate(
-    order: Order
-  ): Date {
+    const statuses: OrderStatus[] = ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
 
-    const rawOrder = order as any;
+    const data = statuses.map(
+      status => this.allOrders.filter(o => o.status === status).length
+    );
 
-    const value =
-      rawOrder.createdAt ??
-      rawOrder.orderDate;
+    return { labels: statuses, data };
+  }
 
-    if (!value) {
-      return new Date(0);
+  private renderStatusChart(): void {
+
+    if (!this.statusChartRef) {
+      return;
     }
 
-    const date =
-      new Date(value);
+    const { labels, data } = this.computeStatusCounts();
 
-    if (isNaN(date.getTime())) {
-      return new Date(0);
+    this.statusChartInstance?.destroy();
+
+    this.statusChartInstance = new Chart(this.statusChartRef.nativeElement, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Orders',
+          data,
+          backgroundColor: ['#f59e0b', '#a855f7', '#3b82f6', '#22c55e', '#ef4444'],
+          borderRadius: 6,
+          maxBarThickness: 40
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+  }
+
+  private computeCategorySales(): { labels: string[]; data: number[] } {
+
+    const totals = new Map<string, number>();
+    const displayLabels = new Map<string, string>();
+
+    this.allOrders
+      .filter(o => o.status !== 'Cancelled')
+      .forEach(order => {
+        order.items.forEach(item => {
+
+          const original = item.product.category || 'Uncategorized';
+          const key = normalizeCategory(original);
+
+          totals.set(key, (totals.get(key) ?? 0) + item.quantity);
+
+          if (!displayLabels.has(key)) {
+            displayLabels.set(key, original);
+          }
+        });
+      });
+
+    const sorted = [...totals.entries()].sort((a, b) => b[1] - a[1]);
+
+    return {
+      labels: sorted.map(([key]) => displayLabels.get(key) ?? key),
+      data: sorted.map(([, value]) => value)
+    };
+  }
+
+  private renderCategoryChart(): void {
+
+    if (!this.categoryChartRef) {
+      return;
     }
 
-    return date;
+    const { labels, data } = this.computeCategorySales();
+
+    this.categoryChartInstance?.destroy();
+
+    this.categoryChartInstance = new Chart(this.categoryChartRef.nativeElement, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Units sold',
+          data,
+          backgroundColor: '#193629',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
   }
 
-  private startOfDay(date: Date): Date {
+  private computePaymentBreakdown(): { labels: PaymentMethod[]; data: number[] } {
 
-    return new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      0,
-      0,
-      0,
-      0
+    const methods: PaymentMethod[] = ['COD', 'Card', 'UPI'];
+
+    const data = methods.map(
+      method => this.allOrders.filter(o => o.paymentMethod === method).length
     );
+
+    return { labels: methods, data };
   }
 
-  private endOfDay(date: Date): Date {
+  private renderPaymentChart(): void {
 
-    return new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      23,
-      59,
-      59,
-      999
-    );
+    if (!this.paymentChartRef) {
+      return;
+    }
+
+    const { labels, data } = this.computePaymentBreakdown();
+
+    this.paymentChartInstance?.destroy();
+
+    // If nobody has placed an order with a recorded payment method yet,
+    // skip rendering rather than showing an empty/misleading ring.
+    if (data.every(count => count === 0)) {
+      return;
+    }
+
+    this.paymentChartInstance = new Chart(this.paymentChartRef.nativeElement, {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{
+          data,
+          backgroundColor: ['#193629', '#a17b19', '#2a4d8f']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+        }
+      }
+    });
   }
 
-  // --------------------------------------------------
-  // STATUS CLASS
-  // --------------------------------------------------
+  // ===========================================================
+  // Display helpers (shared with Orders/Users admin pages' style)
+  // ===========================================================
 
-  getStatusClass(
-    status: string
-  ): string {
+  getUserName(userId: number | undefined): string {
+
+    if (userId == null) {
+      return 'Guest';
+    }
+
+    const user = this.usersById.get(userId);
+
+    return user ? user.name : `User #${userId}`;
+  }
+
+  getStatusClass(status: string): string {
 
     switch (status) {
 
       case 'Delivered':
-        return 'bg-green-50 text-green-700';
+        return 'bg-green-100 text-green-700';
 
       case 'Shipped':
-        return 'bg-blue-50 text-blue-700';
-
-      case 'Processing':
-        return 'bg-yellow-50 text-yellow-700';
+        return 'bg-blue-100 text-blue-700';
 
       case 'Cancelled':
-        return 'bg-red-50 text-red-700';
+        return 'bg-red-100 text-red-700';
+
+      case 'Processing':
+        return 'bg-purple-100 text-purple-700';
+
+      case 'Placed':
+        return 'bg-amber-100 text-amber-700';
 
       default:
         return 'bg-gray-100 text-gray-700';
     }
   }
-
-  // --------------------------------------------------
-  // QUICK ACTIONS
-  // --------------------------------------------------
-
-  goToAddProduct(): void {
-    this.router.navigate([
-      '/admin/products'
-    ], {
-      queryParams: {
-        action: 'add'
-      }
-    });
-  }
-
-  // --------------------------------------------------
-  // CATEGORY BAR WIDTH
-  // --------------------------------------------------
-
-  getCategoryWidth(
-    percentage: number
-  ): number {
-
-    return Math.max(
-      percentage,
-      3
-    );
-  }
-
-  // --------------------------------------------------
-  // TOP BOOK BAR WIDTH
-  // --------------------------------------------------
-
-  getBookWidth(
-    quantity: number
-  ): number {
-
-    const max =
-      Math.max(
-        ...this.topSellingBooks
-          .map(book => book.quantity),
-        1
-      );
-
-    return Math.max(
-      (quantity / max) * 100,
-      5
-    );
-  }
-
-  // --------------------------------------------------
-  // ORDER STATUS BAR WIDTH
-  // --------------------------------------------------
-
-  getStatusWidth(
-    count: number
-  ): number {
-
-    return Math.max(
-      (count / this.orderStatusMax) * 100,
-      count > 0 ? 5 : 0
-    );
-  }
-
-  // --------------------------------------------------
-  // PAYMENT WIDTH
-  // --------------------------------------------------
-
-  getPaymentWidth(
-    percentage: number
-  ): number {
-
-    return Math.max(
-      percentage,
-      percentage > 0 ? 5 : 0
-    );
-  }
 }
-
