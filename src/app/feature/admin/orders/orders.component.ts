@@ -8,6 +8,9 @@ import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/Models/user.model';
 import { PaginationComponent, paginate } from '../../../shared/components/pagination/pagination.component';
 
+// Orders can carry the reason the admin gave when cancelling them
+type OrderWithReason = Order & { cancellationReason?: string; cancelledAt?: string };
+
 @Component({
   selector: 'app-admin-orders',
   standalone: true,
@@ -38,6 +41,19 @@ export class OrdersComponent implements OnInit {
   pageSize = 10;
 
   selectedOrder: Order | null = null;
+
+  // Cancel dialog (the admin must give a reason)
+  cancelTarget: Order | null = null;
+  cancelReason = '';
+  cancelError = '';
+  cancelling = false;
+
+  readonly cancelPresets: string[] = [
+    'Item is out of stock',
+    'Payment issue',
+    'Delivery not available for your address',
+    'Cancelled at your request'
+  ];
 
   statuses: OrderStatus[] = [
     'Placed',
@@ -164,7 +180,138 @@ export class OrdersComponent implements OnInit {
     this.selectedOrder = null;
   }
 
+  // Called by the status dropdowns.
+  // Cancelling needs a reason, so it opens a dialog instead of saving right away.
+  onStatusChange(order: Order, status: OrderStatus, select: HTMLSelectElement): void {
+
+    if (status === 'Cancelled' && order.status !== 'Cancelled') {
+
+      // Put the dropdown back to the real status until the admin confirms
+      select.value = order.status;
+
+      this.openCancelDialog(order);
+
+      return;
+    }
+
+    this.updateStatus(order, status);
+  }
+
+  openCancelDialog(order: Order): void {
+    this.cancelTarget = order;
+    this.cancelReason = '';
+    this.cancelError = '';
+    this.cancelling = false;
+  }
+
+  closeCancelDialog(): void {
+    this.cancelTarget = null;
+    this.cancelReason = '';
+    this.cancelError = '';
+    this.cancelling = false;
+  }
+
+  // Quick-fill buttons in the cancel dialog
+  usePreset(reason: string): void {
+    this.cancelReason = reason;
+    this.cancelError = '';
+  }
+
+  confirmCancel(): void {
+
+    const order = this.cancelTarget;
+
+    if (!order) {
+      return;
+    }
+
+    const reason = this.cancelReason.trim();
+
+    if (reason.length < 5) {
+      this.cancelError = 'Please enter a reason (at least 5 characters).';
+      return;
+    }
+
+    if (reason.length > 200) {
+      this.cancelError = 'The reason cannot exceed 200 characters.';
+      return;
+    }
+
+    this.cancelling = true;
+    this.cancelError = '';
+
+    this.orderService
+      .updateOrderStatus(order.id, 'Cancelled', reason)
+      .subscribe({
+
+        next: (updatedOrder) => {
+
+          const saved = updatedOrder as OrderWithReason;
+          const target = order as OrderWithReason;
+
+          target.status = updatedOrder.status;
+          target.cancellationReason = saved.cancellationReason ?? reason;
+          target.cancelledAt = saved.cancelledAt ?? new Date().toISOString();
+
+          this.closeCancelDialog();
+          this.clampPage();
+        },
+
+        error: () => {
+          this.cancelling = false;
+          this.cancelError = 'Unable to cancel the order. Please try again.';
+        }
+
+      });
+  }
+
+  getCancellationReason(order: Order): string {
+    return (order as OrderWithReason).cancellationReason ?? '';
+  }
+
+  // Order of progress. A status can only move forward, never back.
+  private readonly statusFlow: OrderStatus[] = [
+    'Placed',
+    'Processing',
+    'Shipped',
+    'Delivered'
+  ];
+
+  // Returns true when `option` must not be selectable for an order
+  // that is currently `current`.
+  isStatusDisabled(current: OrderStatus, option: OrderStatus): boolean {
+
+    // The current status itself always stays selectable (it is the selected value)
+    if (option === current) {
+      return false;
+    }
+
+    // A cancelled order is final
+    if (current === 'Cancelled') {
+      return true;
+    }
+
+    // Once shipped (or delivered) an order can no longer be cancelled
+    if (option === 'Cancelled') {
+      return current === 'Shipped' || current === 'Delivered';
+    }
+
+    // Earlier steps are disabled (e.g. Shipped -> Placed / Processing are disabled)
+    return this.statusFlow.indexOf(option) < this.statusFlow.indexOf(current);
+  }
+
   updateStatus(order: Order, status: OrderStatus): void {
+
+    // Safety check: never allow a disabled status to be saved
+    if (this.isStatusDisabled(order.status, status)) {
+      return;
+    }
+
+    // Cancelling always goes through the reason dialog
+    if (status === 'Cancelled') {
+      this.openCancelDialog(order);
+      return;
+    }
 
     this.orderService
       .updateOrderStatus(order.id, status)

@@ -215,13 +215,14 @@
                                 </button>
 
 
-                                <select [ngModel]="order.status" (ngModelChange)="updateStatus(order, $event)" class="rounded-lg border border-gray-200 bg-white
+                                <select #statusSelect [ngModel]="order.status"
+                                    (ngModelChange)="onStatusChange(order, $event, statusSelect)" class="rounded-lg border border-gray-200 bg-white
                                                        px-2 py-1.5 text-xs text-gray-600 outline-none
                                                        focus:border-[#193629]">
 
                                     @for (status of statuses; track status) {
 
-                                    <option [value]="status">
+                                    <option [value]="status" [disabled]="isStatusDisabled(order.status, status)">
                                         {{ status }}
                                     </option>
 
@@ -321,13 +322,14 @@
                     </button>
 
 
-                    <select [ngModel]="order.status" (ngModelChange)="updateStatus(order, $event)" class="flex-1 rounded-lg border border-gray-200 bg-white
+                    <select #statusSelect [ngModel]="order.status"
+                        (ngModelChange)="onStatusChange(order, $event, statusSelect)" class="flex-1 rounded-lg border border-gray-200 bg-white
                                            px-3 py-2 text-xs text-gray-600 outline-none
                                            focus:border-[#193629]">
 
                         @for (status of statuses; track status) {
 
-                        <option [value]="status">
+                        <option [value]="status" [disabled]="isStatusDisabled(order.status, status)">
                             {{ status }}
                         </option>
 
@@ -459,6 +461,24 @@
         </div>
 
 
+        <!-- Cancellation Reason -->
+        @if (selectedOrder.status === 'Cancelled') {
+
+        <div class="border-b border-gray-100 p-5">
+
+            <h3 class="font-semibold text-gray-800">
+                Cancellation Reason
+            </h3>
+
+            <p class="mt-3 rounded-xl bg-red-50 p-4 text-sm text-red-700">
+                {{ getCancellationReason(selectedOrder) || 'No reason recorded.' }}
+            </p>
+
+        </div>
+
+        }
+
+
         <!-- Shipping Address -->
         <div class="border-b border-gray-100 p-5">
 
@@ -539,6 +559,93 @@
                            hover:bg-[#10261d]">
 
                 Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+}
+
+
+<!-- Cancel Order Dialog -->
+
+@if (cancelTarget) {
+
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" (click)="closeCancelDialog()">
+
+    <div class="w-full max-w-md rounded-2xl bg-white shadow-xl" (click)="$event.stopPropagation()">
+
+        <!-- Header -->
+        <div class="border-b border-gray-100 px-5 py-4">
+
+            <h2 class="font-semibold text-[#193629]">
+                Cancel Order #{{ cancelTarget.id }}
+            </h2>
+
+            <p class="mt-1 text-xs text-gray-500">
+                The customer will see this reason on their order.
+            </p>
+
+        </div>
+
+
+        <!-- Body -->
+        <div class="p-5">
+
+            <label class="mb-2 block text-sm font-medium text-gray-700">
+                Reason for cancellation *
+            </label>
+
+            <div class="mb-3 flex flex-wrap gap-2">
+
+                @for (preset of cancelPresets; track preset) {
+
+                <button type="button" (click)="usePreset(preset)"
+                    class="rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-600 transition hover:border-[#193629] hover:text-[#193629]">
+                    {{ preset }}
+                </button>
+
+                }
+
+            </div>
+
+            <textarea [(ngModel)]="cancelReason" rows="4" maxlength="200"
+                placeholder="Write the reason for cancelling this order"
+                class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none focus:border-[#193629]"></textarea>
+
+            <p class="mt-1 text-right text-xs text-gray-400">
+                {{ cancelReason.length }}/200
+            </p>
+
+            @if (cancelError) {
+            <p class="mt-2 text-sm text-red-500">
+                {{ cancelError }}
+            </p>
+            }
+
+        </div>
+
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-2 border-t border-gray-100 px-5 py-4">
+
+            <button type="button" (click)="closeCancelDialog()" [disabled]="cancelling"
+                class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50">
+                Keep Order
+            </button>
+
+            <button type="button" (click)="confirmCancel()" [disabled]="cancelling"
+                class="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50">
+
+                @if (cancelling) {
+                Cancelling...
+                } @else {
+                Cancel Order
+                }
 
             </button>
 

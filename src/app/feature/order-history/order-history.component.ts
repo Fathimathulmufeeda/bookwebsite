@@ -12,6 +12,9 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { Order } from '../../core/Models/order.model';
 
+// Orders can carry the reason the store gave when cancelling them
+type OrderWithReason = Order & { cancellationReason?: string; cancelledAt?: string };
+
 @Component({
   selector: 'app-order-history',
   standalone: true,
@@ -71,15 +74,26 @@ export class OrderHistoryComponent implements OnInit {
       default: return 'bg-[#f0ece3] text-[#5c645d]';
     }
   }
+
+  // The reason the store gave when cancelling the order ('' if none)
+  getCancellationReason(order: Order): string {
+    return (order as OrderWithReason).cancellationReason ?? '';
+  }
+
+  // When the order was cancelled ('' if unknown)
+  getCancelledAt(order: Order): string {
+    return (order as OrderWithReason).cancelledAt ?? '';
+  }
+
   readonly trackingStatuses = ['Placed', 'Processing', 'Shipped', 'Delivered'];
 
-getTrackingSteps(order: Order): { label: string; state: 'done' | 'current' | 'upcoming' }[] {
+  getTrackingSteps(order: Order): { label: string; state: 'done' | 'current' | 'upcoming' }[] {
 
-  const currentIndex = this.trackingStatuses.indexOf(order.status);
+    const currentIndex = this.trackingStatuses.indexOf(order.status);
 
-  return this.trackingStatuses.map((label, index) => ({
-    label,
-    state: index < currentIndex ? 'done' : index === currentIndex ? 'current' : 'upcoming'
-  }));
-}
+    return this.trackingStatuses.map((label, index) => ({
+      label,
+      state: index < currentIndex ? 'done' : index === currentIndex ? 'current' : 'upcoming'
+    }));
+  }
 }

@@ -132,16 +132,25 @@ export class OrderService {
   }
 
 
+  // Updates an order's status.
+  // When cancelling, the reason (and the time) are saved with the order
+  // so the customer can see why it was cancelled.
   updateOrderStatus(
     id: number,
-    status: OrderStatus
+    status: OrderStatus,
+    cancellationReason?: string
   ): Observable<Order> {
+
+    const changes: Record<string, unknown> = { status };
+
+    if (status === 'Cancelled') {
+      changes['cancellationReason'] = cancellationReason;
+      changes['cancelledAt'] = new Date().toISOString();
+    }
 
     return this.http.patch<Order>(
       `${this.apiUrl}/${id}`,
-      {
-        status
-      }
+      changes
     );
 
   }
