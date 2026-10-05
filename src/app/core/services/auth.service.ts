@@ -211,5 +211,32 @@ export class AuthService {
       { isActive }
     );
   }
+  updateProfilePicture(profilePicture: string): Observable<Omit<User, 'password'>> {
+    const currentUser = this.getCurrentUser();
+  
+    if (!currentUser) {
+      throw new Error('No logged-in user found.');
+    }
+  
+    return this.http
+      .patch<User>(
+        `${this.apiUrl}/${currentUser.id}`,
+        { profilePicture }
+      )
+      .pipe(
+        map(updatedUser => {
+          const { password, ...safeUser } = updatedUser;
+  
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem(
+              this.CURRENT_USER_KEY,
+              JSON.stringify(safeUser)
+            );
+          }
+  
+          return safeUser;
+        })
+      );
+  }
 
 }
