@@ -443,7 +443,7 @@
                             </button>
 
                             <p class="text-xs text-gray-500">
-                                JPG, PNG or WEBP · up to 6 images · max 5 MB each
+                                JPG, PNG or WEBP · up to 6 images · max 5 MB each · you can crop each image
                             </p>
 
                         </div>
@@ -472,7 +472,12 @@
                                 <img [src]="image" [alt]="productForm.controls.title.value || 'Product image'"
                                     class="h-40 w-full rounded-md object-cover">
 
-                                <button type="button" (click)="removeImage(i)"
+                                <button type="button" (click)="editImage(i)" title="Crop / edit image"
+                                    class="absolute left-2 top-2 rounded-full bg-[#193629] px-2 py-1 text-xs text-white">
+                                    ✎ Edit
+                                </button>
+
+                                <button type="button" (click)="removeImage(i)" title="Remove image"
                                     class="absolute right-2 top-2 rounded-full bg-red-600 px-2 py-1 text-xs text-white">
                                     ✕
                                 </button>
@@ -908,5 +913,15 @@
     </div>
 
 </div>
+
+}
+
+
+<!-- ================= IMAGE CROPPER ================= -->
+
+@if (cropSource) {
+
+<app-image-cropper [src]="cropSource" [aspectRatio]="2 / 3" [ratios]="coverRatios" [outputSize]="900"
+    title="Crop product image" (cropped)="onCropApplied($event)" (cancelled)="onCropCancelled()" />
 
 }

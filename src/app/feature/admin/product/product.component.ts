@@ -12,9 +12,18 @@ import { Product } from '../../../core/Models/Product.model';
 import { priceLessThanMrpValidator, PRODUCT_TEXT_PATTERN } from '../../../shared/validators/custom-validators';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 import { PaginationComponent, paginate } from '../../../shared/components/pagination/pagination.component';
+import {
+  ImageCropperComponent,
+  CropRatio,
+  fileToDataUrl,
+  validateImageFile
+} from '../../../shared/components/image-cropper/image-cropper';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
+
+// Products can optionally keep the full, uncropped version of each image
+type ProductWithOriginals = Product & { originalImages?: string[] };
 
 @Component({
   selector: 'app-admin-products',
@@ -22,7 +31,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    PaginationComponent
+    PaginationComponent,
+    ImageCropperComponent
   ],
   templateUrl: './product.component.html'
 })
@@ -50,11 +60,26 @@ export class AdminProductsComponent implements OnInit {
   selectedProduct: Product | null = null;
   selectedImageIndex = 0;
 
-  // Image upload
+  // Image upload + crop
   imageError = '';
+  cropSource: string | null = null;
+
+  readonly coverRatios: CropRatio[] = [
+    { label: 'Cover 2:3', value: 2 / 3 },
+    { label: 'Square', value: 1 },
+    { label: 'Wide 4:3', value: 4 / 3 }
+  ];
+
   private readonly MAX_IMAGES = 6;
   private readonly MAX_FILE_SIZE_MB = 5;
-  private readonly MAX_IMAGE_DIMENSION = 800;
+  private cropQueue: File[] = [];
+  private editingImageIndex: number | null = null;
+
+  // The full, uncropped version of each image (same order as the images).
+  // '' means "no separate original" (the image itself is the original).
+  private originals: string[] = [];
+  private pendingOriginal = '';
+  private readonly MAX_ORIGINAL_DIMENSION = 1200;
 
   productForm = new FormGroup(
     {
@@ -186,6 +211,10 @@ export class AdminProductsComponent implements OnInit {
       stock: product.stock,
       images: [...product.images]
     });
+
+    // Load the saved full-size originals (same order as the images)
+    const savedOriginals = (product as ProductWithOriginals).originalImages ?? [];
+    this.originals = product.images.map((_, i) => savedOriginals[i] ?? '');
   
     this.router.navigate([], {
       relativeTo: this.route,
@@ -197,7 +226,7 @@ export class AdminProductsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.loadProducts(true);
   
     this.route.queryParams.subscribe(params => {
       const mode = params['mode'];
@@ -219,7 +248,7 @@ export class AdminProductsComponent implements OnInit {
     });
   }
 
-  loadProducts(): void {
+  loadProducts(openFromUrl = false): void {
     this.loading = true;
     this.error = '';
   
@@ -239,9 +268,9 @@ export class AdminProductsComponent implements OnInit {
           this.page = totalPages;
         }
 
-        const deleteId = Number(
-          this.route.snapshot.queryParams['delete']
-        );
+        const deleteId = openFromUrl
+          ? Number(this.route.snapshot.queryParams['delete'])
+          : 0;
         
         if (deleteId) {
           const product = this.products.find(
@@ -255,8 +284,8 @@ export class AdminProductsComponent implements OnInit {
   
         this.loading = false;
   
-        const mode = this.route.snapshot.queryParams['mode'];
-        const id = Number(this.route.snapshot.queryParams['id']);
+        const mode = openFromUrl ? this.route.snapshot.queryParams['mode'] : null;
+        const id = openFromUrl ? Number(this.route.snapshot.queryParams['id']) : 0;
   
         if (mode === 'edit' && id) {
           const product = this.products.find(p => p.id === id);
@@ -275,6 +304,7 @@ export class AdminProductsComponent implements OnInit {
 
   openAddForm(): void {
   this.editingProduct = null;
+  this.originals = [];
   this.productForm.reset({
     title: '',
     author: '',
@@ -309,13 +339,26 @@ export class AdminProductsComponent implements OnInit {
     this.productForm.reset();
     this.error = '';
     this.imageError = '';
+    this.originals = [];
+    this.onCropCancelled();
+
+    // Remove ?mode=...&id=... from the URL so the edit form does not open again
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { mode: null, id: null },
+      queryParamsHandling: 'merge'
+    });
 
   }
-  // Called when the admin selects image file(s) from the computer
+  // Called when the admin selects image file(s) from the computer.
+  // Each valid file is opened in the cropper, one after another.
   async onFilesSelected(event: Event): Promise<void> {
 
     const input = event.target as HTMLInputElement;
     const files = Array.from(input.files ?? []);
+
+    // Reset so the same file can be selected again later
+    input.value = '';
 
     if (files.length === 0) {
       return;
@@ -323,91 +366,171 @@ export class AdminProductsComponent implements OnInit {
 
     this.imageError = '';
 
-    const images = [...(this.productForm.controls.images.value ?? [])];
+    const currentCount = (this.productForm.controls.images.value ?? []).length;
+    const accepted: File[] = [];
 
     for (const file of files) {
 
-      if (images.length >= this.MAX_IMAGES) {
+      const problem = validateImageFile(file, this.MAX_FILE_SIZE_MB);
+
+      if (problem) {
+        this.imageError = problem;
+        continue;
+      }
+
+      if (currentCount + accepted.length >= this.MAX_IMAGES) {
         this.imageError = `You can add up to ${this.MAX_IMAGES} images.`;
         break;
       }
 
-      if (!file.type.startsWith('image/')) {
-        this.imageError = `"${file.name}" is not an image file.`;
-        continue;
+      accepted.push(file);
+    }
+
+    this.cropQueue = accepted;
+    this.editingImageIndex = null;
+
+    await this.openNextCrop();
+  }
+
+  private async openNextCrop(): Promise<void> {
+
+    const file = this.cropQueue.shift();
+
+    if (!file) {
+      this.cropSource = null;
+      return;
+    }
+
+    try {
+      const dataUrl = await fileToDataUrl(file);
+
+      // Keep the whole picture (only shrunk if huge) as the "original"
+      this.pendingOriginal = await this.downscale(dataUrl, this.MAX_ORIGINAL_DIMENSION);
+      this.cropSource = this.pendingOriginal;
+    } catch {
+      this.imageError = `Unable to read "${file.name}".`;
+      await this.openNextCrop();
+    }
+  }
+
+  // Re-open an already added image in the cropper.
+  // It opens the FULL original picture, so the admin can crop it again from scratch.
+  async editImage(index: number): Promise<void> {
+
+    const image = (this.productForm.controls.images.value ?? [])[index];
+
+    if (!image) {
+      return;
+    }
+
+    this.imageError = '';
+    this.cropQueue = [];
+    this.editingImageIndex = index;
+
+    // Prefer the saved full original; fall back to the current image
+    const source = this.originals[index] || image;
+
+    // Uploaded image (base64) -> open directly
+    if (source.startsWith('data:')) {
+      this.pendingOriginal = source;
+      this.cropSource = source;
+      return;
+    }
+
+    // Existing image link: download it and convert it to base64 so the
+    // browser allows cropping it (needs same-site files or a server with CORS).
+    try {
+
+      const response = await fetch(source);
+
+      if (!response.ok) {
+        throw new Error('download failed');
       }
 
-      if (file.size > this.MAX_FILE_SIZE_MB * 1024 * 1024) {
-        this.imageError = `"${file.name}" is larger than ${this.MAX_FILE_SIZE_MB} MB.`;
-        continue;
-      }
+      const blob = await response.blob();
 
-      try {
-        const dataUrl = await this.readAndResizeImage(file);
+      const dataUrl = await fileToDataUrl(
+        new File([blob], 'product-image', { type: blob.type || 'image/jpeg' })
+      );
 
-        if (!images.includes(dataUrl)) {
-          images.push(dataUrl);
-        }
-      } catch {
-        this.imageError = `Unable to read "${file.name}".`;
-      }
+      this.pendingOriginal = await this.downscale(dataUrl, this.MAX_ORIGINAL_DIMENSION);
+      this.cropSource = this.pendingOriginal;
+
+    } catch {
+
+      // Last attempt: let the cropper try to load the link directly.
+      // If the image host blocks it, the cropper shows a "could not be loaded" message.
+      this.pendingOriginal = source;
+      this.cropSource = source;
+    }
+  }
+
+  // Cropper finished: add the new image, or replace the edited one
+  async onCropApplied(dataUrl: string): Promise<void> {
+
+    const images = [...(this.productForm.controls.images.value ?? [])];
+
+    if (this.editingImageIndex !== null) {
+      images[this.editingImageIndex] = dataUrl;
+      this.originals[this.editingImageIndex] = this.pendingOriginal;
+      this.editingImageIndex = null;
+    } else if (!images.includes(dataUrl) && images.length < this.MAX_IMAGES) {
+      images.push(dataUrl);
+      this.originals.push(this.pendingOriginal);
     }
 
     this.productForm.controls.images.setValue(images);
     this.productForm.controls.images.markAsTouched();
 
-    // Reset so the same file can be selected again later
-    input.value = '';
+    this.cropSource = null;
+
+    await this.openNextCrop();
   }
 
-  // Reads the file, shrinks large images and returns a compact base64 string
-  private readAndResizeImage(file: File): Promise<string> {
+  onCropCancelled(): void {
+    this.cropSource = null;
+    this.cropQueue = [];
+    this.editingImageIndex = null;
+  }
 
-    return new Promise((resolve, reject) => {
+  // Shrinks very large photos (keeping the WHOLE picture) so the stored
+  // original stays a reasonable size.
+  private downscale(dataUrl: string, maxDimension: number): Promise<string> {
 
-      const reader = new FileReader();
+    return new Promise((resolve) => {
 
-      reader.onerror = () => reject(new Error('read failed'));
+      const img = new Image();
 
-      reader.onload = () => {
+      img.onload = () => {
 
-        const img = new Image();
+        const scale = Math.min(1, maxDimension / Math.max(img.width, img.height));
 
-        img.onerror = () => reject(new Error('invalid image'));
+        if (scale === 1) {
+          resolve(dataUrl);
+          return;
+        }
 
-        img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
 
-          const scale = Math.min(
-            1,
-            this.MAX_IMAGE_DIMENSION / Math.max(img.width, img.height)
-          );
+        const ctx = canvas.getContext('2d');
 
-          const width = Math.round(img.width * scale);
-          const height = Math.round(img.height * scale);
+        if (!ctx) {
+          resolve(dataUrl);
+          return;
+        }
 
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          const ctx = canvas.getContext('2d');
-
-          if (!ctx) {
-            reject(new Error('canvas unavailable'));
-            return;
-          }
-
-          // White background so transparent PNGs don't turn black as JPEG
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, width, height);
-          ctx.drawImage(img, 0, 0, width, height);
-
-          resolve(canvas.toDataURL('image/jpeg', 0.8));
-        };
-
-        img.src = reader.result as string;
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
       };
 
-      reader.readAsDataURL(file);
+      img.onerror = () => resolve(dataUrl);
+
+      img.src = dataUrl;
     });
   }
 
@@ -416,6 +539,7 @@ export class AdminProductsComponent implements OnInit {
     const images = this.productForm.controls.images.value ?? [];
   
     images.splice(index, 1);
+    this.originals.splice(index, 1);
   
     this.productForm.controls.images.setValue([...images]);
   
@@ -454,6 +578,7 @@ export class AdminProductsComponent implements OnInit {
       description: value.description!,
       stock: value.stock!,
       images: value.images!,
+      originalImages: (value.images ?? []).map((_, i) => this.originals[i] ?? ''),
       createdAt: this.editingProduct?.createdAt ?? new Date().toISOString()
     };
 
