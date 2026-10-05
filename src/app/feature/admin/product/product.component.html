@@ -432,17 +432,27 @@
                             Product Images *
                         </label>
 
-                        <div class="flex gap-3">
+                        <input #imageInput type="file" accept="image/*" multiple class="hidden"
+                            (change)="onFilesSelected($event)">
 
-                            <input #imageInput type="text" placeholder="Enter image URL"
-                                class="flex-1 rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-[#193629]">
+                        <div class="flex flex-wrap items-center gap-3">
 
-                            <button type="button" (click)="addImage(imageInput)"
-                                class="rounded-lg bg-[#193629] px-5 py-3 text-sm font-medium text-white">
-                                + Add Image
+                            <button type="button" (click)="imageInput.click()"
+                                class="rounded-lg bg-[#193629] px-5 py-3 text-sm font-medium text-white hover:opacity-90">
+                                📁 Browse Images
                             </button>
 
+                            <p class="text-xs text-gray-500">
+                                JPG, PNG or WEBP · up to 6 images · max 5 MB each
+                            </p>
+
                         </div>
+
+                        @if (imageError) {
+                        <p class="mt-2 text-sm text-red-500">
+                            {{ imageError }}
+                        </p>
+                        }
 
 
                         <!-- IMAGE LIST -->
@@ -660,17 +670,26 @@
 
                             </td>
 
-                            <td class="px-6 py-4 text-right">
+                            <td class="px-6 py-4">
 
-                                <button type="button" (click)="editProduct(product)"
-                                    class="rounded-lg border border-[#193629] px-4 py-2 text-sm font-medium text-[#193629] hover:bg-[#193629] hover:text-white">
-                                    Edit
-                                </button>
+                                <div class="flex items-center justify-end gap-2">
 
-                                <button type="button" (click)="deleteProduct(product)"
-                                    class="rounded-lg border border-red-500 px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-500 hover:text-white">
-                                    Delete
-                                </button>
+                                    <button type="button" (click)="viewProduct(product)"
+                                        class="rounded-lg border border-[#193629] px-4 py-2 text-sm font-medium text-[#193629] transition hover:bg-[#193629] hover:text-white">
+                                        View
+                                    </button>
+
+                                    <button type="button" (click)="editProduct(product)"
+                                        class="rounded-lg border border-[#193629] px-4 py-2 text-sm font-medium text-[#193629] transition hover:bg-[#193629] hover:text-white">
+                                        Edit
+                                    </button>
+
+                                    <button type="button" (click)="deleteProduct(product)"
+                                        class="rounded-lg border border-red-500 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-500 hover:text-white">
+                                        Delete
+                                    </button>
+
+                                </div>
 
                             </td>
 
@@ -697,3 +716,197 @@
     </div>
 
 </main>
+
+
+<!-- ================= PRODUCT DETAILS MODAL ================= -->
+
+@if (selectedProduct) {
+
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" (click)="closeView()">
+
+    <div class="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-xl"
+        (click)="$event.stopPropagation()">
+
+
+        <!-- Modal Header -->
+        <div class="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4">
+
+            <div class="min-w-0">
+
+                <h2 class="truncate font-semibold text-[#193629]">
+                    {{ selectedProduct.title }}
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-500">
+                    by {{ selectedProduct.author }}
+                </p>
+
+            </div>
+
+            <button type="button" (click)="closeView()"
+                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xl text-gray-400 transition hover:bg-gray-100 hover:text-gray-700">
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- Images + Price -->
+        <div class="grid grid-cols-1 gap-6 border-b border-gray-100 p-5 sm:grid-cols-5">
+
+            <!-- Images -->
+            <div class="sm:col-span-2">
+
+                @if (selectedProduct.images.length > 0) {
+
+                <img [src]="selectedProduct.images[selectedImageIndex]" [alt]="selectedProduct.title"
+                    class="h-72 w-full rounded-xl bg-[#f8f5ef] object-contain">
+
+                @if (selectedProduct.images.length > 1) {
+
+                <div class="mt-3 flex flex-wrap gap-2">
+
+                    @for (image of selectedProduct.images; track $index; let i = $index) {
+
+                    <button type="button" (click)="selectedImageIndex = i"
+                        class="h-16 w-12 overflow-hidden rounded-md border-2 transition"
+                        [class]="i === selectedImageIndex ? 'border-[#193629]' : 'border-transparent opacity-70 hover:opacity-100'">
+                        <img [src]="image" [alt]="selectedProduct.title" class="h-full w-full object-cover">
+                    </button>
+
+                    }
+
+                </div>
+
+                }
+
+                } @else {
+
+                <div class="flex h-72 w-full items-center justify-center rounded-xl bg-[#f8f5ef] text-sm text-gray-400">
+                    No image
+                </div>
+
+                }
+
+            </div>
+
+
+            <!-- Price / Stock / Rating -->
+            <div class="sm:col-span-3">
+
+                <div class="flex flex-wrap items-baseline gap-3">
+
+                    <span class="text-3xl font-semibold text-[#193629]">
+                        ₹{{ selectedProduct.price }}
+                    </span>
+
+                    @if (selectedProduct.mrp > selectedProduct.price) {
+
+                    <span class="text-base text-gray-400 line-through">
+                        ₹{{ selectedProduct.mrp }}
+                    </span>
+
+                    <span class="rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-700">
+                        {{ getDiscount(selectedProduct) }}% off
+                    </span>
+
+                    }
+
+                </div>
+
+
+                <div class="mt-4 flex flex-wrap items-center gap-3">
+
+                    @if (selectedProduct.stock > 0) {
+
+                    <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                        {{ selectedProduct.stock }} in stock
+                    </span>
+
+                    } @else {
+
+                    <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
+                        Out of stock
+                    </span>
+
+                    }
+
+                    <span class="text-sm text-gray-600">
+                        ⭐ {{ selectedProduct.rating }}
+                        <span class="text-gray-400">({{ selectedProduct.reviewCount }} reviews)</span>
+                    </span>
+
+                </div>
+
+
+                <!-- Details grid -->
+                <div class="mt-5 grid grid-cols-2 gap-3">
+
+                    <div class="rounded-xl bg-[#f8f5ef] p-3">
+                        <p class="text-xs text-gray-400">Category</p>
+                        <p class="mt-1 text-sm font-medium text-gray-700">{{ selectedProduct.category }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-[#f8f5ef] p-3">
+                        <p class="text-xs text-gray-400">Genre</p>
+                        <p class="mt-1 text-sm font-medium text-gray-700">{{ selectedProduct.genre.join(', ') }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-[#f8f5ef] p-3">
+                        <p class="text-xs text-gray-400">Publisher</p>
+                        <p class="mt-1 text-sm font-medium text-gray-700">{{ selectedProduct.publisher }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-[#f8f5ef] p-3">
+                        <p class="text-xs text-gray-400">Language</p>
+                        <p class="mt-1 text-sm font-medium text-gray-700">{{ selectedProduct.language }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-[#f8f5ef] p-3">
+                        <p class="text-xs text-gray-400">Pages</p>
+                        <p class="mt-1 text-sm font-medium text-gray-700">{{ selectedProduct.pages }}</p>
+                    </div>
+
+                    <div class="rounded-xl bg-[#f8f5ef] p-3">
+                        <p class="text-xs text-gray-400">Added On</p>
+                        <p class="mt-1 text-sm font-medium text-gray-700">
+                            {{ selectedProduct.createdAt | date:'dd MMM yyyy' }}
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Description -->
+        <div class="p-5">
+
+            <h3 class="mb-2 font-semibold text-gray-800">
+                Description
+            </h3>
+
+            <p class="whitespace-pre-line text-sm leading-relaxed text-gray-600">
+                {{ selectedProduct.description }}
+            </p>
+
+        </div>
+
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-2 border-t border-gray-100 px-5 py-4">
+
+            <button type="button" (click)="closeView()"
+                class="rounded-lg bg-[#193629] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#10261d]">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+}

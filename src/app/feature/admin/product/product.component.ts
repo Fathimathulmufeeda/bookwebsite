@@ -46,6 +46,16 @@ export class AdminProductsComponent implements OnInit {
   showForm = false;
   editingProduct: Product | null = null;
 
+  // View details modal
+  selectedProduct: Product | null = null;
+  selectedImageIndex = 0;
+
+  // Image upload
+  imageError = '';
+  private readonly MAX_IMAGES = 6;
+  private readonly MAX_FILE_SIZE_MB = 5;
+  private readonly MAX_IMAGE_DIMENSION = 800;
+
   productForm = new FormGroup(
     {
       title: new FormControl('', [
@@ -133,6 +143,27 @@ export class AdminProductsComponent implements OnInit {
   // Only the products for the current page
   get pagedProducts(): Product[] {
     return paginate(this.products, this.page, this.pageSize).items;
+  }
+
+  // Open the details modal
+  viewProduct(product: Product): void {
+    this.selectedProduct = product;
+    this.selectedImageIndex = 0;
+  }
+
+  // Close the details modal
+  closeView(): void {
+    this.selectedProduct = null;
+    this.selectedImageIndex = 0;
+  }
+
+  // Discount percentage between MRP and selling price
+  getDiscount(product: Product): number {
+    if (!product.mrp || product.mrp <= product.price) {
+      return 0;
+    }
+
+    return Math.round(((product.mrp - product.price) / product.mrp) * 100);
   }
 
   editProduct(product: Product): void {
@@ -277,31 +308,109 @@ export class AdminProductsComponent implements OnInit {
     this.editingProduct = null;
     this.productForm.reset();
     this.error = '';
+    this.imageError = '';
 
   }
-  addImage(input: HTMLInputElement): void {
+  // Called when the admin selects image file(s) from the computer
+  async onFilesSelected(event: Event): Promise<void> {
 
-    const imageUrl = input.value.trim();
-  
-    if (!imageUrl) {
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files ?? []);
+
+    if (files.length === 0) {
       return;
     }
-  
-    const images = this.productForm.controls.images.value ?? [];
-  
-    if (images.includes(imageUrl)) {
-      return;
+
+    this.imageError = '';
+
+    const images = [...(this.productForm.controls.images.value ?? [])];
+
+    for (const file of files) {
+
+      if (images.length >= this.MAX_IMAGES) {
+        this.imageError = `You can add up to ${this.MAX_IMAGES} images.`;
+        break;
+      }
+
+      if (!file.type.startsWith('image/')) {
+        this.imageError = `"${file.name}" is not an image file.`;
+        continue;
+      }
+
+      if (file.size > this.MAX_FILE_SIZE_MB * 1024 * 1024) {
+        this.imageError = `"${file.name}" is larger than ${this.MAX_FILE_SIZE_MB} MB.`;
+        continue;
+      }
+
+      try {
+        const dataUrl = await this.readAndResizeImage(file);
+
+        if (!images.includes(dataUrl)) {
+          images.push(dataUrl);
+        }
+      } catch {
+        this.imageError = `Unable to read "${file.name}".`;
+      }
     }
-  
-    this.productForm.controls.images.setValue([
-      ...images,
-      imageUrl
-    ]);
-  
+
+    this.productForm.controls.images.setValue(images);
     this.productForm.controls.images.markAsTouched();
-  
+
+    // Reset so the same file can be selected again later
     input.value = '';
   }
+
+  // Reads the file, shrinks large images and returns a compact base64 string
+  private readAndResizeImage(file: File): Promise<string> {
+
+    return new Promise((resolve, reject) => {
+
+      const reader = new FileReader();
+
+      reader.onerror = () => reject(new Error('read failed'));
+
+      reader.onload = () => {
+
+        const img = new Image();
+
+        img.onerror = () => reject(new Error('invalid image'));
+
+        img.onload = () => {
+
+          const scale = Math.min(
+            1,
+            this.MAX_IMAGE_DIMENSION / Math.max(img.width, img.height)
+          );
+
+          const width = Math.round(img.width * scale);
+          const height = Math.round(img.height * scale);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+
+          if (!ctx) {
+            reject(new Error('canvas unavailable'));
+            return;
+          }
+
+          // White background so transparent PNGs don't turn black as JPEG
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
+        };
+
+        img.src = reader.result as string;
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
   removeImage(index: number): void {
 
     const images = this.productForm.controls.images.value ?? [];
