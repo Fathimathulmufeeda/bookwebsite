@@ -34,15 +34,22 @@ export const loadOrdersFailure = createAction(
 
 export const cancelOrder = createAction(
   '[Orders] Cancel Order',
-  props<{ orderId: number }>()
+  props<{
+    orderId: number;
+    reason: string;
+  }>()
 );
 
 export const cancelOrderSuccess = createAction(
   '[Orders] Cancel Order Success',
-  props<{ order: Order }>()
+  props<{
+    order: Order;
+  }>()
 );
 
 export const cancelOrderFailure = createAction(
   '[Orders] Cancel Order Failure',
-  props<{ error: string }>()
+  props<{
+    error: string;
+  }>()
 );

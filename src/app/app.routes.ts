@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
+import { customerOnlyGuard } from './core/guards/customer.guard';
 import { ProfileComponent } from './feature/profile/profile.component';
 import { adminGuard } from './core/guards/admin.guard';
 
@@ -16,21 +17,22 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./feature/auth/auth/auth.component')
         .then(m => m.AuthComponent),
-        canActivate: [guestGuard]
+    // An admin who is already logged in goes straight to /admin
+    canActivate: [customerOnlyGuard, guestGuard]
   },
   {
     path: 'login',
     loadComponent: () =>
       import('./feature/auth/auth/auth.component')
         .then(m => m.AuthComponent),
-        canActivate: [guestGuard]
+    canActivate: [customerOnlyGuard, guestGuard]
   },
   {
     path: 'verify-otp',
     loadComponent: () =>
       import('./feature/auth/auth/auth.component')
         .then(m => m.AuthComponent),
-    canActivate: [guestGuard]
+    canActivate: [customerOnlyGuard, guestGuard]
   },
 
   // {
@@ -39,26 +41,28 @@ export const routes: Routes = [
   //     import('./feature/auth/forgot-password/forgot-password.component')
   //       .then(m => m.ForgotPasswordComponent)
   // },
-  //public
+
+  // public (customer storefront - admins are sent to /admin)
   {
     path: 'product/:id',
     loadComponent: () =>
       import('./feature/product-details/product-details.component')
         .then(m => m.ProductDetailsComponent),
+    canActivate: [customerOnlyGuard]
   },
   {
     path: 'home',
     loadComponent: () =>
       import('./feature/home/home.component')
         .then(m => m.HomeComponent),
-        
+    canActivate: [customerOnlyGuard]
   },
   {
     path: 'books',
     loadComponent: () =>
       import('./feature/books/books.component')
         .then(m => m.BooksComponent),
-    
+    canActivate: [customerOnlyGuard]
   },
   {
     path: 'profile',
@@ -66,41 +70,41 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
-  //prvate
+  // private (customer storefront - admins are sent to /admin)
   {
     path: 'cart',
     loadComponent: () =>
       import('./feature/cart/cart.component')
         .then(m => m.CartComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, customerOnlyGuard]
   },
   {
     path: 'checkout',
     loadComponent: () =>
       import('./feature/checkout/checkout.component')
         .then(m => m.CheckoutComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, customerOnlyGuard]
   },
   {
     path: 'order-success',
     loadComponent: () =>
       import('./feature/order-success/order-success.component')
         .then(m => m.OrderSuccessComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, customerOnlyGuard]
   },
   {
     path: 'order-history',
     loadComponent: () =>
       import('./feature/order-history/order-history.component')
         .then(m => m.OrderHistoryComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, customerOnlyGuard]
   },
   {
     path: 'wishlist',
     loadComponent: () =>
       import('./feature/wishlist/wishlist.component')
         .then(m => m.WishlistComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, customerOnlyGuard]
   },
   {
     path: 'admin',
@@ -108,16 +112,16 @@ export const routes: Routes = [
       import('./feature/admin/admin-layout/admin-layout.component')
         .then(m => m.AdminLayoutComponent),
     canActivate: [adminGuard],
-  
+
     children: [
-  
+
       {
         path: '',
         loadComponent: () =>
           import('./feature/admin/dashboard/dashboard.component')
             .then(m => m.DashboardComponent)
       },
-  
+
       {
         path: 'products',
         loadComponent: () =>
@@ -136,7 +140,7 @@ export const routes: Routes = [
           import('./feature/admin/orders/orders.component')
             .then(m => m.OrdersComponent)
       }
-  
+
     ]
   },
   {

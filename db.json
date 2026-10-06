@@ -317,7 +317,7 @@
       "pages": 371,
       "createdAt": "2026-09-12",
       "description": "A powerful story of friendship, family, betrayal, and redemption set against the history of Afghanistan.",
-      "stock": 25
+      "stock": 24
     },
     {
       "id": 9,
@@ -904,7 +904,7 @@
       "pages": 208,
       "createdAt": "2026-08-20",
       "description": "Four siblings enter a magical world through a wardrobe and become part of an epic adventure.",
-      "stock": 31
+      "stock": 30
     },
     {
       "id": 32,
@@ -3176,7 +3176,9 @@
       },
       "paymentMethod": "COD",
       "createdAt": "2026-09-29T06:50:13.379Z",
-      "status": "Placed"
+      "status": "Cancelled",
+      "cancellationReason": "delivery time is long",
+      "cancelledAt": "2026-10-06T04:03:38.413Z"
     },
     {
       "id": 1790664657834,
@@ -3910,6 +3912,106 @@
       "status": "Cancelled",
       "cancellationReason": "Delivery not available for your address",
       "cancelledAt": "2026-10-05T12:04:41.390Z"
+    },
+    {
+      "id": 1791225131580,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 31,
+            "title": "The Lion, the Witch and the Wardrobe",
+            "author": "C.S. Lewis",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/lionwitch1.jpg",
+              "/images/lionwitch2.jpg",
+              "/images/lionwitch3.jpg",
+              "/images/lionwitch4.jpg",
+              "/images/lionwitch5.jpg"
+            ],
+            "category": "children",
+            "genre": [
+              "Children",
+              "Adventure",
+              "Fantasy"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1150,
+            "publisher": "HarperCollins",
+            "language": "English",
+            "pages": 208,
+            "createdAt": "2026-08-20",
+            "description": "Four siblings enter a magical world through a wardrobe and become part of an epic adventure.",
+            "stock": 31
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 299,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-05T18:32:11.580Z",
+      "status": "Cancelled",
+      "cancellationReason": "noo need",
+      "cancelledAt": "2026-10-05T18:32:30.242Z"
+    },
+    {
+      "id": 1791259855421,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 8,
+            "title": "The Kite Runner",
+            "author": "Khaled Hosseini",
+            "price": 399,
+            "mrp": 599,
+            "discountPercent": 33,
+            "images": [
+              "/images/kiterunner1.jpg"
+            ],
+            "category": "fiction",
+            "genre": [
+              "Fiction",
+              "Drama",
+              "Historical"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1350,
+            "publisher": "Riverhead Books",
+            "language": "English",
+            "pages": 371,
+            "createdAt": "2026-09-12",
+            "description": "A powerful story of friendship, family, betrayal, and redemption set against the history of Afghanistan.",
+            "stock": 25
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 399,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-06T04:10:55.421Z",
+      "status": "Cancelled",
+      "cancellationReason": "Ordered by mistake",
+      "cancelledAt": "2026-10-06T04:12:57.554Z"
     }
   ],
   "cart": [

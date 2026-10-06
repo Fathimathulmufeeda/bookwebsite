@@ -11,132 +11,50 @@
 
     @if (orders.length > 0) {
 
-    <div class="mt-8 space-y-5">
+    <!-- Order list (Amazon-style: compact rows, click to see details) -->
+    <div class="mt-8 space-y-3">
 
       @for (order of orders; track order.id) {
 
-      <div class="rounded-md border border-[#ebe6dd] bg-white p-5 sm:p-6">
+      <button type="button" (click)="viewOrder(order)"
+        class="flex w-full items-center gap-4 rounded-md border border-[#ebe6dd] bg-white p-4 text-left transition hover:border-[#193629] sm:p-5">
 
-        <div class="flex flex-wrap items-start justify-between gap-3 border-b border-[#f0ece3] pb-4">
-          <div>
-            <p class="text-xs font-bold uppercase tracking-wide text-[#8a8f89]">Order #{{ order.id }}</p>
-            <p class="mt-1 text-xs text-[#999]">Placed on {{ order.createdAt | date:'medium' }}</p>
+        <!-- Thumbnail strip -->
+        <div class="hidden shrink-0 -space-x-3 sm:flex">
+          @for (item of order.items.slice(0, 3); track item.product.id) {
+          <img [src]="item.product.images?.[0]" [alt]="item.product.title"
+            class="h-14 w-11 rounded-sm border-2 border-white object-cover shadow-sm" />
+          }
+          @if (order.items.length > 3) {
+          <div
+            class="flex h-14 w-11 items-center justify-center rounded-sm border-2 border-white bg-[#f0ece3] text-[10px] font-bold text-[#5c645d] shadow-sm">
+            +{{ order.items.length - 3 }}
           </div>
+          }
+        </div>
 
-          <div class="flex items-center gap-3">
-            <span class="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide"
+        <!-- Summary -->
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <p class="text-sm font-semibold text-[#26332b]">Order #{{ order.id }}</p>
+            <span class="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
               [ngClass]="statusClasses(order.status)">
               {{ order.status }}
             </span>
-
-            @if (canCancel(order.status)) {
-            <button type="button" (click)="cancel(order.id)" [disabled]="cancellingId === order.id"
-              class="text-[11px] font-bold uppercase tracking-wide text-red-600 hover:underline disabled:opacity-50">
-              Cancel Order
-            </button>
-            }
           </div>
-
-        </div>
-
-        <!-- Tracking -->
-        @if (order.status !== 'Cancelled') {
-
-        <div class="mt-5 flex items-start">
-          @for (step of getTrackingSteps(order); track step.label; let last = $last) {
-          <div class="flex flex-1 items-center">
-
-            <div class="flex flex-col items-center">
-              <div class="flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold"
-                [ngClass]="step.state === 'upcoming' ? 'bg-[#f0ece3] text-[#999]' : 'bg-[#193629] text-white'">
-                @if (step.state === 'done') {
-                <span>✓</span>
-                } @else {
-                <span>{{ $index + 1 }}</span>
-                }
-              </div>
-              <span class="mt-1.5 text-center text-[9px] font-semibold uppercase tracking-wide"
-                [ngClass]="step.state === 'upcoming' ? 'text-[#b3ada0]' : 'text-[#193629]'">
-                {{ step.label }}
-              </span>
-            </div>
-
-            @if (!last) {
-            <div class="mx-1 mb-4 h-0.5 flex-1" [ngClass]="step.state === 'done' ? 'bg-[#193629]' : 'bg-[#f0ece3]'">
-            </div>
-            }
-
-          </div>
-          }
-        </div>
-
-        } @else {
-
-        <!-- Cancelled: show why -->
-        <div class="mt-5 rounded-sm border border-red-100 bg-red-50 px-4 py-3">
-
-          <p class="text-xs font-bold uppercase tracking-wide text-red-600">
-            This order was cancelled
+          <p class="mt-1 text-xs text-[#999]">
+            {{ order.createdAt | date:'mediumDate' }} · {{ order.items.length }} {{ order.items.length === 1 ? 'item' :
+            'items' }}
           </p>
-
-          @if (getCancellationReason(order)) {
-          <p class="mt-1.5 text-xs leading-5 text-red-700">
-            <span class="font-semibold">Reason:</span>
-            {{ getCancellationReason(order) }}
-          </p>
-          }
-
-          @if (getCancelledAt(order)) {
-          <p class="mt-1 text-[11px] text-red-400">
-            Cancelled on {{ getCancelledAt(order) | date:'medium' }}
-          </p>
-          }
-
         </div>
 
-        }
-
-        <div class="mt-4 space-y-3">
-          @for (item of order.items; track item.product.id) {
-          <div class="flex items-center gap-3">
-            <img [src]="item.product.images?.[0]" [alt]="item.product.title"
-              class="h-14 w-11 shrink-0 rounded-sm object-cover" />
-            <div class="min-w-0 flex-1">
-              <p class="truncate text-sm font-medium text-[#26332b]">{{ item.product.title }}</p>
-              <p class="text-xs text-[#999]">Qty {{ item.quantity }}</p>
-            </div>
-            <p class="shrink-0 text-sm font-semibold text-[#26332b]">
-              ₹{{ item.product.price * item.quantity }}
-            </p>
-          </div>
-          }
+        <!-- Total + chevron -->
+        <div class="flex shrink-0 items-center gap-3">
+          <p class="font-serif text-lg font-medium text-[#193629]">₹{{ order.total }}</p>
+          <span class="text-[#b3ada0]">›</span>
         </div>
 
-        <div class="mt-4 grid grid-cols-1 gap-4 border-t border-[#f0ece3] pt-4 sm:grid-cols-2">
-
-          <div>
-            <p class="text-xs font-bold uppercase tracking-wide text-[#8a8f89]">Shipping Address</p>
-            <p class="mt-1 text-xs leading-5 text-[#5c645d]">
-              {{ order.shippingAddress.name }}<br />
-              {{ order.shippingAddress.address }}, {{ order.shippingAddress.city }}<br />
-              {{ order.shippingAddress.pincode }}
-              @if (order.shippingAddress.phone) {
-              <br />Phone: {{ order.shippingAddress.phone }}
-              }
-            </p>
-          </div>
-
-          <div class="sm:text-right">
-            <p class="text-xs font-bold uppercase tracking-wide text-[#8a8f89]">Order Total</p>
-            <p class="mt-1 font-serif text-xl font-medium text-[#193629]">₹{{ order.total }}</p>
-            @if (order.paymentMethod) {
-            <p class="mt-0.5 text-xs text-[#999]">Paid via {{ order.paymentMethod }}</p>
-            }
-          </div>
-
-        </div>
-
-      </div>
+      </button>
 
       }
 
@@ -165,3 +83,199 @@
 </main>
 
 <app-footer></app-footer>
+
+
+<!-- ================= ORDER DETAIL MODAL ================= -->
+
+@if (selectedOrder) {
+
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" (click)="closeView()">
+
+  <div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-md bg-white shadow-xl"
+    (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-[#f0ece3] px-5 py-4 sm:px-6">
+      <div>
+        <h2 class="font-serif text-lg font-medium text-[#202a24]">Order #{{ selectedOrder.id }}</h2>
+        <p class="mt-1 text-xs text-[#999]">Placed on {{ selectedOrder.createdAt | date:'medium' }}</p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide"
+          [ngClass]="statusClasses(selectedOrder.status)">
+          {{ selectedOrder.status }}
+        </span>
+        <button type="button" (click)="closeView()"
+          class="flex h-9 w-9 items-center justify-center rounded-full text-xl text-[#999] transition hover:bg-[#f0ece1] hover:text-[#26332b]">
+          ×
+        </button>
+      </div>
+    </div>
+
+    <div class="px-5 py-5 sm:px-6">
+
+      <!-- Tracking -->
+      @if (selectedOrder.status !== 'Cancelled') {
+
+      <div class="flex items-start">
+        @for (step of getTrackingSteps(selectedOrder); track step.label; let last = $last) {
+        <div class="flex flex-1 items-center">
+
+          <div class="flex flex-col items-center">
+            <div class="flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold"
+              [ngClass]="step.state === 'upcoming' ? 'bg-[#f0ece3] text-[#999]' : 'bg-[#193629] text-white'">
+              @if (step.state === 'done') {
+              <span>✓</span>
+              } @else {
+              <span>{{ $index + 1 }}</span>
+              }
+            </div>
+            <span class="mt-1.5 text-center text-[9px] font-semibold uppercase tracking-wide"
+              [ngClass]="step.state === 'upcoming' ? 'text-[#b3ada0]' : 'text-[#193629]'">
+              {{ step.label }}
+            </span>
+          </div>
+
+          @if (!last) {
+          <div class="mx-1 mb-4 h-0.5 flex-1" [ngClass]="step.state === 'done' ? 'bg-[#193629]' : 'bg-[#f0ece3]'"></div>
+          }
+
+        </div>
+        }
+      </div>
+
+      } @else {
+
+      <div class="rounded-sm border border-red-100 bg-red-50 px-4 py-3">
+        <p class="text-xs font-bold uppercase tracking-wide text-red-600">This order was cancelled</p>
+        @if (selectedOrder.cancellationReason) {
+        <p class="mt-1.5 text-xs leading-5 text-red-700">
+          <span class="font-semibold">Reason:</span> {{ selectedOrder.cancellationReason }}
+        </p>
+        }
+        @if (selectedOrder.cancelledAt) {
+        <p class="mt-1 text-[11px] text-red-400">Cancelled on {{ selectedOrder.cancelledAt | date:'medium' }}</p>
+        }
+      </div>
+
+      }
+
+      <!-- Items -->
+      <div class="mt-6 space-y-3">
+        @for (item of selectedOrder.items; track item.product.id) {
+        <div class="flex items-center gap-3">
+          <img [src]="item.product.images?.[0]" [alt]="item.product.title"
+            class="h-14 w-11 shrink-0 rounded-sm object-cover" />
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm font-medium text-[#26332b]">{{ item.product.title }}</p>
+            <p class="text-xs text-[#999]">Qty {{ item.quantity }}</p>
+          </div>
+          <p class="shrink-0 text-sm font-semibold text-[#26332b]">₹{{ item.product.price * item.quantity }}</p>
+        </div>
+        }
+      </div>
+
+      <!-- Address + Total -->
+      <div class="mt-6 grid grid-cols-1 gap-4 border-t border-[#f0ece3] pt-5 sm:grid-cols-2">
+
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wide text-[#8a8f89]">Shipping Address</p>
+          <p class="mt-1 text-xs leading-5 text-[#5c645d]">
+            {{ selectedOrder.shippingAddress.name }}<br />
+            {{ selectedOrder.shippingAddress.address }}, {{ selectedOrder.shippingAddress.city }}<br />
+            {{ selectedOrder.shippingAddress.pincode }}
+            @if (selectedOrder.shippingAddress.phone) {
+            <br />Phone: {{ selectedOrder.shippingAddress.phone }}
+            }
+          </p>
+        </div>
+
+        <div class="sm:text-right">
+          <p class="text-xs font-bold uppercase tracking-wide text-[#8a8f89]">Order Total</p>
+          <p class="mt-1 font-serif text-xl font-medium text-[#193629]">₹{{ selectedOrder.total }}</p>
+          @if (selectedOrder.paymentMethod) {
+          <p class="mt-0.5 text-xs text-[#999]">Paid via {{ selectedOrder.paymentMethod }}</p>
+          }
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-3 border-t border-[#f0ece3] px-5 py-4 sm:px-6">
+      @if (canCancel(selectedOrder.status)) {
+      <button type="button" (click)="openCancelDialog(selectedOrder)"
+        class="text-[11px] font-bold uppercase tracking-wide text-red-600 hover:underline">
+        Cancel Order
+      </button>
+      }
+      <button type="button" (click)="closeView()"
+        class="rounded-sm bg-[#193629] px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition hover:bg-[#28503b]">
+        Close
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+}
+
+
+<!-- ================= CANCEL ORDER DIALOG ================= -->
+
+@if (cancelTarget) {
+
+<div class="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4" (click)="closeCancelDialog()">
+
+  <div class="w-full max-w-md rounded-md bg-white shadow-xl" (click)="$event.stopPropagation()">
+
+    <div class="border-b border-[#f0ece3] px-5 py-4">
+      <h2 class="font-serif text-lg font-medium text-[#202a24]">Cancel Order #{{ cancelTarget.id }}</h2>
+      <p class="mt-1 text-xs text-[#999]">Let us know why — it helps us improve.</p>
+    </div>
+
+    <div class="p-5">
+
+      <label class="mb-2 block text-[11px] font-bold uppercase tracking-wide text-[#3a3f3b]">Reason for cancellation
+        *</label>
+
+      <div class="mb-3 flex flex-wrap gap-2">
+        @for (preset of cancelPresets; track preset) {
+        <button type="button" (click)="usePreset(preset)"
+          class="rounded-full border border-[#d8d0c2] px-3 py-1 text-xs text-[#5c645d] transition hover:border-[#193629] hover:text-[#193629]">
+          {{ preset }}
+        </button>
+        }
+      </div>
+
+      <textarea [(ngModel)]="cancelReason" rows="4" maxlength="200"
+        placeholder="Tell us why you're cancelling this order"
+        class="w-full rounded-sm border border-[#d8d0c2] px-3.5 py-3 text-sm outline-none focus:border-[#193629]"></textarea>
+
+      <p class="mt-1 text-right text-xs text-[#999]">{{ cancelReason.length }}/200</p>
+
+      @if (cancelError) {
+      <p class="mt-2 text-xs text-red-600">{{ cancelError }}</p>
+      }
+
+    </div>
+
+    <div class="flex justify-end gap-3 border-t border-[#f0ece3] px-5 py-4">
+      <button type="button" (click)="closeCancelDialog()" [disabled]="cancelling"
+        class="rounded-sm border border-[#d8d0c2] px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-[#3a3f3b] hover:bg-[#f2ece1] disabled:opacity-50">
+        Keep Order
+      </button>
+      <button type="button" (click)="confirmCancel()" [disabled]="cancelling"
+        class="rounded-sm bg-red-600 px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50">
+        @if (cancelling) { Cancelling... } @else { Cancel Order }
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+}

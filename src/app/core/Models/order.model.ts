@@ -29,4 +29,8 @@ export interface Order {
   createdAt: string;
 
   status: OrderStatus;
+
+  cancellationReason?: string;
+
+  cancelledAt?: string;
 }

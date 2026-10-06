@@ -91,24 +91,25 @@ export class OrdersEffect {
   // Cancel an order
   cancelOrder$ = createEffect(() =>
     this.actions$.pipe(
-
+  
       ofType(cancelOrder),
-
-      switchMap(({ orderId }) =>
-
+  
+      switchMap(({ orderId, reason }) =>
+  
         this.orderService
           .updateOrderStatus(
             orderId,
-            'Cancelled'
+            'Cancelled',
+            reason
           )
           .pipe(
-
+  
             map(order =>
               cancelOrderSuccess({
                 order
               })
             ),
-
+  
             catchError(error =>
               of(
                 cancelOrderFailure({
@@ -116,12 +117,11 @@ export class OrdersEffect {
                 })
               )
             )
-
+  
           )
-
+  
       )
-
+  
     )
   );
-
 }

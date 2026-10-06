@@ -1,24 +1,21 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { selectOrders } from '../../store/orders/orders.selectors';
 import { cancelOrder, loadOrders } from '../../store/orders/orders.action';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../shared/services/toast.service';
-import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
-import { Order } from '../../core/Models/order.model';
-
-// Orders can carry the reason the store gave when cancelling them
-type OrderWithReason = Order & { cancellationReason?: string; cancelledAt?: string };
+import { Order, OrderStatus } from '../../core/Models/order.model';
 
 @Component({
   selector: 'app-order-history',
   standalone: true,
-  imports: [CommonModule, RouterLink, HeaderComponent, FooterComponent],
+  imports: [CommonModule, FormsModule, RouterLink, HeaderComponent, FooterComponent],
   templateUrl: './order-history.component.html',
   styleUrl: './order-history.component.css'
 })
@@ -27,42 +24,116 @@ export class OrderHistoryComponent implements OnInit {
   private store = inject(Store);
   private authService = inject(AuthService);
   private toast = inject(ToastService);
-  private confirmDialog = inject(ConfirmDialogService);
 
   orders$ = this.store.select(selectOrders);
 
-  cancellingId: number | null = null;
+  // The order currently open in the detail modal (Amazon-style: list
+  // shows compact rows, click one to see the full breakdown).
+  selectedOrder: Order | null = null;
+
+  // Cancel dialog — the customer must give a reason, same pattern as
+  // the admin side, so both ends write to the exact same fields.
+  cancelTarget: Order | null = null;
+  cancelReason = '';
+  cancelError = '';
+  cancelling = false;
+
+  readonly cancelPresets: string[] = [
+    'Ordered by mistake',
+    'Found a better price elsewhere',
+    'Taking too long to arrive',
+    'Changed my mind'
+  ];
+
+  readonly trackingStatuses: OrderStatus[] = ['Placed', 'Processing', 'Shipped', 'Delivered'];
 
   ngOnInit(): void {
+
     const user = this.authService.getCurrentUser();
     this.store.dispatch(loadOrders({ userId: user?.id }));
+
+    // Keep the open detail modal in sync with the store — if this
+    // order gets cancelled (or its status otherwise changes), the
+    // modal reflects it immediately without needing to reopen it.
+    this.orders$.subscribe(orders => {
+      if (this.selectedOrder) {
+        const updated = orders.find(o => o.id === this.selectedOrder!.id);
+        if (updated) {
+          this.selectedOrder = updated;
+        }
+      }
+    });
   }
 
   canCancel(status: string): boolean {
     return status === 'Placed' || status === 'Processing';
   }
 
-  async cancel(orderId: number): Promise<void> {
+  viewOrder(order: Order): void {
+    this.selectedOrder = order;
+  }
 
-    const confirmed = await this.confirmDialog.confirm({
-      title: 'Cancel this order?',
-      message: 'This will cancel your order. This action cannot be undone.',
-      confirmText: 'Cancel Order',
-      cancelText: 'Keep Order',
-      danger: true
-    });
+  closeView(): void {
+    this.selectedOrder = null;
+  }
 
-    if (!confirmed) {
+  openCancelDialog(order: Order, event?: Event): void {
+    event?.stopPropagation();
+    this.cancelTarget = order;
+    this.cancelReason = '';
+    this.cancelError = '';
+    this.cancelling = false;
+  }
+
+  closeCancelDialog(): void {
+    this.cancelTarget = null;
+    this.cancelReason = '';
+    this.cancelError = '';
+    this.cancelling = false;
+  }
+
+  usePreset(reason: string): void {
+    this.cancelReason = reason;
+    this.cancelError = '';
+  }
+
+  confirmCancel(): void {
+
+    const order = this.cancelTarget;
+
+    if (!order) {
       return;
     }
 
-    this.cancellingId = orderId;
-    this.store.dispatch(cancelOrder({ orderId }));
-    this.toast.success('Order cancelled successfully.');
+    const reason = this.cancelReason.trim();
 
-    // Clear the local "in progress" flag shortly after dispatch; the store
-    // update itself is reflected reactively via orders$.
-    setTimeout(() => this.cancellingId = null, 400);
+    if (reason.length < 5) {
+      this.cancelError = 'Please let us know why (at least 5 characters).';
+      return;
+    }
+
+    if (reason.length > 200) {
+      this.cancelError = 'The reason cannot exceed 200 characters.';
+      return;
+    }
+
+    this.cancelling = true;
+    this.cancelError = '';
+
+    this.store.dispatch(cancelOrder({ orderId: order.id, reason }));
+    this.toast.success('Your order has been cancelled.');
+
+    this.closeCancelDialog();
+  }
+
+  getTrackingSteps(order: Order): { label: string; state: 'done' | 'current' | 'upcoming' }[] {
+
+    const currentIndex = this.trackingStatuses.indexOf(order.status as OrderStatus);
+
+    return this.trackingStatuses.map((label, index) => ({
+      label,
+      state: index < currentIndex ? 'done' : index === currentIndex ? 'current' : 'upcoming'
+    }));
   }
 
   statusClasses(status: string): string {
@@ -73,27 +144,5 @@ export class OrderHistoryComponent implements OnInit {
       case 'Processing': return 'bg-[#faf1da] text-[#a17b19]';
       default: return 'bg-[#f0ece3] text-[#5c645d]';
     }
-  }
-
-  // The reason the store gave when cancelling the order ('' if none)
-  getCancellationReason(order: Order): string {
-    return (order as OrderWithReason).cancellationReason ?? '';
-  }
-
-  // When the order was cancelled ('' if unknown)
-  getCancelledAt(order: Order): string {
-    return (order as OrderWithReason).cancelledAt ?? '';
-  }
-
-  readonly trackingStatuses = ['Placed', 'Processing', 'Shipped', 'Delivered'];
-
-  getTrackingSteps(order: Order): { label: string; state: 'done' | 'current' | 'upcoming' }[] {
-
-    const currentIndex = this.trackingStatuses.indexOf(order.status);
-
-    return this.trackingStatuses.map((label, index) => ({
-      label,
-      state: index < currentIndex ? 'done' : index === currentIndex ? 'current' : 'upcoming'
-    }));
   }
 }
