@@ -11,6 +11,7 @@ import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/Models/Product.model';
 import { priceLessThanMrpValidator, PRODUCT_TEXT_PATTERN } from '../../../shared/validators/custom-validators';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
+import { ToastService } from '../../../shared/services/toast.service';
 import { PaginationComponent, paginate } from '../../../shared/components/pagination/pagination.component';
 import {
   ImageCropperComponent,
@@ -42,6 +43,7 @@ export class AdminProductsComponent implements OnInit {
   private confirmDialog = inject(ConfirmDialogService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private toast = inject(ToastService);
 
   products: Product[] = [];
 
@@ -551,6 +553,7 @@ export class AdminProductsComponent implements OnInit {
     if (this.productForm.invalid) {
 
       this.productForm.markAllAsTouched();
+      this.toast.warning('Please fix the highlighted fields before saving.');
 
       return;
     }
@@ -591,6 +594,7 @@ export class AdminProductsComponent implements OnInit {
           next: () => {
 
             this.submitting = false;
+            this.toast.success(`"${productData.title}" updated successfully.`);
             this.closeForm();
             this.loadProducts();
 
@@ -600,6 +604,7 @@ export class AdminProductsComponent implements OnInit {
 
             this.submitting = false;
             this.error = 'Unable to update product.';
+            this.toast.error('Unable to update product. Please try again.');
 
           }
 
@@ -616,6 +621,8 @@ export class AdminProductsComponent implements OnInit {
             this.submitting = false;
             this.closeForm();
 
+            this.toast.success(`"${productData.title}" added successfully.`);
+
             // New products appear first (newest first), so go to page 1.
             this.page = 1;
             this.loadProducts();
@@ -626,6 +633,7 @@ export class AdminProductsComponent implements OnInit {
 
             this.submitting = false;
             this.error = 'Unable to add product.';
+            this.toast.error('Unable to add product. Please try again.');
 
           }
 
@@ -664,11 +672,13 @@ export class AdminProductsComponent implements OnInit {
   
     this.productService.deleteProduct(product.id).subscribe({
       next: () => {
+        this.toast.success(`"${product.title}" deleted successfully.`);
         this.clearDeleteQueryParam();
         this.loadProducts();
       },
       error: () => {
         this.error = 'Unable to delete product.';
+        this.toast.error('Unable to delete product. Please try again.');
         this.clearDeleteQueryParam();
       }
     });

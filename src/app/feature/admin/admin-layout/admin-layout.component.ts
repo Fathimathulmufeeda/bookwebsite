@@ -1,11 +1,6 @@
 import { Component } from '@angular/core';
-import {
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterOutlet
-} from '@angular/router';
-
+import {Router,RouterLink,RouterLinkActive,RouterOutlet} from '@angular/router';
+import { ToastComponent } from '../../../shared/components/toast/toast.component';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -14,7 +9,8 @@ import { AuthService } from '../../../core/services/auth.service';
   imports: [
     RouterLink,
     RouterLinkActive,
-    RouterOutlet
+    RouterOutlet,
+    ToastComponent
   ],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css'

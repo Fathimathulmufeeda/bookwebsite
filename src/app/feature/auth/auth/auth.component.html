@@ -229,19 +229,21 @@
 
 
         <!-- GO TO REGISTER -->
+         
 
+        @if (!isAdminEmail) {
+        
         <p class="mt-6 text-center text-sm text-[#777d76]">
-
+        
             Don't have an account?
-
+        
             <button type="button" (click)="switchMode('register')" class="font-semibold text-[#193629] hover:underline">
                 Register
             </button>
-
-        </p>
-
-        }
-
+        
+        </p>         
+      }
+    }
 
 
         <!-- ========================================================= -->

@@ -1,4 +1,5 @@
 import { Component, inject, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import {
   FormControl,
@@ -13,7 +14,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
-import { take } from 'rxjs';
+import { debounceTime, distinctUntilChanged, of, switchMap, take } from 'rxjs';
 
 import emailjs from '@emailjs/browser';
 
@@ -85,6 +86,10 @@ export class AuthComponent implements OnDestroy {
 
   showLoginPassword = false;
 
+  // True when the email typed on the login form belongs to an admin.
+  // Used to hide the "Register" link (admins never register here).
+  isAdminEmail = false;
+
   loginForm = new FormGroup({
     email: new FormControl('', [
       Validators.required,
@@ -143,6 +148,28 @@ export class AuthComponent implements OnDestroy {
         this.location.replaceState('/register');
       }
     }
+
+    // As the user types their email on the login form, wait until they
+    // pause, then check whether it is an admin email.
+    this.loginForm.controls.email.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap(value => {
+
+          const email = (value ?? '').trim().toLowerCase();
+
+          if (!email || this.loginForm.controls.email.invalid) {
+            return of(false);
+          }
+
+          return this.authService.isAdminEmail(email);
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe(isAdmin => {
+        this.isAdminEmail = isAdmin;
+      });
   }
 
   switchMode(mode: AuthMode): void {

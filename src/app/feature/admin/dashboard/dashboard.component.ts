@@ -162,35 +162,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .slice(0, 5);
   }
 
-  get notifications(): string[] {
-
-    if (!this.stats) {
-      return [];
-    }
-
-    const today = new Date().toDateString();
-    const ordersToday = this.allOrders.filter(o => new Date(o.createdAt).toDateString() === today).length;
-
-    const messages: string[] = [];
-
-    if (ordersToday > 0) {
-      messages.push(`${ordersToday} new ${ordersToday === 1 ? 'order' : 'orders'} today`);
-    }
-
-    if (this.stats.pendingOrdersCount > 0) {
-      messages.push(`${this.stats.pendingOrdersCount} ${this.stats.pendingOrdersCount === 1 ? 'order needs' : 'orders need'} processing`);
-    }
-
-    if (this.stats.lowStockCount > 0) {
-      messages.push(`${this.stats.lowStockCount} ${this.stats.lowStockCount === 1 ? 'book is' : 'books are'} low in stock`);
-    }
-
-    if (this.stats.outOfStockCount > 0) {
-      messages.push(`${this.stats.outOfStockCount} ${this.stats.outOfStockCount === 1 ? 'book is' : 'books are'} out of stock`);
-    }
-
-    return messages;
-  }
 
   // ===========================================================
   // Charts

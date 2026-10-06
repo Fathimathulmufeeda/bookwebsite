@@ -9,6 +9,7 @@ import { User } from '../../../core/Models/user.model';
 import { Order } from '../../../core/Models/order.model';
 
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
+import { ToastService } from '../../../shared/services/toast.service';
 import { PaginationComponent, paginate } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
@@ -27,6 +28,7 @@ export class UsersComponent implements OnInit {
   private authService = inject(AuthService);
   private orderService = inject(OrderService);
   private confirmDialog = inject(ConfirmDialogService);
+  private toast = inject(ToastService);
 
   users: User[] = [];
   orders: Order[] = [];
@@ -154,10 +156,12 @@ export class UsersComponent implements OnInit {
 
         next: () => {
           user.isActive = newStatus;
+          this.toast.success(`${user.name} has been ${newStatus ? 'activated' : 'deactivated'}.`);
         },
 
         error: () => {
           this.error = 'Unable to update user status.';
+          this.toast.error('Unable to update user status. Please try again.');
         }
 
       });

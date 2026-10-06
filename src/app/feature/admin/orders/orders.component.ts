@@ -7,6 +7,7 @@ import { Order, OrderStatus } from '../../../core/Models/order.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/Models/user.model';
 import { PaginationComponent, paginate } from '../../../shared/components/pagination/pagination.component';
+import { ToastService } from '../../../shared/services/toast.service';
 
 // Orders can carry the reason the admin gave when cancelling them
 type OrderWithReason = Order & { cancellationReason?: string; cancelledAt?: string };
@@ -26,6 +27,7 @@ export class OrdersComponent implements OnInit {
 
   private orderService = inject(OrderService);
   private authService = inject(AuthService);
+  private toast = inject(ToastService);
 
   orders: Order[] = [];
   private usersById = new Map<number, User>();
@@ -254,12 +256,14 @@ export class OrdersComponent implements OnInit {
           target.cancelledAt = saved.cancelledAt ?? new Date().toISOString();
 
           this.closeCancelDialog();
+          this.toast.success(`Order #${order.id} cancelled. The customer can see the reason.`);
           this.clampPage();
         },
 
         error: () => {
           this.cancelling = false;
           this.cancelError = 'Unable to cancel the order. Please try again.';
+          this.toast.error('Unable to cancel the order. Please try again.');
         }
 
       });
@@ -319,11 +323,13 @@ export class OrdersComponent implements OnInit {
   
         next: (updatedOrder) => {
           order.status = updatedOrder.status;
+          this.toast.success(`Order #${order.id} marked as ${updatedOrder.status}.`);
           this.clampPage();
         },
   
         error: () => {
           this.error = 'Unable to update order status.';
+          this.toast.error('Unable to update the order status. Please try again.');
         }
   
       });

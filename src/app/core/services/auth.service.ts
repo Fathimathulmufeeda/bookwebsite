@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, switchMap, tap, map, catchError, throwError } from 'rxjs';
+import { Observable, switchMap, tap, map, catchError, throwError, of } from 'rxjs';
 import { User } from '../Models/user.model';
 
 
@@ -27,6 +27,17 @@ export class AuthService {
     return this.http
       .get<User[]>(`${this.apiUrl}?email=${encodeURIComponent(email)}`)
       .pipe(map(users => users.length > 0));
+  }
+
+  // True when the email belongs to an admin account (used to hide the
+  // "Register" link on the login page). Any error counts as "not admin".
+  isAdminEmail(email: string): Observable<boolean> {
+    return this.http
+      .get<User[]>(`${this.apiUrl}?email=${encodeURIComponent(email)}`)
+      .pipe(
+        map(users => users.length > 0 && users[0].role === 'admin'),
+        catchError(() => of(false))
+      );
   }
 
   login(email: string, password: string): Observable<User> {

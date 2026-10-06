@@ -20,17 +20,6 @@
     </div>
     }
 
-    <!-- Notifications strip -->
-    @if (!loading && notifications.length > 0) {
-    <div class="mb-6 flex flex-wrap gap-2">
-        @for (note of notifications; track note) {
-        <span class="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-xs font-medium text-gray-600">
-            🔔 {{ note }}
-        </span>
-        }
-    </div>
-    }
-
     <!-- Stat cards -->
     @if (!loading && stats) {
 
