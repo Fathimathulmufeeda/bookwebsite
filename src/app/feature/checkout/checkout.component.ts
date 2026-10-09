@@ -81,18 +81,7 @@ import {
   styleUrl: './checkout.component.css'
 })
 export class CheckoutComponent implements OnInit {
-
-  // --------------------------------------------------
-  // BUY NOW
-  // --------------------------------------------------
-
   buyNowProduct: Product | null = null;
-
-
-  // --------------------------------------------------
-  // SERVICES
-  // --------------------------------------------------
-
   private store = inject(Store);
 
   private actions$ = inject(Actions);
@@ -107,46 +96,22 @@ export class CheckoutComponent implements OnInit {
 
   private confirmDialog = inject(ConfirmDialogService);
 
-
-  // --------------------------------------------------
-  // CART
-  // --------------------------------------------------
-
   cartItems$ = this.store.select(selectCartItems);
 
   cartTotal$ = this.store.select(selectCartTotal);
 
-
-  // --------------------------------------------------
-  // ADDRESS
-  // --------------------------------------------------
-
   addresses: SavedAddress[] = [];
 
   selectedAddressId: string | null = null;
-
+  
+  readonly maxAddresses = 3;
   showAddressForm = false;
 
   editingAddressId: string | null = null;
 
-
-  // --------------------------------------------------
-  // PAYMENT
-  // --------------------------------------------------
-
   paymentMethod: PaymentMethod = 'COD';
 
-
-  // --------------------------------------------------
-  // ORDER STATE
-  // --------------------------------------------------
-
   submitting = false;
-
-
-  // --------------------------------------------------
-  // ADDRESS FORM
-  // --------------------------------------------------
 
   addressForm = new FormGroup({
 
@@ -182,11 +147,6 @@ export class CheckoutComponent implements OnInit {
 
   });
 
-
-  // --------------------------------------------------
-  // UPI FORM
-  // --------------------------------------------------
-
   upiForm = new FormGroup({
 
     upiId: new FormControl('', [
@@ -198,10 +158,6 @@ export class CheckoutComponent implements OnInit {
 
   });
 
-
-  // ==================================================
-  // INIT
-  // ==================================================
 
   ngOnInit(): void {
 
@@ -234,10 +190,6 @@ export class CheckoutComponent implements OnInit {
     this.prefillName();
   }
 
-
-  // ==================================================
-  // LOAD ADDRESSES
-  // ==================================================
 
   private loadAddresses(): void {
 
@@ -335,25 +287,20 @@ export class CheckoutComponent implements OnInit {
   }
 
 
-  // ==================================================
-  // ADD ADDRESS FORM
-  // ==================================================
 
   openAddForm(): void {
-
+    if (this.addresses.length >= this.maxAddresses) {
+      this.toast.info('You can save a maximum of 3 addresses.');
+      return;
+    }
+  
     this.editingAddressId = null;
-
     this.addressForm.reset();
-
     this.prefillName();
-
     this.showAddressForm = true;
   }
 
 
-  // ==================================================
-  // EDIT ADDRESS
-  // ==================================================
 
   openEditForm(address: SavedAddress): void {
 
@@ -379,10 +326,6 @@ export class CheckoutComponent implements OnInit {
   }
 
 
-  // ==================================================
-  // CANCEL ADDRESS FORM
-  // ==================================================
-
   cancelAddressForm(): void {
 
     this.showAddressForm = false;
@@ -392,10 +335,6 @@ export class CheckoutComponent implements OnInit {
     this.addressForm.reset();
   }
 
-
-  // ==================================================
-  // SAVE ADDRESS
-  // ==================================================
 
   saveAddress(): void {
 
@@ -432,10 +371,6 @@ export class CheckoutComponent implements OnInit {
 
     };
 
-
-    // ==================================================
-    // UPDATE ADDRESS
-    // ==================================================
 
     if (this.editingAddressId) {
 
@@ -479,9 +414,6 @@ export class CheckoutComponent implements OnInit {
     }
 
 
-    // ==================================================
-    // ADD ADDRESS
-    // ==================================================
 
     this.addressService
       .addAddress(payload)
@@ -520,10 +452,6 @@ export class CheckoutComponent implements OnInit {
       });
   }
 
-
-  // ==================================================
-  // DELETE ADDRESS
-  // ==================================================
 
   async deleteAddress(
     address: SavedAddress,

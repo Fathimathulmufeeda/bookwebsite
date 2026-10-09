@@ -38,7 +38,8 @@ import {
   NAME_PATTERN,
   PASSWORD_PATTERN,
   passwordsMatchValidator,
-  passwordRuleStatus
+  passwordRuleStatus,
+  strictEmailValidator
 } from '../../../shared/validators/custom-validators';
 
 
@@ -122,7 +123,7 @@ export class AuthComponent implements OnDestroy {
 
     email: new FormControl('', [
       Validators.required,
-      Validators.email
+      strictEmailValidator
     ]),
 
     password: new FormControl('', [

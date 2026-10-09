@@ -23,6 +23,7 @@ import {
   fileToDataUrl,
   validateImageFile
 } from '../../shared/components/image-cropper/image-cropper';
+import { ToastService } from '../../shared/services/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -40,10 +41,18 @@ export class ProfileComponent implements OnInit {
   private addressService = inject(AddressService);
   private fb = inject(FormBuilder);
   private confirmDialog = inject(ConfirmDialogService);
+  private toastService = inject(ToastService);
 
   user = this.authService.getCurrentUser();
 
+  
   addresses: SavedAddress[] = [];
+
+readonly MAX_ADDRESS = 3;
+
+get canAddAddress(): boolean {
+  return this.addresses.length < this.MAX_ADDRESS;
+}
 
   showAddressForm = false;
   editingAddressId: string | null = null;
@@ -120,17 +129,9 @@ export class ProfileComponent implements OnInit {
     isDefault: [false]
   });
 
-  // ============================================================
-  // INITIAL LOAD
-  // ============================================================
-
   ngOnInit(): void {
     this.loadAddresses();
   }
-
-  // ============================================================
-  // PROFILE PHOTO MENU
-  // ============================================================
 
   togglePhotoMenu(): void {
 
@@ -140,10 +141,6 @@ export class ProfileComponent implements OnInit {
 
     this.showPhotoMenu = !this.showPhotoMenu;
   }
-
-  // ============================================================
-  // SELECT NEW PROFILE PHOTO
-  // ============================================================
 
   async onPhotoSelected(event: Event): Promise<void> {
 
@@ -181,9 +178,6 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  // ============================================================
-  // EDIT CURRENT PROFILE PHOTO
-  // ============================================================
 
   editCurrentPhoto(): void {
 
@@ -195,13 +189,6 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    /*
-     * Photos uploaded through this profile page
-     * are stored as data URLs.
-     *
-     * Only data URLs can be edited directly
-     * by the cropper.
-     */
 
     if (!photo.startsWith('data:')) {
 
@@ -216,10 +203,6 @@ export class ProfileComponent implements OnInit {
     this.cropSource = photo;
   }
 
-  // ============================================================
-  // PHOTO CROPPED
-  // ============================================================
-
   onPhotoCropped(dataUrl: string): void {
 
     this.cropSource = null;
@@ -227,18 +210,11 @@ export class ProfileComponent implements OnInit {
     this.savePhoto(dataUrl);
   }
 
-  // ============================================================
-  // CANCEL CROP
-  // ============================================================
 
   onCropCancelled(): void {
 
     this.cropSource = null;
   }
-
-  // ============================================================
-  // REMOVE PROFILE PHOTO
-  // ============================================================
 
   async removePhoto(): Promise<void> {
 
@@ -265,10 +241,6 @@ export class ProfileComponent implements OnInit {
 
     this.savePhoto('');
   }
-
-  // ============================================================
-  // SAVE PROFILE PHOTO
-  // ============================================================
 
   private savePhoto(profilePicture: string): void {
 
@@ -298,20 +270,7 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  // ============================================================
-  // LOAD ADDRESSES
-  // ============================================================
-
   loadAddresses(): void {
-
-    /*
-     * AddressService already gets the logged-in
-     * user's ID internally.
-     *
-     * Therefore we call getAddresses() without
-     * passing the user ID.
-     */
-
     this.addressService
       .getAddresses()
       .subscribe({
@@ -331,9 +290,6 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  // ============================================================
-  // CHECK ADDRESS FIELD INVALID
-  // ============================================================
 
   isInvalid(
     field:
@@ -351,11 +307,14 @@ export class ProfileComponent implements OnInit {
       (control.touched || control.dirty);
   }
 
-  // ============================================================
-  // ADD ADDRESS
-  // ============================================================
 
   openAddAddress(): void {
+    if (!this.canAddAddress) {
+      this.toastService.show(
+        `You can save a maximum of ${this.MAX_ADDRESS} addresses.`
+      );
+      return;
+    }
     this.editingAddressId = null;
 
     this.showAddressForm = true;
@@ -374,18 +333,11 @@ export class ProfileComponent implements OnInit {
 
       pincode: '',
 
-      /*
-       * If there are no addresses,
-       * this address becomes default.
-       */
+      
       isDefault: this.addresses.length === 0
 
     });
   }
-
-  // ============================================================
-  // EDIT ADDRESS
-  // ============================================================
 
   openEditAddress(address: SavedAddress): void {
 
@@ -412,10 +364,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // ============================================================
-  // CLOSE ADDRESS FORM
-  // ============================================================
-
   closeAddressForm(): void {
 
     this.showAddressForm = false;
@@ -441,10 +389,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // ============================================================
-  // SAVE ADDRESS
-  // ============================================================
-
   saveAddress(): void {
 
     if (this.addressForm.invalid) {
@@ -456,17 +400,6 @@ export class ProfileComponent implements OnInit {
 
     const formValue =
       this.addressForm.getRawValue();
-
-    /*
-     * IMPORTANT:
-     *
-     * AddressService.addAddress() expects:
-     * Omit<SavedAddress, 'id' | 'userId'>
-     *
-     * So we do NOT create id/userId here.
-     *
-     * AddressService creates them automatically.
-     */
 
     const address: Omit<
       SavedAddress,
@@ -489,9 +422,7 @@ export class ProfileComponent implements OnInit {
 
     };
 
-    // ========================================================
-    // UPDATE EXISTING ADDRESS
-    // ========================================================
+
 
     if (this.editingAddressId) {
 
@@ -515,9 +446,8 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    // ========================================================
     // ADD NEW ADDRESS
-    // ========================================================
+  
 
     this.addressService
       .addAddress(address)
@@ -534,9 +464,6 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  // ============================================================
-  // DELETE ADDRESS
-  // ============================================================
 
   async deleteAddress(id: string): Promise<void> {
 
@@ -572,10 +499,6 @@ export class ProfileComponent implements OnInit {
 
       });
   }
-
-  // ============================================================
-  // MAKE ADDRESS DEFAULT
-  // ============================================================
 
   makeDefault(id: string): void {
 

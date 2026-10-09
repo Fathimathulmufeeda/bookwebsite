@@ -20,9 +20,9 @@
     </div>
     }
 
-    <!-- Stat cards -->
     @if (!loading && stats) {
 
+    <!-- ===================== 1. STAT CARDS ===================== -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
 
         <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
@@ -62,7 +62,8 @@
 
     </div>
 
-    <!-- Quick Actions -->
+
+    <!-- ===================== 2. QUICK ACTIONS ===================== -->
     <div class="mt-6 flex flex-wrap gap-2">
         <a routerLink="/admin/products"
             class="rounded-lg bg-[#193629] px-4 py-2 text-xs font-medium text-white transition hover:bg-[#10261d]">
@@ -78,14 +79,39 @@
         </a>
     </div>
 
-    <!-- Revenue + Order Status charts -->
+
+    <!-- ===================== 3. REVENUE + ORDER STATUS ===================== -->
     <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-5">
 
+        <!-- Revenue with Week / Month / Year -->
         <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-3">
-            <h2 class="font-semibold text-[#193629]">Revenue — Last 7 Days</h2>
+
+            <div class="flex flex-wrap items-start justify-between gap-3">
+
+                <div>
+                    <h2 class="font-semibold text-[#193629]">{{ revenueTitle }}</h2>
+                    <p class="mt-1 text-xs text-gray-500">
+                        ₹{{ revenueTotal | number:'1.2-2' }} in this period
+                    </p>
+                </div>
+
+                <div class="inline-flex rounded-lg border border-gray-200 bg-[#f8f5ef] p-0.5">
+                    @for (period of periods; track period.value) {
+                    <button type="button" (click)="setRevenuePeriod(period.value)"
+                        class="rounded-md px-3 py-1 text-xs font-medium transition" [class]="revenuePeriod === period.value
+                            ? 'bg-[#193629] text-white shadow-sm'
+                            : 'text-gray-600 hover:text-[#193629]'">
+                        {{ period.label }}
+                    </button>
+                    }
+                </div>
+
+            </div>
+
             <div class="relative mt-4 h-64">
                 <canvas #revenueChart></canvas>
             </div>
+
         </div>
 
         <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-2">
@@ -97,7 +123,28 @@
 
     </div>
 
-    <!-- Recent Orders -->
+
+    <!-- ===================== 4. SALES BY CATEGORY + PAYMENT METHODS ===================== -->
+    <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-5">
+
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-3">
+            <h2 class="font-semibold text-[#193629]">Sales by Category</h2>
+            <div class="relative mt-4 h-56">
+                <canvas #categoryChart></canvas>
+            </div>
+        </div>
+
+        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-2">
+            <h2 class="font-semibold text-[#193629]">Payment Methods</h2>
+            <div class="relative mt-4 h-56">
+                <canvas #paymentChart></canvas>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ===================== 5. RECENT ORDERS ===================== -->
     <div class="mt-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
 
         <div class="flex items-center justify-between border-b border-gray-100 px-5 py-4">
@@ -130,7 +177,8 @@
 
     </div>
 
-    <!-- Top Selling Books + Stock Alerts -->
+
+    <!-- ===================== 6. TOP SELLING BOOKS + STOCK ALERTS ===================== -->
     <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
 
         <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
@@ -164,6 +212,7 @@
                 @for (product of lowStockProducts; track product.id) {
                 <div class="flex items-center justify-between gap-3">
                     <p class="truncate text-sm text-gray-700">{{ product.title }}</p>
+
                     @if (product.stock <= 0) { <span
                         class="shrink-0 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700">
                         Out of stock
@@ -180,25 +229,6 @@
             } @else {
             <p class="mt-4 text-sm text-gray-500">All books are well stocked.</p>
             }
-        </div>
-
-    </div>
-
-    <!-- Sales by Category + Payment Methods -->
-    <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-5">
-
-        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-3">
-            <h2 class="font-semibold text-[#193629]">Sales by Category</h2>
-            <div class="relative mt-4 h-56">
-                <canvas #categoryChart></canvas>
-            </div>
-        </div>
-
-        <div class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:col-span-2">
-            <h2 class="font-semibold text-[#193629]">Payment Methods</h2>
-            <div class="relative mt-4 h-56">
-                <canvas #paymentChart></canvas>
-            </div>
         </div>
 
     </div>

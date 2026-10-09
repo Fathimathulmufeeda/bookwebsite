@@ -24,6 +24,8 @@ interface DashboardStats {
   outOfStockCount: number;
 }
 
+type RevenuePeriod = 'week' | 'month' | 'year';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -38,9 +40,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
 
-  // The canvases live inside an @if (!loading && stats) block in the template,
-  // so these refs only exist after Angular has rendered that block.
-  // We call cdr.detectChanges() before drawing to guarantee they are resolved.
   @ViewChild('revenueChart') revenueChartRef?: ElementRef<HTMLCanvasElement>;
   @ViewChild('statusChart') statusChartRef?: ElementRef<HTMLCanvasElement>;
   @ViewChild('categoryChart') categoryChartRef?: ElementRef<HTMLCanvasElement>;
@@ -51,7 +50,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private categoryChartInstance?: Chart;
   private paymentChartInstance?: Chart;
 
-  // A book with stock from 1 up to this number counts as "low stock".
+
   private readonly LOW_STOCK_THRESHOLD = 5;
 
   loading = true;
@@ -59,6 +58,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   stats: DashboardStats | null = null;
   recentOrders: Order[] = [];
+
+
+  readonly periods: { value: RevenuePeriod; label: string }[] = [
+    { value: 'week', label: 'Week' },
+    { value: 'month', label: 'Month' },
+    { value: 'year', label: 'Year' }
+  ];
+
+  revenuePeriod: RevenuePeriod = 'week';
+
+  // Total revenue inside the selected period (shown under the chart title)
+  revenueTotal = 0;
 
   private allOrders: Order[] = [];
   private allProducts: Product[] = [];
@@ -95,7 +106,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const revenue = orders
           .filter(o => o.status !== 'Cancelled')
           .reduce((sum, o) => sum + Number(o.total || 0), 0);
-
+//to create card numbers
         this.stats = {
           totalRevenue: revenue,
           totalOrders: orders.length,
@@ -113,8 +124,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.loading = false;
 
-        // Render the @if block now so the <canvas> elements exist
-        // and the @ViewChild refs are resolved, then draw the charts.
         this.cdr.detectChanges();
         this.renderAllCharts();
       },
@@ -174,26 +183,81 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.renderPaymentChart();
   }
 
-  private computeRevenueByDay(): { labels: string[]; data: number[] } {
+  // ---------- Revenue (Week / Month / Year) ----------
 
-    const days: { dateKey: string; label: string }[] = [];
+  get revenueTitle(): string {
+    switch (this.revenuePeriod) {
+      case 'month': return 'Revenue — Last 30 Days';
+      case 'year': return 'Revenue — Last 12 Months';
+      default: return 'Revenue — Last 7 Days';
+    }
+  }
 
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      days.push({
-        dateKey: d.toDateString(),
-        label: d.toLocaleDateString('en-US', { weekday: 'short' })
-      });
+  setRevenuePeriod(period: RevenuePeriod): void {
+
+    if (this.revenuePeriod === period) {
+      return;
     }
 
-    const data = days.map(({ dateKey }) =>
-      this.allOrders
-        .filter(o => o.status !== 'Cancelled' && new Date(o.createdAt).toDateString() === dateKey)
-        .reduce((sum, o) => sum + Number(o.total || 0), 0)
-    );
+    this.revenuePeriod = period;
 
-    return { labels: days.map(d => d.label), data };
+    // Only the revenue chart depends on the period
+    this.renderRevenueChart();
+  }
+
+  private computeRevenue(): { labels: string[]; data: number[] } {
+
+    const buckets: { key: string; label: string }[] = [];
+    let keyOf: (date: Date) => string;
+
+    if (this.revenuePeriod === 'year') {
+
+      // One bar per month for the last 12 months
+      keyOf = (date) => `${date.getFullYear()}-${date.getMonth()}`;
+
+      const now = new Date();
+
+      for (let i = 11; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        buckets.push({
+          key: keyOf(d),
+          label: d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
+        });
+      }
+
+    } else {
+
+      // One point per day: 7 days (week) or 30 days (month)
+      keyOf = (date) => date.toDateString();
+
+      const dayCount = this.revenuePeriod === 'week' ? 7 : 30;
+
+      for (let i = dayCount - 1; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        buckets.push({
+          key: keyOf(d),
+          label: this.revenuePeriod === 'week'
+            ? d.toLocaleDateString('en-US', { weekday: 'short' })
+            : d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+        });
+      }
+    }
+
+    // Add up the revenue of every non-cancelled order into its bucket
+    const totals = new Map<string, number>();
+
+    this.allOrders
+      .filter(o => o.status !== 'Cancelled')
+      .forEach(order => {
+        const key = keyOf(new Date(order.createdAt));
+        totals.set(key, (totals.get(key) ?? 0) + Number(order.total || 0));
+      });
+
+    return {
+      labels: buckets.map(b => b.label),
+      data: buckets.map(b => totals.get(b.key) ?? 0)
+    };
   }
 
   private renderRevenueChart(): void {
@@ -202,7 +266,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { labels, data } = this.computeRevenueByDay();
+    const { labels, data } = this.computeRevenue();
+
+    this.revenueTotal = data.reduce((sum, value) => sum + value, 0);
 
     this.revenueChartInstance?.destroy();
 
@@ -217,7 +283,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           backgroundColor: 'rgba(25, 54, 41, 0.08)',
           fill: true,
           tension: 0.35,
-          pointRadius: 3,
+          pointRadius: this.revenuePeriod === 'month' ? 2 : 3,
           pointBackgroundColor: '#193629'
         }]
       },
@@ -229,6 +295,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
           tooltip: { callbacks: { label: (ctx) => `₹${ctx.parsed.y ?? 0}` } }
         },
         scales: {
+          x: {
+            ticks: { maxTicksLimit: 10, autoSkip: true }
+          },
           y: {
             beginAtZero: true,
             ticks: { callback: (value) => `₹${value}` }
@@ -237,6 +306,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  // ---------- Order status ----------
 
   private computeStatusCounts(): { labels: OrderStatus[]; data: number[] } {
 
@@ -281,6 +352,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  // ---------- Sales by category ----------
 
   private computeCategorySales(): { labels: string[]; data: number[] } {
 
@@ -343,6 +416,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  // ---------- Payment methods ----------
 
   private computePaymentBreakdown(): { labels: PaymentMethod[]; data: number[] } {
 

@@ -15,6 +15,20 @@
       <!-- Items list -->
       <div class="space-y-4 lg:col-span-2">
 
+        <!-- Item count + Clear Cart -->
+        <div class="flex items-center justify-between">
+
+          <p class="text-sm text-[#777d76]">
+            {{ items.length }} {{ items.length === 1 ? 'item' : 'items' }} in your cart
+          </p>
+
+          <button type="button" (click)="clearCart(items)"
+            class="text-[11px] font-bold uppercase tracking-wide text-red-600 hover:underline">
+            Clear Cart
+          </button>
+
+        </div>
+
         @for (item of items; track item.product.id) {
 
         <div class="flex gap-4 rounded-md border border-[#ebe6dd] bg-white p-4 sm:p-5">
@@ -42,17 +56,21 @@
 
               <div class="flex h-9 w-fit items-center rounded-sm border border-[#d8d0c2]">
                 <button type="button" (click)="decrease(item)"
-                  class="flex h-full w-9 items-center justify-center text-[#26332b]" aria-label="Decrease quantity">−</button>
-                <span class="flex h-full w-9 items-center justify-center text-sm font-semibold">{{ item.quantity }}</span>
+                  class="flex h-full w-9 items-center justify-center text-[#26332b]"
+                  aria-label="Decrease quantity">−</button>
+                <span class="flex h-full w-9 items-center justify-center text-sm font-semibold">{{ item.quantity
+                  }}</span>
                 <button type="button" (click)="increase(item)" [disabled]="item.quantity >= effectiveMax(item)"
-                  class="flex h-full w-9 items-center justify-center text-[#26332b] disabled:opacity-30" aria-label="Increase quantity">+</button>
+                  class="flex h-full w-9 items-center justify-center text-[#26332b] disabled:opacity-30"
+                  aria-label="Increase quantity">+</button>
               </div>
 
               <div class="flex items-center gap-4">
                 <span class="text-sm font-semibold text-[#213027]">
                   ₹{{ item.product.price * item.quantity }}
                 </span>
-                <button type="button" (click)="remove(item)" class="text-[11px] font-bold uppercase tracking-wide text-red-600 hover:underline">
+                <button type="button" (click)="remove(item)"
+                  class="text-[11px] font-bold uppercase tracking-wide text-red-600 hover:underline">
                   Remove
                 </button>
               </div>

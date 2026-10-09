@@ -1,11 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {
-  forkJoin,
-  Observable,
-  of,
-  switchMap
-} from 'rxjs';
+import {forkJoin,Observable,of,switchMap} from 'rxjs';
 
 import { SavedAddress } from '../Models/address.model';
 import { AuthService } from './auth.service';
@@ -17,6 +12,7 @@ export class AddressService {
 
   private http = inject(HttpClient);
   private authService = inject(AuthService);
+  private readonly MAX_ADDRESS=3
 
   private apiUrl = 'http://localhost:3000/addresses';
 
@@ -44,7 +40,7 @@ export class AddressService {
     }
 
     return this.http.get<SavedAddress[]>(
-      `${this.apiUrl}?userId=${encodeURIComponent(userId)}`
+      `${this.apiUrl}?userId=${encodeURIComponent(userId)}` //It safely encodes values before putting them into URLs.
     );
   }
 
@@ -59,6 +55,8 @@ export class AddressService {
     if (!userId) {
       throw new Error('User is not logged in');
     }
+    
+    
 
     const newAddress: SavedAddress = {
       ...address,
@@ -69,6 +67,10 @@ export class AddressService {
     return this.getAddresses().pipe(
 
       switchMap(addresses => {
+
+        // if(addresses.length>=this.MAX_ADDRESS){
+        //   throw new Error('you can only save maximum of ${this.MAX_ADDRESS}adddress')
+        // }
 
         // First address automatically becomes default
         if (addresses.length === 0) {

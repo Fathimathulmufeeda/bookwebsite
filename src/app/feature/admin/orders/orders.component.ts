@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/Models/user.model';
 import { PaginationComponent, paginate } from '../../../shared/components/pagination/pagination.component';
 import { ToastService } from '../../../shared/services/toast.service';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 
 // Orders can carry the reason the admin gave when cancelling them
 type OrderWithReason = Order & { cancellationReason?: string; cancelledAt?: string };
@@ -28,6 +29,7 @@ export class OrdersComponent implements OnInit {
   private orderService = inject(OrderService);
   private authService = inject(AuthService);
   private toast = inject(ToastService);
+  private confirmDialog = inject(ConfirmDialogService);
 
   orders: Order[] = [];
   private usersById = new Map<number, User>();
@@ -182,17 +184,34 @@ export class OrdersComponent implements OnInit {
     this.selectedOrder = null;
   }
 
-  // Called by the status dropdowns.
-  // Cancelling needs a reason, so it opens a dialog instead of saving right away.
-  onStatusChange(order: Order, status: OrderStatus, select: HTMLSelectElement): void {
+  async onStatusChange(order: Order, status: OrderStatus, select: HTMLSelectElement): Promise<void> {
 
-    if (status === 'Cancelled' && order.status !== 'Cancelled') {
+    const previousStatus = order.status;
 
-      // Put the dropdown back to the real status until the admin confirms
-      select.value = order.status;
+    // Selecting the current status again does nothing
+    if (status === previousStatus) {
+      return;
+    }
 
+    // Put the dropdown back to the real status until the admin confirms.
+    // After a successful save, the dropdown updates to the new status.
+    select.value = previousStatus;
+
+    if (status === 'Cancelled') {
       this.openCancelDialog(order);
+      return;
+    }
 
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Update order status',
+      message:
+        `Change Order #${order.id} from "${previousStatus}" to "${status}"? ` +
+        `Order statuses can only move forward, so this cannot be changed back.`,
+      confirmText: `Mark as ${status}`,
+      cancelText: 'Cancel'
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -290,28 +309,25 @@ export class OrdersComponent implements OnInit {
       return false;
     }
 
-    // A cancelled order is final
     if (current === 'Cancelled') {
       return true;
     }
 
-    // Once shipped (or delivered) an order can no longer be cancelled
+
     if (option === 'Cancelled') {
       return current === 'Shipped' || current === 'Delivered';
     }
 
-    // Earlier steps are disabled (e.g. Shipped -> Placed / Processing are disabled)
     return this.statusFlow.indexOf(option) < this.statusFlow.indexOf(current);
   }
 
   updateStatus(order: Order, status: OrderStatus): void {
 
-    // Safety check: never allow a disabled status to be saved
     if (this.isStatusDisabled(order.status, status)) {
       return;
     }
 
-    // Cancelling always goes through the reason dialog
+
     if (status === 'Cancelled') {
       this.openCancelDialog(order);
       return;

@@ -524,13 +524,30 @@
 
                 @for (item of selectedOrder.items; track item.product.id) {
 
-                <div class="flex items-center justify-between gap-4 rounded-xl
-                                           border border-gray-100 p-3">
+                <div class="flex items-center gap-4 rounded-xl border border-gray-100 p-3">
 
-                    <div class="min-w-0">
+                    <!-- Product photo -->
+                    @if (item.product.images?.[0]) {
+
+                    <img [src]="item.product.images?.[0]" [alt]="item.product.title"
+                        class="h-20 w-14 shrink-0 rounded-md bg-[#f8f5ef] object-cover" />
+
+                    } @else {
+
+                    <div class="flex h-20 w-14 shrink-0 items-center justify-center rounded-md bg-[#f8f5ef] text-xl">
+                        📘
+                    </div>
+
+                    }
+
+                    <div class="min-w-0 flex-1">
 
                         <p class="truncate font-medium text-gray-700">
                             {{ item.product.title }}
+                        </p>
+
+                        <p class="mt-0.5 truncate text-xs text-gray-400">
+                            {{ item.product.author }}
                         </p>
 
                         <p class="mt-1 text-xs text-gray-500">

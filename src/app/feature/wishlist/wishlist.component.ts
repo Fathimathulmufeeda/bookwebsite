@@ -11,6 +11,8 @@ import { Product } from '../../core/Models/Product.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ToastService } from '../../shared/services/toast.service';
+import { WishlistService } from '../../core/services/wishlist.service';
+import { ConfirmDialogService } from '../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-wishlist',
@@ -24,6 +26,8 @@ export class WishlistComponent implements OnInit {
   private store = inject(Store);
   private router = inject(Router);
   private toast = inject(ToastService);
+  private wishlistService = inject(WishlistService);
+private confirmDialog = inject(ConfirmDialogService);
 
   wishlistProducts$ = this.store.select(selectWishlistProducts);
 
@@ -72,5 +76,32 @@ export class WishlistComponent implements OnInit {
 
   goToProduct(product: Product): void {
     this.router.navigate(['/product', product.id]);
+  }
+  async clearWishlist(): Promise<void> {
+
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Clear Wishlist',
+      message: 'Are you sure you want to remove all books from your wishlist? This action cannot be undone.',
+      confirmText: 'Clear Wishlist',
+      cancelText: 'Keep Wishlist',
+      danger: true
+    });
+  
+    if (!confirmed) {
+      return;
+    }
+  
+    this.wishlistService.clearWishlist().subscribe({
+  
+      error: () => {
+        this.toast.error('Failed to clear your wishlist. Please try again.');
+      },
+  
+      complete: () => {
+        this.store.dispatch(loadWishlist());
+        this.toast.success('Your wishlist has been cleared.');
+      }
+  
+    });
   }
 }

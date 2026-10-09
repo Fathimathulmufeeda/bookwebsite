@@ -137,7 +137,7 @@
       "pages": 320,
       "createdAt": "2026-09-20",
       "description": "A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.",
-      "stock": 43
+      "stock": 42
     },
     {
       "id": 2,
@@ -256,7 +256,7 @@
       "discountPercent": 36,
       "images": [
         "/images/deepwork1.jpg",
-        "/images/deepwork1.png"
+        "/images/deepwork2.png"
       ],
       "category": "selfhelp",
       "genre": [
@@ -271,7 +271,7 @@
       "pages": 304,
       "createdAt": "2026-09-14",
       "description": "A guide to developing focused work habits in a distracted world.",
-      "stock": 30
+      "stock": 25
     },
     {
       "id": 7,
@@ -322,7 +322,7 @@
       "pages": 371,
       "createdAt": "2026-09-12",
       "description": "A powerful story of friendship, family, betrayal, and redemption set against the history of Afghanistan.",
-      "stock": 24
+      "stock": 23
     },
     {
       "id": 9,
@@ -3371,7 +3371,9 @@
       },
       "paymentMethod": "COD",
       "createdAt": "2026-09-29T10:20:41.013Z",
-      "status": "Placed"
+      "status": "Cancelled",
+      "cancellationReason": "Delivery not available for your address",
+      "cancelledAt": "2026-10-08T09:46:28.142Z"
     },
     {
       "id": 1790692611849,
@@ -4017,6 +4019,128 @@
       "status": "Cancelled",
       "cancellationReason": "Ordered by mistake",
       "cancelledAt": "2026-10-06T04:12:57.554Z"
+    },
+    {
+      "id": 1791347241277,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 6,
+            "title": "Deep Work",
+            "author": "Cal Newport",
+            "price": 449,
+            "mrp": 699,
+            "discountPercent": 36,
+            "images": [
+              "/images/deepwork1.jpg",
+              "/images/deepwork2.png"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Productivity",
+              "Self Help",
+              "Career"
+            ],
+            "rating": 4.6,
+            "reviewCount": 720,
+            "publisher": "Grand Central Publishing",
+            "language": "English",
+            "pages": 304,
+            "createdAt": "2026-09-14",
+            "description": "A guide to developing focused work habits in a distracted world.",
+            "stock": 30
+          },
+          "quantity": 5
+        }
+      ],
+      "total": 2245,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-07T04:27:21.277Z",
+      "status": "Shipped"
+    },
+    {
+      "id": 1791514749930,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 8,
+            "title": "The Kite Runner",
+            "author": "Khaled Hosseini",
+            "price": 399,
+            "mrp": 599,
+            "discountPercent": 33,
+            "images": [
+              "/images/kiterunner1.jpg"
+            ],
+            "category": "fiction",
+            "genre": [
+              "Fiction",
+              "Drama",
+              "Historical"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1350,
+            "publisher": "Riverhead Books",
+            "language": "English",
+            "pages": 371,
+            "createdAt": "2026-09-12",
+            "description": "A powerful story of friendship, family, betrayal, and redemption set against the history of Afghanistan.",
+            "stock": 24
+          },
+          "quantity": 1
+        },
+        {
+          "product": {
+            "id": 1,
+            "title": "Atomic Habits",
+            "author": "James Clear",
+            "price": 450,
+            "mrp": 599,
+            "discountPercent": 25,
+            "images": [
+              "/images/atomic-habit3.jpg",
+              "/images/atomic-habit4.jpg"
+            ],
+            "category": "selfhelp",
+            "genre": [
+              "Self Help",
+              "Habits",
+              "Productivity"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1250,
+            "publisher": "Avery",
+            "language": "English",
+            "pages": 320,
+            "createdAt": "2026-09-20",
+            "description": "A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.",
+            "stock": 43
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 849,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-09T02:59:09.930Z",
+      "status": "Placed"
     }
   ],
   "cart": [
@@ -4049,6 +4173,12 @@
       "userId": "68Y9KwA",
       "productId": 36,
       "quantity": 1
+    },
+    {
+      "id": "1_36",
+      "userId": "1",
+      "productId": 36,
+      "quantity": 1
     }
   ],
   "wishlist": [
@@ -4073,21 +4203,6 @@
       "productId": 2
     },
     {
-      "id": "1_36",
-      "userId": "1",
-      "productId": 36
-    },
-    {
-      "id": "1_37",
-      "userId": "1",
-      "productId": 37
-    },
-    {
-      "id": "1_8",
-      "userId": "1",
-      "productId": 8
-    },
-    {
       "id": "68Y9KwA_37",
       "userId": "68Y9KwA",
       "productId": 37
@@ -4106,6 +4221,21 @@
       "id": "68Y9KwA_29",
       "userId": "68Y9KwA",
       "productId": 29
+    },
+    {
+      "id": "1_36",
+      "userId": "1",
+      "productId": 36
+    },
+    {
+      "id": "1_8",
+      "userId": "1",
+      "productId": 8
+    },
+    {
+      "id": "1_37",
+      "userId": "1",
+      "productId": 37
     }
   ],
   "addresses": [
@@ -4116,7 +4246,7 @@
       "city": "uiyui",
       "state": "kerala28y90u",
       "pincode": "670308",
-      "isDefault": true,
+      "isDefault": false,
       "id": "addr_1790581751016_917",
       "userId": "1"
     },
@@ -4174,6 +4304,28 @@
       "isDefault": true,
       "id": "addr_1790692514461_361",
       "userId": "68Y9KwA"
+    },
+    {
+      "name": "fathima",
+      "phone": "9341567899",
+      "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+      "city": "uiyui",
+      "state": "fjufjyu",
+      "pincode": "670308",
+      "isDefault": false,
+      "id": "addr_1791479256421_686",
+      "userId": "1"
+    },
+    {
+      "name": "fathima",
+      "phone": "9341567899",
+      "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+      "city": "uiyui",
+      "state": "fjufjyu",
+      "pincode": "670308",
+      "isDefault": false,
+      "id": "addr_1791518091208_610",
+      "userId": "1"
     }
   ]
 }

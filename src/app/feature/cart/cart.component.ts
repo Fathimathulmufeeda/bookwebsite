@@ -87,6 +87,33 @@ export class CartComponent implements OnInit {
     this.toast.success(`"${item.product.title}" removed from cart.`);
   }
 
+  // Removes every item from the cart (after asking for confirmation)
+  async clearCart(items: CartItem[]): Promise<void> {
+
+    if (items.length === 0) {
+      return;
+    }
+
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Clear your cart?',
+      message: `Remove all ${items.length} ${items.length === 1 ? 'item' : 'items'} from your cart?`,
+      confirmText: 'Clear Cart',
+      cancelText: 'Keep items',
+      danger: true
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
+    // Copy first, because the cart changes while we remove items
+    [...items].forEach(item => {
+      this.store.dispatch(removeFromCart({ productId: item.product.id }));
+    });
+
+    this.toast.success('Your cart has been cleared.');
+  }
+
   goToCheckout(): void {
     this.router.navigate(['/checkout']);
   }

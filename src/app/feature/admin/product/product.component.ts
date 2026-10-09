@@ -1,29 +1,16 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
-
+import {FormControl,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/Models/Product.model';
 import { priceLessThanMrpValidator, PRODUCT_TEXT_PATTERN } from '../../../shared/validators/custom-validators';
 import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { PaginationComponent, paginate } from '../../../shared/components/pagination/pagination.component';
-import {
-  ImageCropperComponent,
-  CropRatio,
-  fileToDataUrl,
-  validateImageFile
-} from '../../../shared/components/image-cropper/image-cropper';
+import {ImageCropperComponent,CropRatio,fileToDataUrl,validateImageFile} from '../../../shared/components/image-cropper/image-cropper';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
-
-// Products can optionally keep the full, uncropped version of each image
 type ProductWithOriginals = Product & { originalImages?: string[] };
 
 @Component({
@@ -47,7 +34,7 @@ export class AdminProductsComponent implements OnInit {
 
   products: Product[] = [];
 
-  // Pagination
+  
   page = 1;
   pageSize = 10;
 
@@ -214,7 +201,7 @@ export class AdminProductsComponent implements OnInit {
       images: [...product.images]
     });
 
-    // Load the saved full-size originals (same order as the images)
+    // Load the saved full-size originals
     const savedOriginals = (product as ProductWithOriginals).originalImages ?? [];
     this.originals = product.images.map((_, i) => savedOriginals[i] ?? '');
   
@@ -288,7 +275,7 @@ export class AdminProductsComponent implements OnInit {
   
         const mode = openFromUrl ? this.route.snapshot.queryParams['mode'] : null;
         const id = openFromUrl ? Number(this.route.snapshot.queryParams['id']) : 0;
-  
+  //page refresh Reopen the edit form.
         if (mode === 'edit' && id) {
           const product = this.products.find(p => p.id === id);
   
@@ -303,6 +290,8 @@ export class AdminProductsComponent implements OnInit {
       }
     });
   }
+
+  //product+++
 
   openAddForm(): void {
   this.editingProduct = null;
@@ -393,7 +382,7 @@ export class AdminProductsComponent implements OnInit {
 
     await this.openNextCrop();
   }
-
+//crop image queue
   private async openNextCrop(): Promise<void> {
 
     const file = this.cropQueue.shift();
@@ -473,6 +462,7 @@ export class AdminProductsComponent implements OnInit {
     const images = [...(this.productForm.controls.images.value ?? [])];
 
     if (this.editingImageIndex !== null) {
+      //Replace that image with the newly cropped version
       images[this.editingImageIndex] = dataUrl;
       this.originals[this.editingImageIndex] = this.pendingOriginal;
       this.editingImageIndex = null;
