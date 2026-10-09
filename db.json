@@ -8,7 +8,7 @@
       "role": "admin"
     },
     {
-      "name": "fathima",
+      "name": "fathimathul",
       "email": "fathi@gmail.com",
       "password": "Fathi@12",
       "role": "user",
@@ -124,7 +124,7 @@
         "/images/atomic-habit3.jpg",
         "/images/atomic-habit4.jpg"
       ],
-      "category": "selfhelp",
+      "category": "Fiction",
       "genre": [
         "Self Help",
         "Habits",
@@ -137,7 +137,11 @@
       "pages": 320,
       "createdAt": "2026-09-20",
       "description": "A practical guide to building good habits, breaking bad ones, and making small changes that lead to remarkable results.",
-      "stock": 42
+      "stock": 42,
+      "originalImages": [
+        "",
+        ""
+      ]
     },
     {
       "id": 2,
@@ -1036,7 +1040,7 @@
       "pages": 328,
       "createdAt": "2026-08-15",
       "description": "A dystopian classic about surveillance, control, truth, and individual freedom.",
-      "stock": 38
+      "stock": 37
     },
     {
       "id": 37,
@@ -1062,7 +1066,7 @@
       "pages": 336,
       "createdAt": "2026-08-14",
       "description": "A classic novel exploring justice, morality, childhood, and social inequality in the American South.",
-      "stock": 31
+      "stock": 28
     },
     {
       "id": 38,
@@ -1198,11 +1202,11 @@
       "author": "Frieda MC Fadden",
       "price": 420,
       "mrp": 500,
-      "category": "Fiction",
+      "category": "Non Fiction",
       "genre": [
         "thriller"
       ],
-      "rating": 4.8,
+      "rating": 4.6,
       "reviewCount": 970,
       "publisher": "Sourcebook",
       "language": "English",
@@ -1352,7 +1356,7 @@
         "phone": "9876543210"
       },
       "orderDate": "2026-09-17T09:15:00.000Z",
-      "status": "Shipped"
+      "status": "Delivered"
     },
     {
       "id": "4",
@@ -4065,7 +4069,7 @@
       },
       "paymentMethod": "COD",
       "createdAt": "2026-10-07T04:27:21.277Z",
-      "status": "Shipped"
+      "status": "Delivered"
     },
     {
       "id": 1791514749930,
@@ -4140,7 +4144,151 @@
       },
       "paymentMethod": "COD",
       "createdAt": "2026-10-09T02:59:09.930Z",
+      "status": "Shipped"
+    },
+    {
+      "id": 1791524887785,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 36,
+            "title": "1984",
+            "author": "George Orwell",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/1984.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Dystopian",
+              "Political Fiction"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1320,
+            "publisher": "Penguin Classics",
+            "language": "English",
+            "pages": 328,
+            "createdAt": "2026-08-15",
+            "description": "A dystopian classic about surveillance, control, truth, and individual freedom.",
+            "stock": 38
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 299,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-09T05:48:07.785Z",
       "status": "Placed"
+    },
+    {
+      "id": 1791525123531,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 37,
+            "title": "To Kill a Mockingbird",
+            "author": "Harper Lee",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/killamockin1.jpg",
+              "/images/killamockin2.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Drama",
+              "Historical"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1270,
+            "publisher": "Harper Perennial",
+            "language": "English",
+            "pages": 336,
+            "createdAt": "2026-08-14",
+            "description": "A classic novel exploring justice, morality, childhood, and social inequality in the American South.",
+            "stock": 31
+          },
+          "quantity": 1
+        }
+      ],
+      "total": 299,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-09T05:52:03.531Z",
+      "status": "Cancelled",
+      "cancellationReason": "Taking too long to arrive",
+      "cancelledAt": "2026-10-09T06:03:58.522Z"
+    },
+    {
+      "id": 1791525784731,
+      "userId": "1",
+      "items": [
+        {
+          "product": {
+            "id": 37,
+            "title": "To Kill a Mockingbird",
+            "author": "Harper Lee",
+            "price": 299,
+            "mrp": 499,
+            "discountPercent": 40,
+            "images": [
+              "/images/killamockin1.jpg",
+              "/images/killamockin2.jpg"
+            ],
+            "category": "classics",
+            "genre": [
+              "Classic",
+              "Drama",
+              "Historical"
+            ],
+            "rating": 4.8,
+            "reviewCount": 1270,
+            "publisher": "Harper Perennial",
+            "language": "English",
+            "pages": 336,
+            "createdAt": "2026-08-14",
+            "description": "A classic novel exploring justice, morality, childhood, and social inequality in the American South.",
+            "stock": 30
+          },
+          "quantity": 2
+        }
+      ],
+      "total": 598,
+      "shippingAddress": {
+        "name": "fathimamufoeeda",
+        "phone": "9341567899",
+        "address": "Baithul hamd ,\nRamanthali Vadakkumbad,\nkannur kearala",
+        "city": "uiyui",
+        "state": "kerala28y90u",
+        "pincode": "670308"
+      },
+      "paymentMethod": "COD",
+      "createdAt": "2026-10-09T06:03:04.731Z",
+      "status": "Cancelled",
+      "cancellationReason": "Found a better price elsewhere",
+      "cancelledAt": "2026-10-09T06:04:49.658Z"
     }
   ],
   "cart": [
@@ -4171,12 +4319,6 @@
     {
       "id": "68Y9KwA_36",
       "userId": "68Y9KwA",
-      "productId": 36,
-      "quantity": 1
-    },
-    {
-      "id": "1_36",
-      "userId": "1",
       "productId": 36,
       "quantity": 1
     }
@@ -4223,9 +4365,19 @@
       "productId": 29
     },
     {
-      "id": "1_36",
+      "id": "1_31",
       "userId": "1",
-      "productId": 36
+      "productId": 31
+    },
+    {
+      "id": "1_32",
+      "userId": "1",
+      "productId": 32
+    },
+    {
+      "id": "1_29",
+      "userId": "1",
+      "productId": 29
     },
     {
       "id": "1_8",
@@ -4233,9 +4385,24 @@
       "productId": 8
     },
     {
-      "id": "1_37",
+      "id": "1_36",
       "userId": "1",
-      "productId": 37
+      "productId": 36
+    },
+    {
+      "id": "1_17",
+      "userId": "1",
+      "productId": 17
+    },
+    {
+      "id": "1_43",
+      "userId": "1",
+      "productId": 43
+    },
+    {
+      "id": "1_2",
+      "userId": "1",
+      "productId": 2
     }
   ],
   "addresses": [

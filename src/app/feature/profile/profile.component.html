@@ -139,46 +139,142 @@
 
             <!-- PROFILE INFORMATION -->
             <div class="rounded-lg bg-white p-6 shadow-sm lg:col-span-2">
-
-                <h2 class="text-xl font-semibold text-[#193629]">
-                    Personal Information
-                </h2>
-
-                <div class="mt-6 space-y-5">
-
+            
+                <!-- HEADER -->
+                <div class="flex items-center justify-between gap-3">
+                    <h2 class="text-xl font-semibold text-[#193629]">
+                        Personal Information
+                    </h2>
+            
+                    @if (!showProfileForm) {
+                    <button type="button" (click)="openEditProfile()"
+                        class="rounded-md border border-[#193629] px-4 py-2 text-sm font-medium text-[#193629] transition hover:bg-[#193629] hover:text-white">
+                        Edit Profile
+                    </button>
+                    }
+                </div>
+            
+                @if (showProfileForm) {
+            
+                <!-- EDIT PROFILE FORM -->
+                <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="mt-6 space-y-5">
+            
                     <!-- NAME -->
                     <div>
-
-                        <p class="text-sm text-gray-500">
+                        <label for="profileName" class="text-sm text-gray-600">
                             Name
+                        </label>
+            
+                        <input id="profileName" type="text" formControlName="name" maxlength="50"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#193629]"
+                            placeholder="Enter your name" />
+            
+                        @if (
+                        profileForm.controls.name.invalid &&
+                        (profileForm.controls.name.touched ||
+                        profileForm.controls.name.dirty)
+                        ) {
+                        @if (profileForm.controls.name.hasError('required')) {
+                        <p class="mt-1 text-xs text-red-600">
+                            Name is required.
                         </p>
-
-                        <p class="mt-1 text-[#202a24]">
-                            {{ user.name }}
+                        } @else if (
+                        profileForm.controls.name.hasError('minlength')
+                        ) {
+                        <p class="mt-1 text-xs text-red-600">
+                            Name must contain at least 2 characters.
                         </p>
-
+                        } @else if (
+                        profileForm.controls.name.hasError('maxlength')
+                        ) {
+                        <p class="mt-1 text-xs text-red-600">
+                            Name cannot exceed 50 characters.
+                        </p>
+                        } @else if (
+                        profileForm.controls.name.hasError('pattern')
+                        ) {
+                        <p class="mt-1 text-xs text-red-600">
+                            Enter a valid name using letters, spaces,
+                            apostrophes, or hyphens.
+                        </p>
+                        }
+                        }
                     </div>
-
-
+            
                     <!-- EMAIL -->
                     <div>
-
-                        <p class="text-sm text-gray-500">
+                        <label for="profileEmail" class="text-sm text-gray-600">
                             Email
+                        </label>
+            
+                        <input id="profileEmail" type="email" formControlName="email" maxlength="254" autocomplete="email"
+                            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#193629]"
+                            placeholder="Enter your email" />
+            
+                        @if (
+                        profileForm.controls.email.invalid &&
+                        (profileForm.controls.email.touched ||
+                        profileForm.controls.email.dirty)
+                        ) {
+                        @if (profileForm.controls.email.hasError('required')) {
+                        <p class="mt-1 text-xs text-red-600">
+                            Email is required.
                         </p>
-
-                        <p class="mt-1 text-[#202a24]">
+                        } @else {
+                        <p class="mt-1 text-xs text-red-600">
+                            Enter a valid email address.
+                        </p>
+                        }
+                        }
+                    </div>
+            
+                    <!-- SAVE / CANCEL -->
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" (click)="cancelEditProfile()" [disabled]="savingProfile"
+                            class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50">
+                            Cancel
+                        </button>
+            
+                        <button type="submit" [disabled]="savingProfile"
+                            class="rounded-md bg-[#193629] px-4 py-2 text-sm font-medium text-white hover:bg-[#244b3b] disabled:cursor-not-allowed disabled:opacity-50">
+                            {{ savingProfile ? 'Saving...' : 'Save Changes' }}
+                        </button>
+                    </div>
+            
+                </form>
+            
+                } @else {
+            
+                <!-- PROFILE DETAILS -->
+                <div class="mt-6 space-y-5">
+            
+                    <div>
+                        <p class="text-sm text-gray-500">Name</p>
+                        <p class="mt-1 break-words text-[#202a24]">
+                            {{ user.name }}
+                        </p>
+                    </div>
+            
+                    <div>
+                        <p class="text-sm text-gray-500">Email</p>
+                        <p class="mt-1 break-words text-[#202a24]">
                             {{ user.email }}
                         </p>
-
                     </div>
-
+            
                 </div>
-
+            
+                }
+            
+                <!-- LOGOUT -->
+                <div class="mt-8 border-t border-[#eeeae2] pt-5">
+                    <button type="button" (click)="logout()"
+                        class="rounded-md border border-red-300 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50">
+                        Logout
+                    </button>
+                </div>    
+              </div>
             </div>
-
-        </div>
-
 
         <!-- SAVED ADDRESSES -->
         <div class="mt-8 rounded-lg bg-white p-6 shadow-sm">

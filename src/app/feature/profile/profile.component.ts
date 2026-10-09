@@ -24,6 +24,7 @@ import {
   validateImageFile
 } from '../../shared/components/image-cropper/image-cropper';
 import { ToastService } from '../../shared/services/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -42,6 +43,7 @@ export class ProfileComponent implements OnInit {
   private fb = inject(FormBuilder);
   private confirmDialog = inject(ConfirmDialogService);
   private toastService = inject(ToastService);
+  private router = inject(Router);
 
   user = this.authService.getCurrentUser();
 
@@ -57,9 +59,7 @@ get canAddAddress(): boolean {
   showAddressForm = false;
   editingAddressId: string | null = null;
 
-  // ============================================================
-  // PROFILE PHOTO
-  // ============================================================
+
 
   showPhotoMenu = false;
 
@@ -69,9 +69,6 @@ get canAddAddress(): boolean {
 
   savingPhoto = false;
 
-  // ============================================================
-  // ADDRESS FORM
-  // ============================================================
 
   addressForm = this.fb.nonNullable.group({
 
@@ -128,6 +125,124 @@ get canAddAddress(): boolean {
 
     isDefault: [false]
   });
+  
+  showProfileForm = false;
+  savingProfile = false;
+  
+  profileForm = this.fb.nonNullable.group({
+    name: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(50),
+        Validators.pattern(NAME_PATTERN)
+      ]
+    ],
+    email: [
+      '',
+      [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(254)
+      ]
+    ]
+  });
+  
+openEditProfile(): void {
+  if (!this.user || this.savingProfile) {
+    return;
+  }
+
+  this.profileForm.reset({
+    name: this.user.name,
+    email: this.user.email
+  });
+
+  this.showProfileForm = true;
+}
+
+cancelEditProfile(): void {
+  this.showProfileForm = false;
+
+  this.profileForm.reset({
+    name: this.user?.name ?? '',
+    email: this.user?.email ?? ''
+  });
+}
+
+saveProfile(): void {
+  if (this.profileForm.invalid || this.savingProfile) {
+    this.profileForm.markAllAsTouched();
+    return;
+  }
+
+  const { name, email } = this.profileForm.getRawValue();
+
+  const updatedName = name.trim();
+  const updatedEmail = email.trim();
+
+  if (
+    updatedName === this.user?.name &&
+    updatedEmail.toLowerCase() === this.user?.email.toLowerCase()
+  ) {
+    this.toastService.show('No changes to save.');
+    this.cancelEditProfile();
+    return;
+  }
+
+  this.savingProfile = true;
+
+  this.authService
+    .updateProfile(updatedName, updatedEmail)
+    .subscribe({
+      next: updatedUser => {
+        this.user = updatedUser;
+        this.savingProfile = false;
+        this.showProfileForm = false;
+
+        this.toastService.show(
+          'Profile updated successfully.'
+        );
+      },
+
+      error: error => {
+        this.savingProfile = false;
+
+        if (error?.message === 'EMAIL_EXISTS') {
+          this.toastService.show(
+            'This email is already registered.'
+          );
+        } else if (error?.message === 'NOT_LOGGED_IN') {
+          this.toastService.show(
+            'Please log in to update your profile.'
+          );
+        } else {
+          this.toastService.show(
+            'Unable to update your profile. Please try again.'
+          );
+        }
+      }
+    });
+}
+
+async logout(): Promise<void> {
+  const confirmed = await this.confirmDialog.confirm({
+    title: 'Logout',
+    message: 'Are you sure you want to log out?',
+    confirmText: 'Logout',
+    cancelText: 'Cancel',
+    danger: true
+  });
+
+  if (!confirmed) {
+    return;
+  }
+
+  this.authService.logout();
+
+  this.router.navigate(['/home']);
+}
 
   ngOnInit(): void {
     this.loadAddresses();

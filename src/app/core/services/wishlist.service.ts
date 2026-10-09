@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
+import { Observable, forkJoin, map, of, switchMap, throwError } from 'rxjs';
 
 import { Product } from '../Models/Product.model';
 import { AuthService } from './auth.service';
@@ -22,6 +22,12 @@ export class WishlistService {
   private apiUrl = 'http://localhost:3000/wishlist';
   private productsUrl = 'http://localhost:3000/products';
 
+  readonly MAX_WISHLIST_PRODUCTS = 8;
+
+isWishlistFull(products: Product[]): boolean {
+  return products.length >= this.MAX_WISHLIST_PRODUCTS;
+}
+
   private getUserId(): string | null {
     const user = this.authService.getCurrentUser();
 
@@ -38,6 +44,11 @@ export class WishlistService {
 
     if (!userId) {
       return of(void 0);
+    }
+    if (products.length > this.MAX_WISHLIST_PRODUCTS) {
+      return throwError(
+        () => new Error('Only 8 products are allowed in the wishlist.')
+      );
     }
 
     return this.http

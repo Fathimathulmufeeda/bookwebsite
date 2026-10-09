@@ -1,0 +1,1 @@
+export const MAX_WISHLIST_PRODUCTS = 10;

@@ -24,6 +24,8 @@ import { FooterComponent } from '../../shared/components/footer/footer.component
 import { ToastService } from '../../shared/services/toast.service';
 import { AuthService } from '../../core/services/auth.service';
 import { normalizeCategory } from '../../shared/utils/category.util';
+import { take } from 'rxjs';
+import { MAX_WISHLIST_PRODUCTS } from '../../store/wishlist/wishlist.constant';
 
 
 type SortOption = 'relevance' | 'price-asc' | 'price-desc' | 'rating';
@@ -284,7 +286,6 @@ export class BooksComponent implements OnInit {
   }
 
   toggleWishlist(product: Product, event?: Event): void {
-
     event?.stopPropagation();
   
     if (!this.authService.isLoggedIn()) {
@@ -300,21 +301,30 @@ export class BooksComponent implements OnInit {
   
     if (this.isWishlisted(product)) {
       this.store.dispatch(
-        removeFromWishlist({
-          productId: product.id
-        })
+        removeFromWishlist({ productId: product.id })
       );
   
       this.toast.info(`${product.title} removed from wishlist.`);
-    } else {
-      this.store.dispatch(
-        addToWishlist({
-          product
-        })
-      );
-  
-      this.toast.success(`${product.title} added to wishlist.`);
+      return;
     }
+  
+    this.store.select(selectWishlistProducts).pipe(
+      take(1)
+    ).subscribe(products => {
+      if (products.some(item => item.id === product.id)) {
+        return;
+      }
+  
+      if (products.length >= MAX_WISHLIST_PRODUCTS) {
+        this.toast.warning(
+          `Only ${MAX_WISHLIST_PRODUCTS} books are allowed in the wishlist.`
+        );
+        return;
+      }
+  
+      this.store.dispatch(addToWishlist({ product }));
+      this.toast.success(`${product.title} added to wishlist.`);
+    });
   }
 
   buyNow(product: Product, event?: Event): void {

@@ -27,16 +27,35 @@ export class OrderHistoryComponent implements OnInit {
 
   orders$ = this.store.select(selectOrders);
 
-  // The order currently open in the detail modal (Amazon-style: list
-  // shows compact rows, click one to see the full breakdown).
+  
   selectedOrder: Order | null = null;
 
-  // Cancel dialog — the customer must give a reason, same pattern as
-  // the admin side, so both ends write to the exact same fields.
+
   cancelTarget: Order | null = null;
   cancelReason = '';
   cancelError = '';
   cancelling = false;
+  
+  // Pagination
+currentPage = 1;
+readonly pageSize = 5;
+
+getPageNumbers(totalOrders: number): number[] {
+  const totalPages = Math.ceil(totalOrders / this.pageSize);
+
+  return Array.from(
+    { length: totalPages },
+    (_, index) => index + 1
+  );
+}
+
+changePage(page: number, totalOrders: number): void {
+  const totalPages = Math.ceil(totalOrders / this.pageSize);
+
+  if (page >= 1 && page <= totalPages) {
+    this.currentPage = page;
+  }
+}
 
   readonly cancelPresets: string[] = [
     'Ordered by mistake',
@@ -48,23 +67,34 @@ export class OrderHistoryComponent implements OnInit {
   readonly trackingStatuses: OrderStatus[] = ['Placed', 'Processing', 'Shipped', 'Delivered'];
 
   ngOnInit(): void {
-
     const user = this.authService.getCurrentUser();
-    this.store.dispatch(loadOrders({ userId: user?.id }));
-
-    // Keep the open detail modal in sync with the store — if this
-    // order gets cancelled (or its status otherwise changes), the
-    // modal reflects it immediately without needing to reopen it.
+  
+    // Load the current user's orders
+    this.store.dispatch(
+      loadOrders({ userId: user?.id })
+    );
+  
     this.orders$.subscribe(orders => {
+      const totalPages = Math.ceil(orders.length / this.pageSize);
+  
+      if (totalPages === 0) {
+        this.currentPage = 1;
+      } else if (this.currentPage > totalPages) {
+        this.currentPage = totalPages;
+      }
+  
+      // Keep the selected order updated
       if (this.selectedOrder) {
-        const updated = orders.find(o => o.id === this.selectedOrder!.id);
+        const updated = orders.find(
+          order => order.id === this.selectedOrder!.id
+        );
+  
         if (updated) {
           this.selectedOrder = updated;
         }
       }
     });
   }
-
   canCancel(status: string): boolean {
     return status === 'Placed' || status === 'Processing';
   }

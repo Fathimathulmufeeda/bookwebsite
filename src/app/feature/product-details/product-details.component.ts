@@ -2,7 +2,7 @@ import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, map } from 'rxjs';
+import { Observable, map, take } from 'rxjs';
 
 import { Product } from '../../core/Models/Product.model';
 import { ProductService } from '../../core/services/product.service';
@@ -19,6 +19,7 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { AuthService } from '../../core/services/auth.service';
 import { normalizeCategory } from '../../shared/utils/category.util';
+import { MAX_WISHLIST_PRODUCTS } from '../../store/wishlist/wishlist.constant';
 
 
 @Component({
@@ -294,22 +295,23 @@ maxCartProducts = MAX_CART_PRODUCTS;
   }
 
   toggleWishlist(): void {
-    
-    if (!this.product) return;
+    if (!this.product) {
+      return;
+    }
   
-    // Check authentication first
+    // Require login first
     if (!this.authService.isLoggedIn()) {
       this.authService.savePendingAction({
         type: 'wishlist',
         productId: this.product.id,
         quantity: 1
       });
-    
+  
       this.router.navigate(['/login']);
       return;
     }
-    
   
+    // Remove the book if it is already in the wishlist
     if (this.isWishlisted) {
       this.store.dispatch(
         removeFromWishlist({
@@ -317,20 +319,42 @@ maxCartProducts = MAX_CART_PRODUCTS;
         })
       );
   
-      this.toast.info(`${this.product.title} removed from wishlist.`);
+      this.toast.info(
+        `${this.product.title} removed from wishlist.`
+      );
+      return;
+    }
   
-    } else {
-      
-    
+    // Check the latest wishlist state before adding
+    this.wishlistProducts$.pipe(take(1)).subscribe(products => {
+      const productId = this.product!.id;
+  
+      // Avoid adding the same book twice
+      if (products.some(item => item.id === productId)) {
+        return;
+      }
+  
+      // Stop before dispatching if the wishlist is full
+      if (products.length >= MAX_WISHLIST_PRODUCTS) {
+        this.toast.warning(
+          `Only ${MAX_WISHLIST_PRODUCTS} books are allowed in the wishlist.`
+        );
+        return;
+      }
+  
+      // Add the book only when there is space
       this.store.dispatch(
         addToWishlist({
-          product: this.product
+          product: this.product!
         })
       );
   
-      this.toast.success(`${this.product.title} added to wishlist.`);
-    }
+      this.toast.success(
+        `${this.product!.title} added to wishlist.`
+      );
+    });
   }
+    
 
   discountAmount(): number {
     if (!this.product) return 0;

@@ -14,7 +14,10 @@
     <!-- Order list (Amazon-style: compact rows, click to see details) -->
     <div class="mt-8 space-y-3">
 
-      @for (order of orders; track order.id) {
+      @for (
+      order of orders | slice: (currentPage - 1) * pageSize : currentPage * pageSize;
+      track order.id
+      ) {
 
       <button type="button" (click)="viewOrder(order)"
         class="flex w-full items-center gap-4 rounded-md border border-[#ebe6dd] bg-white p-4 text-left transition hover:border-[#193629] sm:p-5">
@@ -59,6 +62,52 @@
       }
 
     </div>
+    
+    <!-- PAGINATION -->
+    @if (orders.length > pageSize) {
+    <div class="mt-8 flex flex-wrap items-center justify-between gap-4">
+    
+      <p class="text-xs text-[#777d76]">
+        Showing
+        {{ (currentPage - 1) * pageSize + 1 }}
+        -
+        {{ currentPage * pageSize > orders.length
+        ? orders.length
+        : currentPage * pageSize }}
+        of {{ orders.length }} orders
+      </p>
+    
+      <div class="flex items-center gap-1">
+    
+        <!-- Previous -->
+        <button type="button" (click)="changePage(currentPage - 1, orders.length)" [disabled]="currentPage === 1"
+          class="rounded-sm border border-[#d8d0c2] px-3 py-2 text-xs text-[#193629] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40">
+          Previous
+        </button>
+    
+        <!-- Page numbers -->
+        @for (page of getPageNumbers(orders.length); track page) {
+        <button type="button" (click)="changePage(page, orders.length)"
+          [attr.aria-current]="currentPage === page ? 'page' : null" [ngClass]="currentPage === page
+                ? 'bg-[#193629] text-white border-[#193629]'
+                : 'border-[#d8d0c2] text-[#193629] hover:bg-white'"
+          class="h-9 min-w-9 rounded-sm border px-3 text-xs transition">
+          {{ page }}
+        </button>
+        }
+    
+        <!-- Next -->
+        <button type="button" (click)="changePage(currentPage + 1, orders.length)"
+          [disabled]="currentPage === getPageNumbers(orders.length).length"
+          class="rounded-sm border border-[#d8d0c2] px-3 py-2 text-xs text-[#193629] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40">
+          Next
+        </button>
+    
+      </div>
+    </div>
+    }
+    
+
 
     } @else {
 

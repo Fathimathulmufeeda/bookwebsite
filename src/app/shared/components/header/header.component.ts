@@ -9,6 +9,7 @@ import { selectWishlistCount } from '../../../store/wishlist/wishlist.selectors'
 import { AuthService } from '../../../core/services/auth.service';
 import { clearCart, loadCart } from '../../../store/cart/cart.action';
 import { clearWishlist, loadWishlist } from '../../../store/wishlist/wishlist.action';
+import { ConfirmDialogService } from '../../services/confirm-dialog.service';
 
 @Component({
   selector: 'app-header',
@@ -20,6 +21,7 @@ export class HeaderComponent implements OnInit {
   private router = inject(Router);
   private store = inject(Store);
   private authService = inject(AuthService);
+  private confirmDialog = inject(ConfirmDialogService);
 
   cartCount$ = this.store.select(selectCartCount);
   wishlistCount$ = this.store.select(selectWishlistCount);
@@ -104,15 +106,27 @@ export class HeaderComponent implements OnInit {
     this.searchTerm = '';
   }
 
-  logout(): void {
-
+  
+  async logout(): Promise<void> {
     this.profileMenuOpen = false;
+  
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Log Out',
+      message: 'Are you sure you want to log out of your account?',
+      confirmText: 'Log Out',
+      cancelText: 'Cancel'
+    });
+  
+    if (!confirmed) {
+      return;
+    }
   
     this.authService.logout();
   
     this.store.dispatch(clearCart());
     this.store.dispatch(clearWishlist());
   
-    this.router.navigate(['/home']);
+    await this.router.navigate(['/home']);
   }
+
 }

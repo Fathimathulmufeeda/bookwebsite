@@ -249,5 +249,71 @@ export class AuthService {
         })
       );
   }
+  
+updateProfile(
+  name: string,
+  email: string
+): Observable<Omit<User, 'password'>> {
+
+  const currentUser = this.getCurrentUser();
+
+  if (!currentUser) {
+    return throwError(() => new Error('NOT_LOGGED_IN'));
+  }
+
+  const updatedName = name.trim();
+  const updatedEmail = email.trim();
+
+  return this.http
+    .get<User[]>(
+      `${this.apiUrl}?email=${encodeURIComponent(updatedEmail)}`
+    )
+    .pipe(
+      switchMap(users => {
+
+        const emailAlreadyUsed = users.some(
+          user => String(user.id) !== String(currentUser.id)
+        );
+
+        if (emailAlreadyUsed) {
+          return throwError(() => new Error('EMAIL_EXISTS'));
+        }
+
+        return this.http.patch<User>(
+          `${this.apiUrl}/${currentUser.id}`,
+          {
+            name: updatedName,
+            email: updatedEmail
+          }
+        );
+      }),
+
+      map(updatedUser => {
+
+        const { password, ...safeUser } = updatedUser;
+
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem(
+            this.CURRENT_USER_KEY,
+            JSON.stringify(safeUser)
+          );
+        }
+
+        return safeUser;
+      }),
+
+      catchError(error => {
+
+        if (
+          error instanceof Error &&
+          error.message === 'EMAIL_EXISTS'
+        ) {
+          return throwError(() => error);
+        }
+
+        return throwError(() => new Error('NETWORK_ERROR'));
+      })
+    );
+}
 
 }

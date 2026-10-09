@@ -22,7 +22,6 @@ import { selectWishlistProducts } from './wishlist.selectors';
 
 @Injectable()
 export class WishlistEffect {
-
   private actions$ = inject(Actions);
   private store = inject(Store);
   private wishlistService = inject(WishlistService);
@@ -31,60 +30,39 @@ export class WishlistEffect {
   saveWishlist$ = createEffect(
     () =>
       this.actions$.pipe(
-
-        ofType(
-          addToWishlist,
-          removeFromWishlist
-        ),
-
+        ofType(addToWishlist, removeFromWishlist),
         withLatestFrom(
           this.store.select(selectWishlistProducts)
         ),
-
         switchMap(([, products]) =>
           this.wishlistService.saveWishlist(products).pipe(
-
             catchError(error => {
               console.error('Failed to save wishlist:', error);
               return EMPTY;
             })
-
           )
         )
       ),
-
     { dispatch: false }
   );
-
 
   // Load wishlist from db.json
   loadWishlist$ = createEffect(() =>
     this.actions$.pipe(
-
       ofType(loadWishlist),
-
       switchMap(() =>
         this.wishlistService.getWishlist().pipe(
-
           map(products =>
-            loadWishlistSuccess({
-              products
-            })
+            loadWishlistSuccess({ products })
           ),
-
           catchError(error => {
             console.error('Failed to load wishlist:', error);
-
             return [
-              loadWishlistSuccess({
-                products: []
-              })
+              loadWishlistSuccess({ products: [] })
             ];
           })
-
         )
       )
     )
   );
-
 }
